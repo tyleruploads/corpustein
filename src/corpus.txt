@@ -1,0 +1,603 @@
+Electronics is a scientific and engineering discipline that studies and applies the principles of physics to design, create, and operate devices that manipulate electrons and other electrically charged particles. It is a subfield of physics[1][2] and electrical engineering which uses active devices such as transistors, diodes, and integrated circuits to control and amplify the flow of electric current and to convert it from one form to another, such as from alternating current (AC) to direct current (DC) or from analog signals to digital signals.
+
+Electronic devices have significantly influenced the development of many aspects of modern society, such as telecommunications, entertainment, education, health care, industry, and security. The main driving force behind the advancement of electronics is the semiconductor industry, which continually produces ever-more sophisticated electronic devices and circuits in response to global demand. The semiconductor industry is one of the global economy's largest and most profitable industries, with annual revenues exceeding $481 billion in 2018.
+History and development
+See also: History of electronics engineering and Timeline of electrical and electronics engineering
+One of the earliest Audion radio receivers, constructed by De Forest in 1914
+
+Karl Ferdinand Braun's development of the crystal detector, the first semiconductor device, in 1874 and the identification of the electron in 1897 by Sir Joseph John Thomson, along with the subsequent invention of the vacuum tube which could amplify and rectify small electrical signals, inaugurated the field of electronics and the electron age.[3][4] Practical applications started with the invention of the diode by Ambrose Fleming and the triode by Lee De Forest in the early 1900s, which made the detection of small electrical voltages, such as radio signals from a radio antenna, practicable.
+
+Vacuum tubes (thermionic valves) were the first active electronic components which controlled current flow by influencing the flow of individual electrons, and enabled the construction of equipment that used current amplification and rectification to give us radio, television, radar, long-distance telephony and much more. The early growth of electronics was rapid, and by the 1920s, commercial radio broadcasting and telecommunications were becoming widespread and electronic amplifiers were being used in such diverse applications as long-distance telephony and the music recording industry.[5]
+
+The next big technological step took several decades to appear, when the first working point-contact transistor was invented by John Bardeen and Walter Houser Brattain at Bell Labs in 1947.[6] However, vacuum tubes continued to play a leading role in the field of microwave and high-power transmission as well as television receivers until the middle of the 1980s.[7] Since then, solid-state devices have all but completely taken over. Vacuum tubes are still used in some specialist applications such as high power RF amplifiers, cathode-ray tubes, specialist audio equipment, guitar amplifiers and some microwave devices.
+
+In April 1955, the IBM 608 was the first IBM product to use transistor circuits without any vacuum tubes and is believed to be the first all-transistorized calculator to be manufactured for the commercial market.[8][9] The 608 contained more than 3,000 germanium transistors. Thomas J. Watson Jr. ordered all future IBM products to use transistors in their design. From that time on, transistors were almost exclusively used for computer logic circuits and peripheral devices. However, early junction transistors were relatively bulky devices that were difficult to manufacture on a mass-production basis, which limited them to a number of specialised applications.[10]
+
+The MOSFET was invented at Bell Labs between 1955 and 1960.[11][12][13][14][15][16] It was the first truly compact transistor that could be miniaturised and mass-produced for a wide range of uses.[10] Its advantages include high scalability,[17] affordability,[18] low power consumption, and high density.[19] It revolutionized the electronics industry.[20][21] As the complexity of circuits grew, problems arose.[22] One problem was the size of the circuit. A complex circuit like a computer was dependent on speed. If the components were large, the wires interconnecting them must be long. The electric signals took time to go through the circuit, thus slowing the computer.[22] The invention of the integrated circuit by Jack Kilby and Robert Noyce solved this problem by making all the components and the chip out of the same block (monolith) of semiconductor material. The circuits could be made smaller, and the manufacturing process could be automated. This led to the idea of integrating all components on a single-crystal silicon wafer, which led to small-scale integration (SSI) in the early 1960s, and then medium-scale integration (MSI) in the late 1960s, followed by VLSI. In 2008, billion-transistor processors became commercially available.[23]
+Subfields
+
+    Analog electronics
+    Audio electronics
+    Avionics
+    Bioelectronics
+    Circuit design
+    Digital electronics
+    Electronic components
+    Embedded systems
+    Integrated circuits
+    Microelectronics
+    Nanoelectronics
+    Optoelectronics
+    Power electronics
+    Printed circuit boards
+    Semiconductor devices
+    Sensors
+    Telecommunications
+
+Devices and components
+Main article: Electronic component
+Various electronic components
+
+An electronic component is any component, either active or passive, in an electronic system or electronic device. Components are connected together, usually by being soldered to a printed circuit board (PCB), to create an electronic circuit with a particular function. Components may be packaged singly or in more complex groups as integrated circuits. Passive electronic components are capacitors, inductors, resistors, whilst active components are such as semiconductor devices; transistors and thyristors, which control current flow at electron level.[24]
+Types of circuits
+
+Electronic circuit functions can be divided into two function groups: analog and digital. A particular device may consist of circuitry that has either or a mix of the two types. Analog circuits are becoming less common, as many of their functions are being digitized.
+Analog circuits
+Main article: Analog electronics
+
+Analog circuits use a continuous range of voltage or current for signal processing, as opposed to the discrete levels used in digital circuits. Analog circuits were common throughout electronic devices in the early years, in devices such as radio receivers and transmitters. Analog electronic computers were valuable for solving problems with continuous variables until digital processing advanced.
+
+As semiconductor technology developed, many of the functions of analog circuits were taken over by digital circuits, and modern circuits that are entirely analog are less common; their functions being replaced by hybrid approach which, for instance, uses analog circuits at the front end of a device receiving an analog signal, and then use digital processing using microprocessor techniques thereafter.
+
+Sometimes it may be difficult to classify some circuits that have elements of both linear and non-linear operation. An example is the voltage comparator, which receives a continuous range of voltage but only outputs one of two levels, as in a digital circuit. Similarly, an overdriven transistor amplifier can take on the characteristics of a controlled switch, having essentially two levels of output.
+
+Analog circuits are still widely used for signal amplification, such as in the entertainment industry, and conditioning signals from analog sensors, such as in industrial measurement and control.
+Digital circuits
+Main article: Digital electronics
+
+Digital circuits are electric circuits based on discrete voltage levels. Digital circuits use Boolean algebra and are the basis of all digital computers and microprocessor devices. They range from simple logic gates to large integrated circuits, employing millions of such gates.
+
+Digital circuits use a binary system with two voltage levels labelled 0 and 1 to indicate logical status. Often logic 0 will be a lower voltage and referred to as Low while logic 1 is referred to as High. However, some systems use the reverse definition (0 is High) or are current based. Quite often, the logic designer may reverse these definitions from one circuit to the next as they see fit to facilitate their design. The definition of the levels as 0 or 1 is arbitrary.[25]
+
+Ternary (with three states) logic has been studied, and some prototype computers made, but have not gained any significant practical acceptance.[26] Universally, computers and digital signal processors are constructed with digital logic circuits using transistors such as MOSFETs in the electronic logic gates to generate binary states.
+A selection of logic gates, used extensively in digital electronics
+
+    Logic gates
+    Adders
+    Flip-flops
+    Counters
+    Registers
+    Multiplexers
+    Schmitt triggers
+
+Highly integrated devices:
+
+    Memory chip
+    Microprocessors
+    Microcontrollers
+    Application-specific integrated circuit (ASIC)
+    Digital signal processor (DSP)
+    Field-programmable gate array (FPGA)
+    Field-programmable analog array (FPAA)
+    System on chip (SOC)
+
+Design
+
+Electronic systems design deals with the multi-disciplinary design issues of complex electronic devices and systems, such as mobile phones and computers. The subject covers a broad spectrum, from the design and development of an electronic system (new product development) to assuring its proper function, service life and disposal.[27] Electronic systems design is therefore the process of defining and developing complex electronic devices to satisfy specified requirements of the user.
+
+Due to the complex nature of electronics theory, laboratory experimentation is an important part of the development of electronic devices. These experiments are used to test or verify the engineer's design and detect errors. Historically, electronics labs have consisted of electronics devices and equipment located in a physical space, although in more recent years the trend has been towards electronics lab simulation software, such as CircuitLogix, Multisim, and PSpice.
+Computer-aided design
+Main article: Electronic design automation
+
+Today's electronics engineers have the ability to design circuits using premanufactured building blocks such as power supplies, semiconductors (i.e., semiconductor devices, such as transistors), and integrated circuits. Electronic design automation software programs include schematic capture programs and printed circuit board design programs. Popular names in the EDA software world are NI Multisim, Cadence (ORCAD), EAGLE PCB[28] and Schematic, Mentor (PADS PCB and LOGIC Schematic), Altium (Protel), LabCentre Electronics (Proteus), gEDA, KiCad and many others.
+Negative qualities
+Thermal management
+Main article: Thermal management of electronic devices and systems
+
+Heat generated by electronic circuitry must be dissipated to prevent immediate failure and improve long-term reliability. Heat dissipation is mostly achieved by passive conduction/convection. Means to achieve greater dissipation include heat sinks and fans for air cooling, and other forms of computer cooling such as water cooling. These techniques use convection, conduction, and radiation of heat energy.
+Noise
+Main article: Electronic noise
+
+Electronic noise is defined[29] as unwanted disturbances superimposed on a useful signal that tend to obscure its information content. Noise is not the same as signal distortion caused by a circuit. Noise is associated with all electronic circuits. Noise may be electromagnetically or thermally generated, which can be decreased by lowering the operating temperature of the circuit. Other types of noise, such as shot noise, cannot be removed as they are due to limitations in physical properties.
+Packaging methods
+[icon]	
+This section needs expansion. You can help by adding missing information. (July 2025)
+Through-hole devices mounted on the circuit board of a mid-1980s home computer. Axial-lead devices are at the upper left, while blue radial-lead capacitors are at the upper right.
+Main articles: Electronic packaging and Semiconductor package
+
+Many different methods of connecting components have been used over the years. For instance, early electronics often used point-to-point wiring with components attached to wooden breadboards to construct circuits. Cordwood construction and wire wrap were other methods used. Most modern-day electronics now use printed circuit boards made of materials such as FR-4 and FR-2. Electrical components are generally mounted to PCBs using through-hole or surface mount.
+
+Through-hole technology uses component leads inserted through holes in a printed circuit board and soldered on the opposite side. Surface-mount technology places components directly onto pads on the surface of the board, allowing higher component density and automated assembly. Modern electronic assemblies may use both methods, with through-hole components commonly kept where greater mechanical strength or easier manual replacement is needed.[30]
+
+Health and environmental concerns associated with electronics assembly have gained increased attention in recent years.
+Industry
+Main article: Electronics industry
+Further information: Consumer electronics, List of best-selling electronic devices, and Semiconductor industry
+
+The electronics industry consists of various branches. The central driving force behind the entire electronics industry is the semiconductor industry,[31] which has annual sales of over $481 billion as of 2018.[32] The most widely manufactured electronic device is the metal-oxide-semiconductor field-effect transistor (MOSFET), with an estimated 13 sextillion MOSFETs having been manufactured between 1960 and 2018.[33] In the 1960s, U.S. manufacturers were unable to compete with Japanese companies such as Sony and Hitachi which could produce high-quality goods at lower prices. By the 1980s, however, U.S. manufacturers became the world leaders in semiconductor development and assembly.[34]
+
+However, during the 1990s and subsequently, the industry shifted overwhelmingly to East Asia (a process begun with the initial movement of microchip mass-production there in the 1970s), as plentiful, cheap labor and increasing technological sophistication became widely available there.[35][36]
+
+Over three decades, the United States' global share of semiconductor manufacturing capacity fell from 37% in 1990 to 12% in 2022.[36] America's pre-eminent semiconductor manufacturer, Intel Corporation, fell far behind its subcontractor Taiwan Semiconductor Manufacturing Company (TSMC) in manufacturing technology.[35]
+
+By that time, Taiwan had become the world's leading source of advanced semiconductors[36][35]—followed by South Korea, the United States, Japan, Singapore, and China.[36][35]
+
+Important semiconductor industry facilities (which often are subsidiaries of a leading producer based elsewhere) also exist in Europe (notably the Netherlands), Southeast Asia, South America, and Israel.[35]
+
+Electric charge (symbols: q, Q) is a physical property of matter that causes it to experience a force when placed in an electromagnetic field. Electric charge can be positive or negative. Like charges repel each other and unlike charges attract each other.[1] An object with no net charge is referred to as electrically neutral. Early knowledge of how charged substances interact is now called classical electrodynamics, and is still accurate for problems that do not require consideration of quantum effects.
+
+In an isolated system, the total charge stays the same - the amount of positive charge minus the amount of negative charge does not change over time. Electric charge carriers include subatomic particles. In ordinary matter, negative charge is carried by electrons, and positive charge is carried by the protons in the nuclei of atoms. If there are more electrons than protons in a piece of matter, it will have a negative charge, if there are fewer it will have a positive charge, and if there are equal numbers it will be neutral.
+
+Charge is quantized: it comes in integer multiples of individual small units called the elementary charge, e, about 1.602×10−19 C,[2] which is the smallest charge that can exist freely. Particles called quarks have smaller charges, multiples of ⁠1/3⁠e, but they are found only combined in particles that have a charge that is an integer multiple of e. In the Standard Model, charge is an absolutely conserved quantum number. The proton has a charge of +e, and the electron has a charge of −e. Today, a negative charge is defined as the charge carried by an electron and a positive charge is that carried by a proton. Before these particles were discovered, a positive charge was defined by Benjamin Franklin as the charge acquired by a glass rod when it is rubbed with a silk cloth.
+
+Electric charges produce electric fields.[3] A moving charge also produces a magnetic field.[4] The interaction of electric charges with an electromagnetic field (a combination of an electric and a magnetic field) is the source of the electromagnetic (or Lorentz) force,[5] which is one of the four fundamental interactions in physics. The study of photon-mediated interactions among charged particles is called quantum electrodynamics.[6]
+
+The SI derived unit of electric charge is the coulomb (C) named after French physicist Charles-Augustin de Coulomb. In electrical engineering it is also common to use the ampere-hour (A⋅h). In physics and chemistry it is common to use the elementary charge (e) as a unit. Chemistry also uses the Faraday constant, which is the charge of one mole of elementary charges.
+Overview
+Diagram showing field lines and equipotentials around an electron, a negatively charged particle. In an electrically neutral atom, the number of electrons is equal to the number of protons (which are positively charged), resulting in a net zero overall charge
+
+Charge is the fundamental property of matter that exhibits electrostatic attraction or repulsion in the presence of other matter with charge. Electric charge is a characteristic property of many subatomic particles. The charges of free-standing particles are integer multiples of the elementary charge e; we say that electric charge is quantized. Michael Faraday, in his electrolysis experiments, was the first to note the discrete nature of electric charge. Robert Millikan's oil drop experiment demonstrated this fact directly, and measured the elementary charge. It has been discovered that one type of particle, quarks, have fractional charges of either −⁠1/3⁠ or +⁠2/3⁠, but it is believed they always occur in multiples of integral charge; free-standing quarks have never been observed.
+
+By convention, the charge of an electron is negative, −e, while that of a proton is positive, +e. Charged particles whose charges have the same sign repel one another, and particles whose charges have different signs attract. Coulomb's law quantifies the electrostatic force between two particles by asserting that the force is proportional to the product of their charges, and inversely proportional to the square of the distance between them. The charge of an antiparticle equals that of the corresponding particle, but with opposite sign.
+
+The electric charge of a macroscopic object is the sum of the electric charges of the particles that it is made up of. This charge is often small, because matter is made of atoms, and atoms typically have equal numbers of protons and electrons, in which case their charges cancel out, yielding a net charge of zero, thus making the atom neutral.
+
+An ion is an atom (or group of atoms) that has lost one or more electrons, giving it a net positive charge (cation), or that has gained one or more electrons, giving it a net negative charge (anion). Monatomic ions are formed from single atoms, while polyatomic ions are formed from two or more atoms that have been bonded together, in each case yielding an ion with a positive or negative net charge.
+Electric field induced by a positive electric charge
+Electric field induced by a negative electric charge
+Electric field induced by a positive electric charge (left) and a field induced by a negative electric charge (right).
+
+During the formation of macroscopic objects, constituent atoms and ions usually combine to form structures composed of neutral ionic compounds electrically bound to neutral atoms. Thus macroscopic objects tend toward being neutral overall, but macroscopic objects are rarely perfectly net neutral.
+
+Sometimes macroscopic objects contain ions distributed throughout the material, rigidly bound in place, giving an overall net positive or negative charge to the object. Also, macroscopic objects made of conductive elements can more or less easily (depending on the element) take on or give off electrons, and then maintain a net negative or positive charge indefinitely. When the net electric charge of an object is non-zero and motionless, the phenomenon is known as static electricity. This can easily be produced by rubbing two dissimilar materials together, such as rubbing amber with fur or glass with silk. In this way, non-conductive materials can be charged to a significant degree, either positively or negatively. Charge taken from one material is moved to the other material, leaving an opposite charge of the same magnitude behind. The law of conservation of charge always applies, giving the object from which a negative charge is taken a positive charge of the same magnitude, and vice versa.
+
+Even when an object's net charge is zero, the charge can be distributed non-uniformly in the object (e.g., due to an external electromagnetic field, or bound polar molecules). In such cases, the object is said to be polarized. The charge due to polarization is known as bound charge, while the charge on an object produced by electrons gained or lost from outside the object is called free charge. The motion of electrons in conductive metals in a specific direction is known as electric current.
+Unit
+
+The SI unit of quantity of electric charge is the coulomb (symbol: C). The coulomb is defined as the quantity of charge that passes through the cross section of an electrical conductor carrying one ampere for one second.[7] This unit was proposed in 1946 and ratified in 1948.[7] The lowercase symbol q is often used to denote a quantity of electric charge. The quantity of electric charge can be directly measured with an electrometer, or indirectly measured with a ballistic galvanometer.
+
+The elementary charge is defined as a fundamental constant in the SI.[8] The value for elementary charge, when expressed in SI units, is exactly 1.602176634×10−19 C.[2]
+
+After discovering the quantized character of charge, in 1891, George Stoney proposed the unit 'electron' for this fundamental unit of electrical charge. J. J. Thomson subsequently discovered the particle that we now call the electron in 1897. The unit is today referred to as elementary charge, fundamental unit of charge, or simply denoted e, with the charge of an electron being −e. The charge of an isolated system should be a multiple of the elementary charge e, even if at large scales charge seems to behave as a continuous quantity. In some contexts it is meaningful to speak of fractions of an elementary charge; for example, in the fractional quantum Hall effect.
+
+The unit faraday is sometimes used in electrochemistry. One faraday is the magnitude of the charge of one mole of elementary charges,[9] i.e. 9.648533212...×104 C.
+History
+See also: History of electromagnetic theory and Electricity § History
+Coulomb's torsion balance
+
+From ancient times, people were familiar with four types of phenomena that today would all be explained using the concept of electric charge: (a) lightning, (b) the torpedo fish (or electric ray), (c) St Elmo's Fire, and (d) that amber rubbed with fur would attract small, light objects.[10] The first account of the amber effect is often attributed to the ancient Greek mathematician Thales of Miletus, who lived from c. 624 to c. 546 BC, but there are doubts about whether Thales left any writings;[11] his account about amber is known from an account from early 200s.[12] This account can be taken as evidence that the phenomenon was known since at least c. 600 BC, but Thales explained this phenomenon as evidence for inanimate objects having a soul.[12] In other words, there was no indication of any conception of electric charge. More generally, the ancient Greeks did not understand the connections among these four kinds of phenomena. The Greeks observed that the charged amber buttons could attract light objects such as hair. They also found that if they rubbed the amber for long enough, they could even get an electric spark to jump,[citation needed] but there is also a claim that no mention of electric sparks appeared until the late 17th century.[13] This property derives from the triboelectric effect. In late 1100s, the substance jet, a compacted form of coal, was noted to have an amber effect,[14] and in the middle of the 1500s, Girolamo Fracastoro, discovered that diamond also showed this effect.[15] Some efforts were made by Fracastoro and others, especially Gerolamo Cardano to develop explanations for this phenomenon.[16]
+
+In contrast to astronomy, mechanics, and optics, which had been studied quantitatively since antiquity, the start of ongoing qualitative and quantitative research into electrical phenomena can be marked with the publication of De Magnete by the English scientist William Gilbert in 1600.[17] In this book, there was a small section where Gilbert returned to the amber effect (as he called it) in addressing many of the earlier theories,[16] and coined the Neo-Latin word electrica (from ἤλεκτρον (ēlektron), the Greek word for amber). The Latin word was translated into English as electrics.[18] Gilbert is also credited with the term electrical, while the term electricity came later, first attributed to Sir Thomas Browne in his Pseudodoxia Epidemica from 1646.[19] (For more linguistic details see Etymology of electricity.) Gilbert hypothesized that this amber effect could be explained by an effluvium (a small stream of particles that flows from the electric object, without diminishing its bulk or weight) that acts on other objects. This idea of a material electrical effluvium was influential in the 17th and 18th centuries. It was a precursor to ideas developed in the 18th century about "electric fluid" (Dufay, Nollet, Franklin) and "electric charge".[20]
+
+Around 1663 Otto von Guericke invented what was probably the first electrostatic generator, but he did not recognize it primarily as an electrical device and only conducted minimal electrical experiments with it.[21] Other European pioneers were Robert Boyle, who in 1675 published the first book in English that was devoted solely to electrical phenomena.[22] His work was largely a repetition of Gilbert's studies, but he also identified several more "electrics",[23] and noted mutual attraction between two bodies.[22]
+
+In 1729 Stephen Gray was experimenting with static electricity, which he generated using a glass tube. He noticed that a cork, used to protect the tube from dust and moisture, also became electrified (charged). Further experiments (e.g., extending the cork by putting thin sticks into it) showed—for the first time—that electrical effluvia (as Gray called it) could be transmitted (conducted) over a distance. Gray managed to transmit charge with twine (765 feet) and wire (865 feet).[24] Through these experiments, Gray discovered the importance of different materials, which facilitated or hindered the conduction of electrical effluvia. John Theophilus Desaguliers, who repeated many of Gray's experiments, is credited with coining the terms conductors and insulators to refer to the effects of different materials in these experiments.[24] Gray also discovered electrical induction (i.e., where charge could be transmitted from one object to another without any direct physical contact). For example, he showed that by bringing a charged glass tube close to, but not touching, a lump of lead that was sustained by a thread, it was possible to make the lead become electrified (e.g., to attract and repel brass filings).[25] He attempted to explain this phenomenon with the idea of electrical effluvia.[26]
+
+Gray's discoveries introduced an important shift in the historical development of knowledge about electric charge. The fact that electrical effluvia could be transferred from one object to another, opened the theoretical possibility that this property was not inseparably connected to the bodies that were electrified by rubbing.[27] In 1733 Charles François de Cisternay du Fay, inspired by Gray's work, made a series of experiments (reported in Mémoires de l'Académie Royale des Sciences), showing that more or less all substances could be 'electrified' by rubbing, except for metals and fluids[28] and proposed that electricity comes in two varieties that cancel each other, which he expressed in terms of a two-fluid theory.[29] When glass was rubbed with silk, du Fay said that the glass was charged with vitreous electricity, and, when amber was rubbed with fur, the amber was charged with resinous electricity. In contemporary understanding, positive charge is now defined as the charge of a glass rod after being rubbed with a silk cloth, but it is arbitrary which type of charge is called positive and which is called negative.[30] Another important two-fluid theory from this time was proposed by Jean-Antoine Nollet (1745).[31]
+
+Up until about 1745, the main explanation for electrical attraction and repulsion was the idea that electrified bodies gave off an effluvium.[32] Benjamin Franklin started electrical experiments in late 1746,[33] and by 1750 had developed a one-fluid theory of electricity, based on an experiment that showed that a rubbed glass received the same, but opposite, charge strength as the cloth used to rub the glass.[33][34] Franklin imagined electricity as being a type of invisible fluid present in all matter and coined the term charge itself (as well as battery and some others[35]); for example, he believed that it was the glass in a Leyden jar that held the accumulated charge. He posited that rubbing insulating surfaces together caused this fluid to change location, and that a flow of this fluid constitutes an electric current. He also posited that when matter contained an excess of the fluid it was positively charged and when it had a deficit it was negatively charged. He identified the term positive with vitreous electricity and negative with resinous electricity after performing an experiment with a glass tube he had received from his overseas colleague Peter Collinson. The experiment had participant A charge the glass tube and participant B receive a shock to the knuckle from the charged tube. Franklin identified participant B to be positively charged after having been shocked by the tube.[36] There is some ambiguity about whether William Watson independently arrived at the same one-fluid explanation around the same time (1747). Watson, after seeing Franklin's letter to Collinson, claims that he had presented the same explanation as Franklin in spring 1747.[37] Franklin had studied some of Watson's works prior to making his own experiments and analysis, which was probably significant for Franklin's own theorizing.[38] One physicist suggests that Watson first proposed a one-fluid theory, which Franklin then elaborated further and more influentially.[39] A historian of science argues that Watson missed a subtle difference between his ideas and Franklin's, so that Watson misinterpreted his ideas as being similar to Franklin's.[40] In any case, there was no animosity between Watson and Franklin, and the Franklin model of electrical action, formulated in early 1747, eventually became widely accepted at that time.[38] After Franklin's work, effluvia-based explanations were rarely put forward.[41]
+
+It is now known that the Franklin model was fundamentally correct. There is only one kind of electrical charge, and only one variable is required to keep track of the amount of charge.[42]
+
+Until 1800 it was only possible to study conduction of electric charge by using an electrostatic discharge. In 1800 Alessandro Volta was the first to show that charge could be maintained in continuous motion through a closed path.[43]
+
+In 1833, Michael Faraday sought to remove any doubt that electricity is identical, regardless of the source by which it is produced.[44] He discussed a variety of known forms, which he characterized as common electricity (e.g., static electricity, piezoelectricity, magnetic induction), voltaic electricity (e.g., electric current from a voltaic pile), and animal electricity (e.g., bioelectricity).
+
+In 1838, Faraday raised a question about whether electricity was a fluid or fluids or a property of matter, like gravity. He investigated whether matter could be charged with one kind of charge independently of the other.[45] He came to the conclusion that electric charge was a relation between two or more bodies, because he could not charge one body without having an opposite charge in another body.[46]
+
+In 1838, Faraday also put forth a theoretical explanation of electric force, while expressing neutrality about whether it originates from one, two, or no fluids.[47] He focused on the idea that the normal state of particles is to be nonpolarized, and that when polarized, they seek to return to their natural, nonpolarized state.
+
+In developing a field theory approach to electrodynamics (starting in the mid-1850s), James Clerk Maxwell stops considering electric charge as a special substance that accumulates in objects, and starts to understand electric charge as a consequence of the transformation of energy in the field.[48] This pre-quantum understanding considered magnitude of electric charge to be a continuous quantity, even at the microscopic level.[48]
+Role of charge in static electricity
+
+Static electricity refers to the electric charge of an object and the related electrostatic discharge when two objects are brought together that are not at equilibrium. An electrostatic discharge creates a change in the charge of each of the two objects.
+Electrification by sliding
+Further information: Triboelectric effect
+
+When a piece of glass and a piece of resin—neither of which exhibit any electrical properties—are rubbed together and left with the rubbed surfaces in contact, they still exhibit no electrical properties. When separated, they attract each other.
+
+A second piece of glass rubbed with a second piece of resin, then separated and suspended near the former pieces of glass and resin causes these phenomena:
+
+    The two pieces of glass repel each other.
+    Each piece of glass attracts each piece of resin.
+    The two pieces of resin repel each other.
+
+This attraction and repulsion is an electrical phenomenon, and the bodies that exhibit them are said to be electrified, or electrically charged. Bodies may be electrified in many other ways, as well as by sliding. The electrical properties of the two pieces of glass are similar to each other but opposite to those of the two pieces of resin: The glass attracts what the resin repels and repels what the resin attracts.
+
+If a body electrified in any manner whatsoever behaves as the glass does, that is, if it repels the glass and attracts the resin, the body is said to be vitreously electrified, and if it attracts the glass and repels the resin it is said to be resinously electrified. All electrified bodies are either vitreously or resinously electrified.
+
+An established convention in the scientific community defines vitreous electrification as positive, and resinous electrification as negative. The exactly opposite properties of the two kinds of electrification justify our indicating them by opposite signs, but the application of the positive sign to one rather than to the other kind must be considered as a matter of arbitrary convention—just as it is a matter of convention in mathematical diagram to reckon positive distances towards the right hand.[49]
+Role of charge in electric current
+
+Electric current is the flow of electric charge through an object. The most common charge carriers are the positively charged proton and the negatively charged electron. The movement of any of these charged particles constitutes an electric current. In many situations, it suffices to speak of the conventional current without regard to whether it is carried by positive charges moving in the direction of the conventional current or by negative charges moving in the opposite direction. This macroscopic viewpoint is an approximation that simplifies electromagnetic concepts and calculations.
+
+At the opposite extreme, if one looks at the microscopic situation, one sees there are many ways of carrying an electric current, including: a flow of electrons; a flow of electron holes that act like positive particles; and both negative and positive particles (ions or other charged particles) flowing in opposite directions in an electrolytic solution or a plasma.
+
+The direction of the conventional current in most metallic wires is opposite to the drift velocity of the actual charge carriers; i.e., the electrons.
+Conservation of electric charge
+Main article: Charge conservation
+
+The total electric charge of an isolated system remains constant regardless of changes within the system itself.[50] : 4 This law is inherent to all processes known to physics and can be derived in a local form from gauge invariance of the wave function. The conservation of charge results in the charge-current continuity equation. More generally, the rate of change in charge density ρ within a volume of integration V is equal to the area integral over the current density J through the closed surface S = ∂V, which is in turn equal to the net current I:
+
+    − d d t ∫ V ρ d V = {\displaystyle -{\frac {d}{dt}}\int _{V}\rho \,\mathrm {d} V=} \oiint ∂ V {\displaystyle \scriptstyle \partial V} J ⋅ d S = ∫ J d S cos ⁡ θ = I . {\displaystyle \mathbf {J} \cdot \mathrm {d} \mathbf {S} =\int J\mathrm {d} S\cos \theta =I.}
+
+Thus, the conservation of electric charge, as expressed by the continuity equation, gives the result:
+
+    I = − d q d t . {\displaystyle I=-{\frac {\mathrm {d} q}{\mathrm {d} t}}.}
+
+The charge transferred between times t i {\displaystyle t_{\mathrm {i} }} and t f {\displaystyle t_{\mathrm {f} }} is obtained by integrating both sides:
+
+    q = ∫ t i t f I d t {\displaystyle q=\int _{t_{\mathrm {i} }}^{t_{\mathrm {f} }}I\,\mathrm {d} t}
+
+where I is the net outward current through a closed surface and q is the electric charge contained within the volume defined by the surface.
+Relativistic invariance
+
+Aside from the properties described in articles about electromagnetism, electric charge is a relativistic invariant. This means that any particle that has electric charge q has the same electric charge regardless of how fast it is travelling. This property has been experimentally verified by showing that the electric charge of one helium nucleus (two protons and two neutrons bound together in a nucleus and moving around at high speeds) is the same as that of two deuterium nuclei (one proton and one neutron bound together, but moving much more slowly than they would if they were in a helium nucleus).[51][52]
+
+Electrical engineering is an engineering discipline concerned with the study, design, and application of equipment, devices, and systems that use electricity, electronics, and electromagnetism. It emerged as an identifiable occupation in the latter half of the 19th century after the commercialization of the electric telegraph, the telephone, and electrical power generation, distribution, and use.
+
+Electrical engineering encompasses many different fields, including computer engineering, systems engineering, power engineering, telecommunications, radio-frequency engineering, signal processing, instrumentation, control engineering, photovoltaic cells, electronics, and optics and photonics. Many of these disciplines overlap with other engineering branches, spanning a huge number of specializations including hardware engineering, power electronics, electromagnetics and waves, microwave engineering, nanotechnology, electrochemistry, renewable energies, mechatronics/control, and electrical materials science.[a] Machine learning and computer science techniques are also further studied due to being historically developed as fields of electrical engineering.
+
+Electrical engineers typically hold a degree in electrical engineering, electronic or electrical and electronic engineering. Practicing engineers may have professional certification and be members of a professional body or an international standards organization. These include the International Electrotechnical Commission (IEC), the National Society of Professional Engineers (NSPE), the Institute of Electrical and Electronics Engineers (IEEE) and the Institution of Engineering and Technology (IET, formerly the IEE).
+
+Electrical engineers work in a very wide range of industries and the skills required are likewise variable. These range from circuit theory to the management skills of a project manager. The tools and equipment that an individual engineer may need are similarly variable, ranging from a simple voltmeter to sophisticated design and manufacturing software.
+History
+Main article: History of electrical engineering
+
+Electricity has been a subject of scientific interest since at least the early 17th century. William Gilbert was a prominent early electrical scientist, and was the first to draw a clear distinction between magnetism and static electricity. He is credited with establishing the term "electricity".[1] He also designed the versorium: a device that detects the presence of statically charged objects. In 1762 Swedish professor Johan Wilcke invented a device later named electrophorus that produced a static electric charge.[2] By 1800 Alessandro Volta had developed the voltaic pile, a forerunner of the electric battery.
+19th century
+The discoveries of Michael Faraday formed the foundation of electric motor technology.
+
+In the 19th century, research into the subject started to intensify. Notable developments in this century include the work of Hans Christian Ørsted, who discovered in 1820 that an electric current produces a magnetic field that will deflect a compass needle; of William Sturgeon, who in 1825 invented the electromagnet; of Joseph Henry and Edward Davy, who invented the electrical relay in 1835; of Georg Ohm, who in 1827 quantified the relationship between the electric current and potential difference in a conductor; of Michael Faraday, the discoverer of electromagnetic induction in 1831; and of James Clerk Maxwell, who in 1873 published a unified theory of electricity and magnetism in his treatise Electricity and Magnetism.[3]
+
+In 1782, Georges-Louis Le Sage developed and presented in Berlin probably the world's first form of electric telegraphy, using 24 different wires, one for each letter of the alphabet. This telegraph connected two rooms. It was an electrostatic telegraph that moved gold leaf through electrical conduction.
+
+In 1795, Francisco Salva Campillo proposed an electrostatic telegraph system. Between 1803 and 1804, he worked on electrical telegraphy, and in 1804, he presented his report at the Royal Academy of Natural Sciences and Arts of Barcelona. Salva's electrolyte telegraph system was very innovative though it was greatly influenced by and based upon two discoveries made in Europe in 1800—Alessandro Volta's electric battery for generating an electric current and William Nicholson and Anthony Carlyle's electrolysis of water.[4] Electrical telegraphy may be considered the first example of electrical engineering.[5] Electrical engineering became a profession in the later 19th century. Practitioners had created a global electric telegraph network, and the first professional electrical engineering institutions were founded in the UK and the US to support the new discipline. Francis Ronalds created an electric telegraph system in 1816 and documented his vision of how the world could be transformed by electricity.[6][7] Over 50 years later, he joined the new Society of Telegraph Engineers (soon to be renamed the Institution of Electrical Engineers) where he was regarded by other members as the first of their cohort.[8] By the end of the 19th century, the world had been forever changed by the rapid communication made possible by the engineering development of land-lines, submarine cables, and, from about 1890, wireless telegraphy.
+
+Practical applications and advances in such fields created an increasing need for standardized units of measure. They led to the international standardization of the units volt, ampere, coulomb, ohm, farad, and henry. This was achieved at an international conference in Chicago in 1893.[9] The publication of these standards formed the basis of future advances in standardization in various industries, and in many countries, the definitions were immediately recognized in relevant legislation.[10]
+
+During these years, the study of electricity was largely considered to be a subfield of physics since early electrical technology was considered electromechanical in nature. The Technische Universität Darmstadt founded the world's first department of electrical engineering in 1882 and introduced the first-degree course in electrical engineering in 1883.[11] The first electrical engineering degree program in the United States was started at Massachusetts Institute of Technology (MIT) in the physics department under Professor Charles Cross,[12] though it was Cornell University to produce the world's first electrical engineering graduates in 1885.[13] The first course in electrical engineering was taught in 1883 in Cornell's Sibley College of Mechanical Engineering and Mechanic Arts.[14]
+
+In about 1885, Cornell President Andrew Dickson White established the first Department of Electrical Engineering in the United States.[15] In the same year, University College London founded the first chair of electrical engineering in Great Britain.[16] Professor Mendell P. Weinbach at University of Missouri established the electrical engineering department in 1886.[17] Afterwards, universities and institutes of technology gradually started to offer electrical engineering programs to their students all over the world.
+
+During these decades the use of electrical engineering increased dramatically. In 1882, Thomas Edison switched on the world's first large-scale electric power network that provided 110 volts—direct current (DC)—to 59 customers on Manhattan Island in New York City. In 1884, Sir Charles Parsons invented the steam turbine allowing for more efficient electric power generation. Alternating current, with its ability to transmit power more efficiently over long distances via the use of transformers, developed rapidly in the 1880s and 1890s with transformer designs by Károly Zipernowsky, Ottó Bláthy and Miksa Déri (later called ZBD transformers), Lucien Gaulard, John Dixon Gibbs and William Stanley Jr. Practical AC motor designs including induction motors were independently invented by Galileo Ferraris and Nikola Tesla and further developed into a practical three-phase form by Mikhail Dolivo-Dobrovolsky and Charles Eugene Lancelot Brown.[18] Charles Steinmetz and Oliver Heaviside contributed to the theoretical basis of alternating current engineering.[19][20] The spread in the use of AC set off in the United States what has been called the war of the currents between a George Westinghouse backed AC system and a Thomas Edison backed DC power system, with AC being adopted as the overall standard.[21]
+Early 20th century
+Guglielmo Marconi, known for his pioneering work on long-distance radio transmission
+
+During the development of radio, many scientists and inventors contributed to radio technology and electronics. The mathematical work of James Clerk Maxwell during the 1850s had shown the relationship of different forms of electromagnetic radiation, including the possibility of invisible airborne waves (later called "radio waves"). In his classic physics experiments of 1888, Heinrich Hertz proved Maxwell's theory by transmitting radio waves with a spark-gap transmitter, and detected them by using simple electrical devices. Other physicists experimented with these new waves and, in the process, developed devices for transmitting and detecting them. In 1895, Guglielmo Marconi began work on a way to adapt the known methods of transmitting and detecting these "Hertzian waves" into a purpose-built commercial wireless telegraphic system. Early on, he sent wireless signals over a distance of one and a half miles. In December 1901, he sent wireless waves that were not affected by the curvature of the Earth. Marconi later transmitted the wireless signals across the Atlantic between Poldhu, Cornwall, and St. John's, Newfoundland, a distance of 2,100 miles (3,400 km).[22]
+
+Millimetre wave communication was first investigated by Jagadish Chandra Bose during 1894–1896, when he reached an extremely high frequency of up to 60 GHz in his experiments.[23] He also introduced the use of semiconductor junctions to detect radio waves,[24] when he patented the radio crystal detector in 1901.[25][26]
+
+In 1897, Karl Ferdinand Braun introduced the cathode-ray tube as part of an oscilloscope, a crucial enabling technology for electronic television.[27] John Fleming invented the first radio tube, the diode, in 1904. Two years later, Robert von Lieben and Lee De Forest independently developed the amplifier tube, called the triode.[28]
+
+In 1920, Albert Hull developed the magnetron, which eventually led to the development of the microwave oven in 1946 by Percy Spencer.[29][30] In 1934, the British military began to make strides toward radar (which also uses the magnetron) under the direction of Dr Wimperis, culminating in the operation of the first radar station at Bawdsey in August 1936.[31]
+
+In 1941, Konrad Zuse presented the Z3, the world's first fully functional and programmable computer using electromechanical parts. In 1943, Tommy Flowers designed and built the Colossus, the world's first fully functional, electronic, digital and programmable computer.[32][33] In 1946, the ENIAC (Electronic Numerical Integrator and Computer) of John Presper Eckert and John Mauchly followed, beginning the computing era. The arithmetic performance of these machines allowed engineers to develop completely new technologies and achieve new objectives.[34]
+
+In 1948, Claude Shannon published "A Mathematical Theory of Communication" which mathematically describes the passage of information with uncertainty (electrical noise).
+Solid-state electronics
+See also: History of electronics engineering, History of the transistor, Invention of the integrated circuit, MOSFET, and Solid-state electronics
+A replica of the first working transistor, a point-contact transistor
+Metal–oxide–semiconductor field-effect transistor (MOSFET), the basic building block of modern electronics
+
+The first working transistor was a point-contact transistor invented by John Bardeen and Walter Houser Brattain while working under William Shockley at the Bell Telephone Laboratories (BTL) in 1947.[35] They then invented the bipolar junction transistor in 1948.[36] While early junction transistors were relatively bulky devices that were difficult to manufacture on a mass-production basis,[37] they opened the door for more compact devices.[38]
+
+The first integrated circuits were the hybrid integrated circuit invented by Jack Kilby at Texas Instruments in 1958 and the monolithic integrated circuit chip invented by Robert Noyce at Fairchild Semiconductor in 1959.[39]
+
+The MOSFET (metal–oxide–semiconductor field-effect transistor, or MOS transistor) was invented by Mohamed Atalla and Dawon Kahng at BTL in 1959.[40][41][42] It was the first truly compact transistor that could be miniaturised and mass-produced for a wide range of uses.[37] It revolutionized the electronics industry,[43][44] becoming the most widely used electronic device in the world.[41][45][46]
+
+The MOSFET made it possible to build high-density integrated circuit chips.[41] The earliest experimental MOS IC chip to be fabricated was built by Fred Heiman and Steven Hofstein at RCA Laboratories in 1962.[47] MOS technology enabled Moore's law, the doubling of transistors on an IC chip every two years, predicted by Gordon Moore in 1965.[48] Silicon-gate MOS technology was developed by Federico Faggin at Fairchild in 1968.[49] Since then, the MOSFET has been the basic building block of modern electronics.[42][50][51] The mass-production of silicon MOSFETs and MOS integrated circuit chips, along with continuous MOSFET scaling miniaturization at an exponential pace (as predicted by Moore's law), has since led to revolutionary changes in technology, economy, culture and thinking.[52]
+
+The Apollo program which culminated in landing astronauts on the Moon with Apollo 11 in 1969 was enabled by NASA's adoption of advances in semiconductor electronic technology, including MOSFETs in the Interplanetary Monitoring Platform (IMP)[53][54] and silicon integrated circuit chips in the Apollo Guidance Computer (AGC).[55]
+
+The development of MOS integrated circuit technology in the 1960s led to the invention of the microprocessor in the early 1970s.[56][57] The first single-chip microprocessor was the Intel 4004, released in 1971.[56] The Intel 4004 was designed and realized by Federico Faggin at Intel with his silicon-gate MOS technology,[56] along with Intel's Marcian Hoff and Stanley Mazor and Busicom's Masatoshi Shima.[58] The microprocessor led to the development of microcomputers and personal computers, and the microcomputer revolution.
+Electrical Engineering and Artificial Intelligence
+
+In recent times, the subject of machine learning (including speech systems, computer vision and reinforcement learning) has had significant overlap with electrical engineering fields such as signal processing, image processing and control engineering, and is, as such, studied often by electrical engineers. Machine learning techniques are also used in electrical engineering systems in subfields such as electronic design automation, stochastic and adaptive control, smart grids, adaptive signal processing, etc.
+Subfields
+
+One of the properties of electricity is that it is very useful for energy transmission as well as for information transmission. These were also the first areas in which electrical engineering was developed. Today, electrical engineering has many subdisciplines, the most common of which are listed below. Although there are electrical engineers who focus exclusively on one of these subdisciplines, many deal with a combination of them. Sometimes, certain fields, such as electronic engineering and computer engineering, are considered disciplines in their own right.
+Power and energy
+Main articles: Power engineering and Energy engineering
+The top of a power pole
+
+Power & Energy engineering deals with the generation, transmission, and distribution of electricity as well as the design of a range of related devices.[59] These include transformers, electric generators, electric motors, high voltage engineering, and power electronics. In many regions of the world, governments maintain an electrical network called a power grid that connects a variety of generators together with users of their energy. Users purchase electrical energy from the grid, avoiding the costly exercise of having to generate their own. Power engineers may work on the design and maintenance of the power grid as well as the power systems that connect to it.[60] Such systems are called on-grid power systems and may supply the grid with additional power, draw power from the grid, or do both. Power engineers may also work on systems that do not connect to the grid, called off-grid power systems, which in some cases are preferable to on-grid systems.
+Telecommunications
+Main article: Telecommunications engineering
+Satellite dishes are a crucial component in the analysis of satellite information.
+
+Telecommunications engineering focuses on the transmission of information across a communication channel such as a coax cable, optical fiber or free space.[61] Transmissions across free space require information to be encoded in a carrier signal to shift the information to a carrier frequency suitable for transmission; this is known as modulation. Popular analog modulation techniques include amplitude modulation and frequency modulation.[62] The choice of modulation affects the cost and performance of a system and these two factors must be balanced carefully by the engineer.
+
+Once the transmission characteristics of a system are determined, telecommunication engineers design the transmitters and receivers needed for such systems. These two are sometimes combined to form a two-way communication device known as a transceiver. A key consideration in the design of transmitters is their power consumption as this is closely related to their signal strength.[63][64] Typically, if the power of the transmitted signal is insufficient once the signal arrives at the receiver's antenna(s), the information contained in the signal will be corrupted by noise, specifically static.
+Control engineering
+Main articles: Control engineering and Control theory
+Control systems play a critical role in spaceflight.
+
+Control engineering focuses on the modeling of a diverse range of dynamic systems and the design of controllers that will cause these systems to behave in the desired manner.[65] To implement such controllers, electronics control engineers may use electronic circuits, digital signal processors, microcontrollers, and programmable logic controllers (PLCs). Control engineering has a wide range of applications from the flight and propulsion systems of commercial airliners to the cruise control present in many modern automobiles.[66] It also plays an important role in industrial automation.
+
+Control engineers often use feedback when designing control systems. For example, in an automobile with cruise control, the vehicle's speed is continuously monitored and fed back to the system, which adjusts the motor's power output accordingly.[67] Where there is regular feedback, control theory can be used to determine how the system responds to such feedback.
+
+Control engineers also work in robotics to design autonomous systems using control algorithms which interpret sensory feedback to control actuators that move robots such as autonomous vehicles, autonomous drones and others used in a variety of industries.[68]
+Electronics
+Main article: Electronic engineering
+Electronic components
+
+Electronic engineering involves the design and testing of electronic circuits that use the properties of components such as resistors, capacitors, inductors, diodes, and transistors to achieve a particular functionality.[60] The tuned circuit, which allows the user of a radio to filter out all but a single station, is just one example of such a circuit. Another example to research is a pneumatic signal conditioner.
+
+Prior to the Second World War, the subject was commonly known as radio engineering and basically was restricted to aspects of communications and radar, commercial radio, and early television.[60] Later, in post-war years, as consumer devices began to be developed, the field grew to include modern television, audio systems, computers, and microprocessors. In the mid-to-late 1950s, the term radio engineering gradually gave way to the name electronic engineering.
+
+Before the invention of the integrated circuit in 1959,[69] electronic circuits were constructed from discrete components that could be manipulated by humans. These discrete circuits consumed much space and power and were limited in speed, although they are still common in some applications. By contrast, integrated circuits packed a large number—often millions—of tiny electrical components, mainly transistors,[70] into a small chip around the size of a coin. This allowed for the powerful computers and other electronic devices we see today.
+Microelectronics and nanoelectronics
+Main articles: Integrated circuit design, Semiconductor device modeling, and Semiconductor device fabrication
+Further information: Microelectronics, Nanoelectronics, Chip design, and Outline of semiconductors
+Microprocessor
+
+Microelectronics engineering deals with the design and microfabrication of very small electronic circuit components for use in an integrated circuit or sometimes for use on their own as a general electronic component.[71] The most common microelectronic components are semiconductor transistors, although all main electronic components (resistors, capacitors, etc.) can be created at a microscopic level.
+
+Nanoelectronics is the further scaling of devices down to nanometer levels. Modern devices are already in the nanometer regime, with below 100 nm processing having been standard since around 2002.[72]
+
+Microelectronic components are created by chemically fabricating wafers of semiconductors such as silicon (at higher frequencies, compound semiconductors like gallium arsenide and indium phosphide can be used) to obtain the desired transport of electric charge and current. The field of microelectronics involves a significant amount of chemistry and material science and requires the electronic engineer to have a working knowledge of the effects of quantum mechanics.[73]
+Signal processing
+Main article: Signal processing
+A Bayer filter on a CCD requires signal processing to get a red, green, and blue value at each pixel.
+
+Signal processing deals with the analysis and manipulation of signals.[74] Signals can be either analog, in which case the signal varies continuously according to the information, or digital, in which case the signal varies according to a series of discrete values representing the information. For analog signals, signal processing may involve the amplification and filtering of audio signals for audio equipment or the modulation and demodulation of signals for telecommunications. For digital signals, signal processing may involve the compression, error detection and error correction of digitally sampled signals.[75]
+
+Signal processing is a mathematically oriented area forming the core of digital signal processing and is rapidly expanding with new applications in multiple fields of electrical engineering such as communications, control, radar, audio engineering, broadcast engineering, power electronics, and biomedical engineering as many already existing analog systems are replaced with their digital counterparts. Analog signal processing is still important in the design of many control systems.
+
+DSP processor ICs are found in many types of modern electronic devices, such as digital television sets,[76] radios, hi-fi audio equipment, mobile phones, multimedia players, camcorders and digital cameras, automobile control systems, noise cancelling headphones, digital spectrum analyzers, missile guidance systems, radar systems, and telematics systems. In such products, DSP may be responsible for noise reduction, speech recognition or synthesis, encoding or decoding digital media, wirelessly transmitting or receiving data, triangulating positions using GPS, and other kinds of image processing, video processing, audio processing, and speech processing.[77]
+Instrumentation
+Main article: Instrumentation engineering
+Flight instruments provide pilots with the tools to control aircraft analytically.
+
+Instrumentation engineering deals with the design of devices to measure physical quantities such as pressure, flow, and temperature.[78] The design of such instruments requires a good understanding of physics that often extends beyond electromagnetic theory. For example, flight instruments measure variables such as wind speed and altitude to enable pilots to control the aircraft analytically. Similarly, thermocouples use the Peltier-Seebeck effect to measure the temperature difference between two points.[79]
+
+Often instrumentation is not used by itself, but instead as the sensors of larger electrical systems. For example, a thermocouple might be used to help ensure a furnace's temperature remains constant.[80] For this reason, instrumentation engineering is often viewed as the counterpart of control.
+Computers
+Main article: Computer engineering
+Supercomputers are used in fields as diverse as computational biology and geographic information systems.
+
+Computer engineering deals with the design of computers and computer systems. This may involve the design of new hardware. Computer engineers may also work on a system's software. However, the design of complex software systems is often the domain of software engineering, which is usually considered a separate discipline.[81] Desktop computers represent a tiny fraction of the devices a computer engineer might work on, as computer-like architectures are now found in a range of embedded devices including video game consoles and DVD players. Computer engineers are involved in many hardware and software aspects of computing.[82] Robots are one of the applications of computer engineering.
+Photonics and optics
+Main articles: Photonics, Optics, and Fiber-optic communication
+Electromagnetic spectrum showing wavelengths from radio waves (1 km) to gamma rays (0.01 nm). Visible light Information transmission in electrical engineering applications most frequently uses infrared light in the C band (1530–1565 nm).
+
+Photonics and optics deal with the generation, transmission, amplification, modulation, detection, and analysis of electromagnetic radiation. The application of optics deals with design of optical instruments such as lenses, microscopes, telescopes, and other equipment that uses the properties of electromagnetic radiation. Other prominent applications of optics include electro-optical sensors and measurement systems, lasers, fiber-optic communication systems, and optical disc systems (e.g., CD and DVD). Photonics builds heavily on optical technology, supplemented with modern developments such as optoelectronics (mostly involving semiconductors), laser systems, optical amplifiers and novel materials (e.g. metamaterials).
+Related disciplines
+The Bird VIP Infant ventilator
+
+Mechatronics is an engineering discipline that deals with the convergence of electrical and mechanical systems. Such combined systems are known as electromechanical systems and have widespread adoption. Examples include automated manufacturing systems,[83] heating, ventilation and air-conditioning systems,[84] and various subsystems of aircraft and automobiles.[85] Electronic systems design is the subject within electrical engineering that deals with the multi-disciplinary design issues of complex electrical and mechanical systems.[86]
+
+The term mechatronics is typically used to refer to macroscopic systems, but futurists have predicted the emergence of very small electromechanical devices. Already, such small devices, known as microelectromechanical systems (MEMS), are used in automobiles to tell airbags when to deploy,[87] in digital projectors to create sharper images, and in inkjet printers to create nozzles for high definition printing. In the future, it is hoped the devices will help build tiny implantable medical devices and improve optical communication.[88]
+
+In aerospace engineering and robotics, an example is the most recent electric propulsion and ion propulsion.
+Education
+Main article: Education and training of electrical and electronics engineers
+Oscilloscope
+
+Electrical engineers typically possess an academic degree with a major in electrical engineering, electronics engineering, electronics and computer engineering, electrical engineering technology,[89] or electrical and electronic engineering.[90][91] The same fundamental principles are taught in all programs, though emphasis may vary according to title. The length of study for such a degree is usually four or five years and the completed degree may be designated as a Bachelor of Science in Electrical/Electronics Engineering Technology, Bachelor of Engineering, Bachelor of Science, Bachelor of Technology, or Bachelor of Applied Science, depending on the university. The bachelor's degree generally includes units covering physics, mathematics, computer science, project management, and a variety of topics in electrical engineering.[92] Initially, such topics cover most, if not all, of the subdisciplines of electrical engineering.
+An example circuit diagram, which is useful in circuit design and troubleshooting
+
+At many schools, electronic engineering is included as part of an electrical award, sometimes explicitly, such as a Bachelor of Engineering (Electrical and Electronic), but in others, electrical and electronic engineering are both considered to be sufficiently broad and complex that separate degrees are offered.[93]
+
+Some electrical engineers choose to study for a postgraduate degree such as a Master of Engineering/Master of Science (MEng/MSc), a Master of Engineering Management, a Doctor of Philosophy (PhD) in Engineering, an Engineering Doctorate (Eng.D.), or an Engineer's degree. The master's and engineer's degrees may consist of either research, coursework or a mixture of the two. The Doctor of Philosophy and Engineering Doctorate degrees consist of a significant research component and are often viewed as the entry point to academia. In the United Kingdom and some other European countries, Master of Engineering is often considered to be an undergraduate degree of slightly longer duration than the Bachelor of Engineering, rather than a standalone postgraduate degree.[94]
+Professional practice
+Belgian electrical engineers inspecting the rotor of a 40,000 kilowatt turbine of the General Electric Company in New York City
+
+In most countries, a bachelor's degree in engineering represents the first step towards professional certification and the degree program itself is certified by a professional body.[95] After completing a certified degree program the engineer must satisfy a range of requirements (including work experience requirements) before being certified. Once certified the engineer is designated the title of Professional Engineer (in the United States, Canada and South Africa), Chartered engineer or Incorporated Engineer (in India, Pakistan, the United Kingdom, Ireland and Zimbabwe), Chartered Professional Engineer (in Australia and New Zealand) or European Engineer (in much of the European Union).
+The IEEE corporate office is on the 17th floor of 3 Park Avenue in New York City.
+
+The advantages of licensure vary depending on location. For example, in the United States and Canada, "only a licensed engineer may seal engineering work for public and private clients".[96] This requirement is enforced by state and provincial legislation such as Quebec's Engineers Act.[97] In other countries, no such legislation exists. Practically all certifying bodies maintain a code of ethics that they expect all members to abide by or risk expulsion.[98] In this way these organizations play an important role in maintaining ethical standards for the profession. Even in jurisdictions where certification has little or no legal bearing on work, engineers are subject to contract law. In cases where an engineer's work fails he or she may be subject to the tort of negligence and, in extreme cases, the charge of criminal negligence. An engineer's work must also comply with numerous other rules and regulations, such as building codes and legislation pertaining to environmental law.
+
+Professional bodies of note for electrical engineers include the Institute of Electrical and Electronics Engineers (IEEE) and the Institution of Engineering and Technology (IET). The IEEE, which claims to produce 30% of the world's literature in electrical engineering, has over 360,000 members worldwide and holds over 3,000 conferences annually.[99] The IET publishes 21 journals, has a worldwide membership of over 150,000, and claims to be the largest professional engineering society in Europe.[100][101] Obsolescence of technical skills is a serious concern for electrical engineers. Membership and participation in technical societies, regular reviews of periodicals in the field and a habit of continued learning are therefore essential to maintaining proficiency. An MIET(Member of the Institution of Engineering and Technology) is recognised in Europe as an Electrical and computer (technology) engineer.[102]
+
+In Australia, Canada, and the United States, electrical engineers make up around 0.25% of the labor force.[b]
+Tools and work
+See also: List of electrical engineering software, List of CAE software, Free electronics circuit simulators, Power engineering software, and Open-source EDA software
+
+From the Global Positioning System to electric power generation, electrical engineers have contributed to the development of a wide range of technologies. They design, develop, test, and supervise the deployment of electrical systems and electronic devices. For example, they may work on the design of telecommunications systems, the operation of electric power stations, the lighting and wiring of buildings, the design of household appliances, or the electrical control of industrial machinery.[102]
+Satellite communications is typical of what electrical engineers work on.
+
+Fundamental to the discipline are the sciences of physics and mathematics, as these help to obtain both a qualitative and quantitative description of how such systems will work. Today, most engineering work involves the use of computers, and it is commonplace to use computer-aided design programs when designing electrical systems. Nevertheless, the ability to sketch ideas is still invaluable for quickly communicating with others.
+The Shadow robot hand system
+
+Although most electrical engineers will understand basic circuit theory (that is, the interactions of elements such as resistors, capacitors, diodes, transistors, and inductors in a circuit), the theories employed by engineers generally depend upon the work they do. For example, quantum mechanics and solid state physics might be relevant to an engineer working on VLSI (the design of integrated circuits), but are largely irrelevant to engineers working with macroscopic electrical systems. Even circuit theory may not be relevant to a person designing telecommunications systems that use off-the-shelf components. Perhaps the most important technical skills for electrical engineers are reflected in university programs, which emphasize strong numerical skills, computer literacy, and the ability to understand the technical language and concepts that relate to electrical engineering.[106]
+A laser bouncing down an acrylic rod, illustrating the total internal reflection of light in a multi-mode optical fiber
+
+A wide range of instrumentation is used by electrical engineers. For simple control circuits and alarms, a basic multimeter measuring voltage, current, and resistance may suffice. Where time-varying signals need to be studied, the oscilloscope is also an ubiquitous instrument. In RF engineering and high-frequency telecommunications, spectrum analyzers and network analyzers are used. In some disciplines, safety can be a particular concern with instrumentation. For instance, medical electronics designers must take into account that much lower voltages than normal can be dangerous when electrodes are directly in contact with internal body fluids.[107] Power transmission engineering also has great safety concerns due to the high voltages used; although voltmeters may in principle be similar to their low voltage equivalents, safety and calibration issues make them very different.[108] Many disciplines of electrical engineering use tests specific to their discipline. Audio electronics engineers use audio test sets consisting of a signal generator and a meter, principally to measure level but also other parameters such as harmonic distortion and noise. Likewise, information technology has its own test sets, often specific to a particular data format, and the same is true of television broadcasting.
+Radome at the Misawa Air Base Misawa Security Operations Center, Misawa, Japan
+
+For many engineers, technical work accounts for only a fraction of the work they do. A lot of time may also be spent on tasks such as discussing proposals with clients, preparing budgets and determining project schedules.[109] Many senior engineers manage a team of technicians or other engineers and for this reason project management skills are important. Most engineering projects involve some form of documentation and strong written communication skills are therefore very important.
+
+The workplaces of engineers are just as varied as the types of work they do. Electrical engineers may be found in the pristine lab environment of a fabrication plant, on board a Naval ship, the offices of a consulting firm or on site at a mine. During their working life, electrical engineers may find themselves supervising a wide range of individuals, including scientists, electricians, computer programmers, and other engineers.[110]
+
+Electrical engineering has an intimate relationship with the physical sciences. For instance, the physicist Lord Kelvin played a major role in the engineering of the first transatlantic telegraph cable.[111] Conversely, the engineer Oliver Heaviside produced major work on the mathematics of transmission on telegraph cables.[112] Electrical engineers are often required on major science projects. For instance, large particle accelerators such as CERN need electrical engineers to deal with many aspects of the project including the power distribution, the instrumentation, and the manufacture and installation of the superconducting electromagnets.[113][114]
+
+Technology is the application of conceptual knowledge to achieve practical goals, especially in a reproducible way.[1] The word technology can also mean the products resulting from such efforts,[2][3] including both tangible products such as tools or machines, and intangible ones such as software. Technology plays a critical role in science, engineering, and everyday life.[4][5]
+
+Technological advancements have led to significant changes in society. The earliest known technology is the stone tool, used during prehistory, followed by the control of fire—which in turn contributed to the growth of the human brain and the development of language during the Ice Age, according to the cooking hypothesis.[6] The invention of the wheel in the Bronze Age allowed greater travel and the creation of more complex machines. More recent technological inventions, including the printing press, telephone, and the Internet, have lowered barriers to communication and ushered in the knowledge economy.
+
+While technology contributes to economic development and improves human prosperity, it can also have negative impacts such as pollution and resource depletion, and can cause social harms like technological unemployment resulting from automation. As a result, philosophical and political debates about the role and use of technology, the ethics of technology, and ways to mitigate its downsides are ongoing.[7]
+Etymology
+
+Technology is a term dating back to the early 17th century that meant 'systematic treatment' (from Greek Τεχνολογία, from the Greek: τέχνη, romanized: tékhnē, lit. 'craft, art' and -λογία (-logíā), 'study, knowledge').[8][9] It is predated in use by the Ancient Greek word τέχνη (tékhnē), used to mean 'knowledge of how to make things', which encompassed activities like architecture.[10]
+
+Starting in the 19th century, continental Europeans started using the terms Technik (German) or technique (French) to refer to a 'way of doing', which included all technical arts, such as dancing, navigation, or printing, whether or not they required tools or instruments.[11] At the time, Technologie (German and French) referred either to the academic discipline studying the "methods of arts and crafts", or to the political discipline "intended to legislate on the functions of the arts and crafts".[12] The distinction between Technik and Technologie is absent in English, and so both were translated as technology. The term was previously uncommon in English and mostly referred to the academic discipline, as in the Massachusetts Institute of Technology.[13]
+
+In the 20th century, as a result of scientific progress and the Second Industrial Revolution, technology stopped being considered a distinct academic discipline and took on the meaning: the systematic use of knowledge to practical ends.[14]
+History
+Main articles: History of technology and Timeline of historic inventions
+Prehistoric
+Main article: Prehistoric technology
+refer to caption
+A person holding a hand axe
+
+Tools were initially developed by hominids through observation and trial and error.[15] Around 2 mya (million years ago), they learned to make the first stone tools by hammering flakes off a pebble, forming a sharp hand axe.[16] This practice was refined 75 kya (thousand years ago) into pressure flaking, enabling much finer work.[17]
+
+The discovery of fire was described by Charles Darwin as "possibly the greatest ever made by man".[18] Archaeological, dietary, and social evidence point to "continuous [human] fire-use" at least 1.5 mya.[19] Fire, fueled with wood and charcoal, allowed early humans to cook their food to increase its digestibility, improving its nutrient value and broadening the number of foods that could be eaten.[20] The cooking hypothesis proposes that the ability to cook promoted an increase in hominid brain size, though some researchers find the evidence inconclusive.[21] Archaeological evidence of hearths was dated to 790 kya; researchers believe this is likely to have intensified human socialization and may have contributed to the emergence of language.[22][23]
+
+Other technological advances made during the Paleolithic era include clothing and shelter.[24] No consensus exists on the approximate time of adoption of either technology, but archaeologists have found archaeological evidence of clothing 90-120 kya[25] and shelter 450 kya.[24] As the Paleolithic era progressed, dwellings became more sophisticated and more elaborate; as early as 380 kya, humans were constructing temporary wood huts.[26][27] Clothing, adapted from the fur and hides of hunted animals, helped humanity expand into colder regions; humans began to migrate out of Africa around 200 kya, initially moving to Eurasia.[28][29][30]
+Neolithic
+Main article: Neolithic Revolution
+Photo of Neolithic tools on display
+An array of Neolithic artifacts, including bracelets, axe heads, chisels, and polishing tools
+
+The Neolithic Revolution (or First Agricultural Revolution) brought about an acceleration of technological innovation, and a consequent increase in social complexity.[31] The invention of the polished stone axe was a major advance that allowed large-scale forest clearance and farming.[32] This use of polished stone axes increased greatly in the Neolithic but was originally used in the preceding Mesolithic in some areas such as Ireland.[33] Agriculture fed larger populations, and the transition to sedentism allowed for the simultaneous raising of more children, as infants no longer needed to be carried around by nomads. Additionally, children could contribute labor to the raising of crops more readily than they could participate in hunter-gatherer activities.[34][35]
+
+With this increase in population and availability of labor came an increase in labor specialization.[36] What triggered the progression from early Neolithic villages to the first cities, such as Uruk, and the first civilizations, such as Sumer, is not specifically known; however, the emergence of increasingly hierarchical social structures and specialized labor, of trade and war among adjacent cultures, and the need for collective action to overcome environmental challenges such as irrigation, are all thought to have played a role.[37]
+
+The invention of writing led to the spread of cultural knowledge and became the basis for history, libraries, schools, and scientific research.[38]
+
+Continuing improvements led to the furnace and bellows and provided, for the first time, the ability to smelt and forge gold, copper, silver, and lead – native metals found in relatively pure form in nature.[39] The advantages of copper tools over stone, bone, and wooden tools were quickly apparent to early humans, and native copper was probably used from near the beginning of Neolithic times (about 10 kya).[40] Native copper does not naturally occur in large amounts, but copper ores are quite common, and some of them produce metal easily when burned in wood or charcoal fires. Eventually, the working of metals led to the discovery of alloys such as bronze and brass (about 4,000 BCE). The first use of iron alloys such as steel dates to around 1,800 BCE.[41][42]
+Ancient
+Main article: Ancient technology
+
+Ancient technology
+
+    Egyptian technology
+    Indian technology
+    Chinese technology
+    Greek technology
+    Roman technology
+    Iranian technology
+    African technology
+
+Photo of an early wooden wheel
+The wheel was invented c. 4,000 BCE.
+Photo of Wooden Wheel with axle (oldest wooden wheel yet discovered)
+Ljubljana Marshes Wheel with axle (oldest wooden wheel yet discovered as of 2024)
+
+After harnessing fire, humans discovered other forms of energy. The earliest known use of wind power is the sailing ship; the earliest record of a ship under sail is that of a Nile boat dating to around 7,000 BCE.[43] From prehistoric times, Egyptians likely used the power of the annual flooding of the Nile to irrigate their lands, gradually learning to regulate much of it through purposely built irrigation channels and "catch" basins.[44] The ancient Sumerians in Mesopotamia used a complex system of canals and levees to divert water from the Tigris and Euphrates rivers for irrigation.[45]
+
+Archaeologists estimate that the wheel was invented independently and concurrently in Mesopotamia (in present-day Iraq), the Northern Caucasus (Maykop culture), and Central Europe.[46] Time estimates range from 5,500 to 3,000 BCE, with most experts putting it closer to 4,000 BCE.[47] The oldest artifacts with drawings depicting wheeled carts date from about 3,500 BCE.[48] More recently, the oldest-known wooden wheel in the world as of 2024 was found in the Ljubljana Marsh of Slovenia; Austrian experts have established that the wheel is between 5,100 and 5,350 years old.[49]
+
+The invention of the wheel revolutionized trade and war. It did not take long to discover that wheeled wagons could be used to carry heavy loads. The ancient Sumerians used a potter's wheel and may have invented it.[50] A stone pottery wheel found in the city-state of Ur dates to around 3,429 BCE,[51] and even older fragments of wheel-thrown pottery have been found in the same area.[51] Fast (rotary) potters' wheels enabled early mass production of pottery, but it was the use of the wheel as a transformer of energy (through water wheels, windmills, and even treadmills) that revolutionized the application of nonhuman power sources. The first two-wheeled carts were derived from travois[52] and were first used in Mesopotamia and Iran around 3,000 BCE.[52]
+
+The oldest known constructed roadways are the stone-paved streets of the city-state of Ur, dating to c. 4,000 BCE,[53] and timber roads leading through the swamps of Glastonbury, England, dating to around the same period.[53] The first long-distance road, which came into use around 3,500 BCE,[53] spanned 2,400 km from the Persian Gulf to the Mediterranean Sea,[53] but was not paved and was only partially maintained.[53] Around 2,000 BCE, the Minoans on the Greek island of Crete built a 50 km road leading from the palace of Gortyn on the south side of the island, through the mountains, to the Palace of Knossos on the north side of the island.[53] Unlike the earlier road, the Minoan road was completely paved.[53]
+refer to caption
+Photograph of the Pont du Gard in France, one of the most famous ancient Roman aqueducts[54]
+
+Ancient Minoan private homes had running water.[55] A bathtub virtually identical to modern ones was unearthed at the Palace of Knossos.[55][56] Several Minoan private homes also had toilets, which could be flushed by pouring water down the drain.[55] The ancient Romans had many public flush toilets,[56] which emptied into an extensive sewage system.[56] The primary sewer in Rome was the Cloaca Maxima;[56] construction began on it in the sixth century BCE, and it is still in use today.[56]
+
+The ancient Romans also had a complex system of aqueducts,[54] which were used to transport water across long distances.[54] The first Roman aqueduct was built in 312 BCE.[54] The eleventh and final ancient Roman aqueduct was built in 226 CE.[54] Put together, the Roman aqueducts extended over 450 km,[54] but less than 70 km of this was above ground and supported by arches.[54]
+Pre-modern
+Main articles: Medieval technology and Renaissance technology
+
+Innovations continued through the Middle Ages with the introduction of silk production (in Asia and later Europe), the horse collar, and horseshoes. Simple machines (such as the lever, the screw, and the pulley) were combined into more complicated tools, such as the wheelbarrow, windmills, and clocks.[57] A system of universities developed and spread scientific ideas and practices, including Oxford and Cambridge.[58]
+
+The Renaissance era produced many innovations, including the introduction of the movable type printing press to Europe, which facilitated the communication of knowledge. Technology became increasingly influenced by science, beginning a cycle of mutual advancement.[59]
+Modern
+Main articles: Industrial Revolution, Second Industrial Revolution, and Information Age
+The automobile, here the original Benz Patent-Motorwagen, revolutionized personal transportation.
+
+Starting in the United Kingdom in the 18th century, the discovery of steam power set off the Industrial Revolution, which saw wide-ranging technological discoveries, particularly in the areas of agriculture, manufacturing, mining, metallurgy, and transport, and the widespread application of the factory system.[60] This was followed a century later by the Second Industrial Revolution, which led to rapid scientific discovery, standardization, and mass production. New technologies were developed, including sewage systems, electricity, light bulbs, electric motors, railroads, automobiles, and airplanes. These technological advances led to significant developments in medicine, chemistry, physics, and engineering.[61] They were accompanied by consequential social change, with the introduction of skyscrapers accompanied by rapid urbanization.[62] Communication improved with the invention of the telegraph, the telephone, the radio, and television.[63]
+
+The 20th century brought a host of innovations. In physics, the discovery of nuclear fission in the Atomic Age led to both nuclear weapons and nuclear power. Analog computers were invented and asserted dominance in processing complex data. While the invention of vacuum tubes allowed for digital computing with computers like the ENIAC, their sheer size precluded widespread use until innovations in quantum physics allowed for the invention of the transistor in 1947, which significantly compacted computers and led the digital transition. Information technology, particularly optical fiber and optical amplifiers, allowed for simple and fast long-distance communication, which ushered in the Information Age and the birth of the Internet. The Space Age began with the launch of Sputnik 1 in 1957, and later the launch of crewed missions to the moon in the 1960s. Organized efforts to search for extraterrestrial intelligence have used radio telescopes to detect signs of technology use, or technosignatures, given off by alien civilizations. In medicine, new technologies were developed for diagnosis (CT, PET, and MRI scanning), treatment (like the dialysis machine, defibrillator, pacemaker, and a wide array of new pharmaceutical drugs), and research (like interferon cloning and DNA microarrays).[64]
+
+Complex manufacturing and construction techniques and organizations are needed to make and maintain more modern technologies, and entire industries have arisen to develop succeeding generations of increasingly more complex tools. Modern technology increasingly relies on training and education – their designers, builders, maintainers, and users often require sophisticated general and specific training.[65] Moreover, these technologies have become so complex that entire fields have developed to support them, including engineering, medicine, and computer science; and other fields have become more complex, such as construction, transportation, and architecture.
+Impact
+Main article: Technology and society
+Production of new technology, such as renewable energy sources, starts a positive feedback loop to form what has been called a virtuous cycle—the opposite of a vicious cycle. For example, as more and more solar modules are deployed, prices fall because of the economies of scale, allowing the technology to become cost-competitive in new applications that in turn increase demand for more deployment.[66]
+
+Technological change is the largest cause of long-term economic growth.[67][68] Throughout human history, energy production was the main constraint on economic development, and new technologies allowed humans to significantly increase the amount of available energy. First came fire, which made a wider variety of foods edible, and made it less physically demanding to digest them. Fire also enabled smelting and the use of tin, copper, and iron tools, used for hunting or tradesmanship. Then came the agricultural revolution: humans no longer needed to hunt or gather to survive, and began to settle in towns and cities, forming more complex societies, with militaries and more organized forms of religion.[69]
+
+Technologies have contributed to human welfare through increased prosperity, improved comfort and quality of life, and medical progress, but they can also disrupt existing social hierarchies, cause pollution, and harm individuals or groups.
+
+Recent years have brought about a rise in social media's cultural prominence, with potential repercussions on democracy, as well as economic and social life. Early on, the Internet was seen as a "liberation technology" that would democratize knowledge, improve access to education, and promote democracy. Modern research has turned to investigate the Internet's downsides, including disinformation, polarization, hate speech, and propaganda.[70]
+
+Since the 1970s, technology's impact on the environment has been criticized, leading to a surge in investment in solar, wind, and other forms of clean energy.
+Social
+Jobs
+
+Since the invention of the wheel, technologies have helped increase humans' economic output. Past automation has both substituted and complemented labor; machines replaced humans at some lower-paying jobs (for example, in agriculture), but this was compensated by the creation of new, higher-paying jobs.[71] Studies have found that computers did not create significant net technological unemployment.[72] Due to artificial intelligence being far more capable than computers, and still being in its infancy, it is not known whether it will follow the same trend; the question has been debated at length among economists and policymakers. A 2017 survey found no clear consensus among economists on whether AI would increase long-term unemployment.[73] According to the World Economic Forum's "The Future of Jobs Report 2020", AI is predicted to replace 85 million jobs worldwide and create 97 million new jobs by 2025.[74][75] From 1990 to 2007, a study in the U.S. by MIT economist Daron Acemoglu showed that an addition of one robot for every 1,000 workers decreased the employment-to-population ratio by 0.2%, or about 3.3 workers, and lowered wages by 0.42%.[76][77] Concerns about technology replacing human labor, however, are long-lasting. As U.S. President Lyndon Johnson said in 1964 upon signing the National Commission on Technology, Automation, and Economic Progress bill, "Technology is creating both new opportunities and new obligations for us, opportunity for greater productivity and progress; obligation to be sure that no workingman, no family must pay an unjust price for progress."[78][79][80][81][82]
+Security
+
+With the growing reliance on technology, there have been security and privacy concerns along with it. Billions of people use different online payment methods—such as WeChat Pay, PayPal, Alipay, and many more—to help transfer money. Although security measures are placed, some criminals are able to bypass them.[83] In March 2022, North Korea used Blender.io, a mixer that helped them to hide their cryptocurrency exchanges, to launder over $20.5 million in cryptocurrency from Axie Infinity and steal over $600 million worth of cryptocurrency from the game's owner. Because of this, the U.S. Treasury Department sanctioned Blender.io, which marked the first time it has taken action against a mixer, to try to crack down on North Korean hackers.[84][85] The privacy of cryptocurrency has been debated. Although many customers like the privacy of cryptocurrency, many also argue that it needs more transparency and stability.[83]
+Environmental
+
+Technology can have both positive and negative effects on the environment. Environmental technology describes an array of technologies that seek to reverse, mitigate, or halt environmental damage to the environment. This can include measures to halt pollution through environmental regulations, capture and storage of pollution, or using pollutant byproducts in other industries.[86] Other examples of environmental technology include deforestation and the reversing of deforestation.[87] Emerging technologies in the fields of climate engineering may be able to halt or reverse global warming and its environmental impacts,[88] although this remains highly controversial.[89] As technology has advanced, so too has the negative environmental impact, with increased release of greenhouse gases, including methane, nitrous oxide and carbon dioxide, into the atmosphere, causing the greenhouse effect. This continues to gradually heat the Earth, causing global warming and climate change. Measures of technological innovation correlate with a rise in greenhouse gas emissions.[90]
+Pollution
+
+Pollution, the presence of contaminants in an environment that causes adverse effects, could have been present as early as the Inca Empire. They used a lead sulfide flux in the smelting of ores, along with the use of a wind-drafted clay kiln, which released lead into the atmosphere and the sediment of rivers.[91]
+Philosophy
+Main article: Philosophy of technology
+
+Philosophy of technology is a branch of philosophy that studies the "practice of designing and creating artifacts", and the "nature of the things so created".[92] It emerged as a discipline over the past two centuries, and has grown "considerably" since the 1970s.[93] The humanities philosophy of technology is concerned with the "meaning of technology for, and its impact on, society and culture".[92]
+
+Initially, technology was seen as an extension of the human organism that replicated or amplified bodily and mental faculties.[94] Marx framed it as a tool used by capitalists to oppress the proletariat, but believed that technology would be a fundamentally liberating force once it was "freed from societal deformations". Second-wave philosophers like Ortega later shifted their focus from economics and politics to "daily life and living in a techno-material culture", arguing that technology could oppress "even the members of the bourgeoisie who were its ostensible masters and possessors". Third-stage philosophers like Don Ihde and Albert Borgmann represent a turn toward de-generalization and empiricism, and considered how humans can learn to live with technology.[93][page needed]
+
+Early scholarship on technology was split between two arguments: technological determinism and social construction. Technological determinism is the idea that technologies cause unavoidable social changes.[95]: 95  It usually encompasses a related argument, technological autonomy, which asserts that technological progress follows a natural progression and cannot be prevented.[96] Social constructivists[who?] argue that technologies follow no natural progression, and they are shaped by cultural values, laws, politics, and economic incentives. Modern scholarship has shifted towards an analysis of sociotechnical systems, "assemblages of things, people, practices, and meanings", looking at the value judgments that shape technology.[95][page needed]
+
+Cultural critic Neil Postman distinguished tool-using societies from technological societies and from what he called "technopolies", societies that are dominated by an ideology of technological and scientific progress to the detriment of other cultural practices, values, and world views.[97] Herbert Marcuse and John Zerzan suggest that technological society will inevitably deprive humanity of its freedom and psychological health.[98]
+Ethics
+Main article: Ethics of technology
+
+The ethics of technology is an interdisciplinary subfield of ethics that analyzes technology's ethical implications and explores ways to mitigate potential negative impacts of new technologies. There is a broad range of ethical issues revolving around technology, from specific areas of focus affecting professionals working with technology to broader social, ethical, and legal issues concerning the role of technology in society and everyday life.[99]
+
+Prominent debates have surrounded genetically modified organisms, the use of military robots, algorithmic bias, and the issue of aligning AI behavior with human values.[100]
+
+Technology ethics encompasses several key fields: Bioethics looks at ethical issues surrounding biotechnologies and modern medicine, including cloning, human genetic engineering, and stem cell research. Computer ethics focuses on issues related to computing. Cyberethics explores Internet-related issues like intellectual property rights, privacy, and censorship. Nanoethics examines issues surrounding the alteration of matter at the atomic and molecular level in various disciplines, including computer science, engineering, and biology. And engineering ethics deals with the professional standards of engineers, including software engineers and their moral responsibilities to the public.[101]
+
+A wide branch of technology ethics is concerned with the ethics of artificial intelligence: it includes robot ethics, which deals with ethical issues involved in the design, construction, use, and treatment of robots,[102] as well as machine ethics, which is concerned with ensuring the ethical behavior of artificially intelligent agents.[103] Within the field of AI ethics, significant yet-unsolved research problems include AI alignment (ensuring that AI behaviors are aligned with their creators' intended goals and interests) and the reduction of algorithmic bias. Some researchers have warned against the hypothetical risk of an AI takeover, and they have advocated for the use of AI capability control in addition to AI alignment methods.
+
+Other fields of ethics have had to contend with technology-related issues, including military ethics, media ethics, and educational ethics.
+Futures studies
+Main article: Futures studies
+
+Futures studies is the study of social and technological progress. It aims to explore the range of plausible futures and incorporate human values in the development of new technologies.[104]: 54  More generally, futures researchers are interested in improving "the freedom and welfare of humankind".[104]: 73  It relies on a thorough quantitative and qualitative analysis of past and present technological trends, and attempts to rigorously extrapolate them into the future.[104] Science fiction is often used as a source of ideas.[104]: 173  Futures research methodologies include survey research, modeling, statistical analysis, and computer simulations.[104]: 187 
+Existential risk
+Main article: Global catastrophic risk
+
+Existential risk researchers analyze risks that could lead to human extinction or civilizational collapse, and look for ways to build resilience against them.[105][106] Relevant research centers include the Cambridge Center for the Study of Existential Risk and the Stanford Existential Risk Initiative.[107] Future technologies may contribute to the risks of artificial general intelligence, biological warfare, nuclear warfare, nanotechnology, anthropogenic climate change, global warming, or stable global totalitarianism, though technologies may also help to mitigate asteroid impacts and gamma-ray bursts.[108] In 2019, philosopher Nick Bostrom introduced the notion of a vulnerable world, "one in which there is some level of technological development at which civilization almost certainly gets devastated by default", citing the risks of a pandemic caused by bioterrorists, or an arms race triggered by the development of novel armaments and the loss of mutual assured destruction.[109] He invites policymakers to question the assumptions that technological progress is always beneficial, that scientific openness is always preferable, or that they can afford to wait until a dangerous technology has been invented before they prepare mitigations.[109]
+Emerging technologies
+Main article: Emerging technologies
+Photo of a scientist looking at a microscope pointed at a petri dish
+Experimental 3D printing of muscle tissue
+
+Emerging technologies are novel technologies whose development or practical applications are still largely unrealized. They include nanotechnology, biotechnology, robotics, 3D printing, and blockchains.
+
+In 2005, futurist Ray Kurzweil claimed the next technological revolution would rest upon advances in genetics, nanotechnology, and robotics, with robotics being the most impactful of the three technologies.[110] Genetic engineering will allow far greater control over human biological nature through a process called directed evolution. Some thinkers believe that this may shatter humanity's sense of self, and they have urged for renewed public debate exploring the issue more thoroughly;[111] others fear that directed evolution could lead to eugenics or extreme social inequality. Nanotechnology will grant the ability to manipulate matter "at the molecular and atomic scale",[112] which could allow humanity to reshape itself and its environment in fundamental ways.[113] Nanobots could be used within the human body to destroy cancer cells or form new body parts, blurring the line between biology and technology.[114] Autonomous robots have undergone rapid progress, and they are expected to replace humans at many dangerous tasks, including search and rescue, bomb disposal, firefighting, and war.[115]
+
+Estimates on the advent of artificial general intelligence vary, but half of machine learning experts surveyed in 2018 believe that AI will "accomplish every task better and more cheaply" than humans by 2063, and automate all human jobs by 2140.[116] This expected technological unemployment has led to calls for increased emphasis on computer science education and debates about universal basic income. Political science experts predict that this could lead to a rise in extremism, while others see it as an opportunity to usher in a post-scarcity economy.
+Movements
+Appropriate technology
+Main article: Appropriate technology
+
+Some segments of the 1960s hippie counterculture grew to dislike urban living and developed a preference for locally autonomous, sustainable, and decentralized technology, termed appropriate technology. This later influenced hacker culture and technopaganism.
+Technological utopianism
+Main article: Technological utopianism
+
+Technological utopianism refers to the belief that technological development is a moral good, which can and should bring about a utopia, that is, a society in which laws, governments, and social conditions serve the needs of all its citizens.[117] Examples of techno-utopian goals include post-scarcity economics, life extension, mind uploading, cryonics, and the creation of artificial superintelligence. Major techno-utopian movements include transhumanism and singularitarianism.
+
+The transhumanism movement is founded upon the "continued evolution of human life beyond its current human form" through science and technology, informed by "life-promoting principles and values".[118] The movement gained wider popularity in the early 21st century.[119]
+
+Singularitarians believe that machine superintelligence will "accelerate technological progress" by orders of magnitude and "create even more intelligent entities ever faster", which may lead to a pace of societal and technological change that is "incomprehensible" to humanity. This event horizon is known as the technological singularity.[120]
+
+Major figures of techno-utopianism include Ray Kurzweil and Nick Bostrom. Techno-utopianism has attracted both praise and criticism from progressive, religious, and conservative thinkers.[121]
+Anti-technology backlash
+See also: Luddite, Neo-Luddism, and Bioconservatism
+
+Technology's central role in human life has drawn concerns and backlash. The backlash against technology is not a uniform movement and encompasses many heterogeneous ideologies.[122]
+
+The earliest known revolt against technology was Luddism, a pushback against early automation in textile production. Automation had resulted in a need for fewer workers, a process known as technological unemployment.
+
+Between the 1970s and 1990s, American terrorist Ted Kaczynski carried out a series of bombings across America and published the Unabomber Manifesto denouncing technology's negative impacts on nature and human freedom. The essay resonated with a large part of the American public.[123] It was partly inspired by Jacques Ellul's The Technological Society.[124]
+
+Some subcultures, like the off-the-grid movement, advocate a withdrawal from technology and a return to nature. The ecovillage movement seeks to reestablish harmony between technology and nature.[125]
+Relation to science and engineering
+Drawing of Lavoisier conducting an experiment in front of onlookers
+Antoine Lavoisier experimenting with combustion generated by amplified sunlight
+See also: Science and Engineering
+
+Engineering is the process by which technology is developed. It often requires problem-solving under strict constraints.[126] Technological development is "action-oriented", while scientific knowledge is fundamentally explanatory.[127] Polish philosopher Henryk Skolimowski framed it like so: "science concerns itself with what is, technology with what is to be."[128]: 375 
+
+The direction of causality between scientific discovery and technological innovation has been debated by scientists, philosophers and policymakers.[129] Because innovation is often undertaken at the edge of scientific knowledge, most technologies are not derived from scientific knowledge, but instead from engineering, tinkering and chance.[130]: 217–240  For example, in the 1940s and 1950s, when knowledge of turbulent combustion or fluid dynamics was still crude, jet engines were invented through "running the device to destruction, analyzing what broke [...] and repeating the process".[126] Scientific explanations often follow technological developments rather than preceding them.[130]: 217–240  Many discoveries also arose from pure chance, like the discovery of penicillin as a result of accidental lab contamination.[131] Since the 1960s, the assumption that government funding of basic research would lead to the discovery of marketable technologies has lost credibility.[132][133] Probabilist Nassim Taleb argues that national research programs that implement the notions of serendipity and convexity through frequent trial and error are more likely to lead to useful innovations than research that aims to reach specific outcomes.[130][134]
+
+Despite this, modern technology is increasingly reliant on deep, domain-specific scientific knowledge. In 1975, there was an average of one citation of scientific literature in every three patents granted in the U.S.; by 1989, this increased to an average of one citation per patent. The average was skewed upwards by patents related to the pharmaceutical industry, chemistry, and electronics.[135] A 2021 analysis shows that patents that are based on scientific discoveries are on average 26% more valuable than equivalent non-science-based patents.[136]
+Other animal species
+See also: Tool use by non-humans, structures built by animals, and ecosystem engineer
+Photo of a gorilla walking hip-deep in a pond, holding a stick
+This adult gorilla uses a branch as a walking stick to gauge the water's depth.
+
+The use of basic technology is also a feature of nonhuman animal species. Tool use was once considered a defining characteristic of the genus Homo.[137] This view was supplanted after discovering evidence of tool use among chimpanzees and other primates,[138] dolphins,[139] and crows.[140][141] For example, researchers have observed wild chimpanzees using basic foraging tools, pestles, levers, leaves as sponges, and tree bark or vines as probes to fish termites.[142] Western chimpanzees use stone hammers and anvils for cracking nuts,[143] as do capuchin monkeys of Boa Vista, Brazil.[144] Tool use is not the only form of animal technology use; for example, beaver dams, built with wooden sticks or large stones, are a technology with "dramatic" impacts on river habitats and ecosystems.[145]
+
