@@ -10,6 +10,8 @@
 #include <fstream>
 #include <regex>
 #include <iterator>
+#include <unordered_set>
+#include <list>
 
 std::string next_token(std::mt19937 &gen, const std::vector<std::string> &ngram_context) { 
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
@@ -70,7 +72,8 @@ int main()
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
-    const size_t max_size = 3;
+    const size_t max_window_size = 3;
+    const size_t max_history_size = 30;
 
     std::deque<std::string> ngram_window = {
         std::istream_iterator<std::string>{ngram_window_ss},
@@ -81,8 +84,22 @@ int main()
 
     auto push_token = [&](const std::string &word) {
         ngram_window.push_back(word);
-        if (ngram_window.size() > max_size) {
+        if (ngram_window.size() > max_window_size) {
             ngram_window.pop_front();
+        }
+    };
+
+    std::unordered_set<std::string> ngram_history_set;
+    std::list<std::string> ngram_history_list;
+
+    auto push_ngram = [&](const std::string &ngram) {
+        std::pair result = ngram_history_set.insert(ngram);
+
+        if (result.second == true) ngram_history_list.push_back(ngram);
+        if (ngram_history_set.size() > max_history_size) {
+            std::string erased_ngram = ngram_history_list.front();
+            ngram_history_list.pop_front();
+            ngram_history_set.erase(erased_ngram);
         }
     };
 
@@ -96,11 +113,35 @@ int main()
             );
 
             ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+        } 
+
+        std::string context_key = ngram;
+
+        std::string token = next_token(gen, ngram_contexts[context_key]);
+
+        ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
+
+        int reps = 0;
+        bool retry = false;
+        while (ngram_history_set.contains(ngram)) {
+            ++reps;
+
+            if (reps >= 20) {
+                retry = true;
+                break;
+            }
+
+            token = next_token(gen, ngram_contexts[context_key]);
+            ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
         }
 
-        push_token(next_token(gen, ngram_contexts[ngram]));
+        if (retry) continue;
+
+        push_token(token);
 
         ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+
+        push_ngram(ngram);
 
         std::cout << ngram << " ";
     }
