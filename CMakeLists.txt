@@ -9,6 +9,13 @@ add_executable(corpustein
     src/main.cpp
 )
 
+target_compile_options(corpustein PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Werror
+)
+
 target_compile_definitions(corpustein PRIVATE
     APP_VERSION="${PROJECT_VERSION}"
     PROJECT_ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}"

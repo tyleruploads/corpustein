@@ -64,7 +64,7 @@ int main()
     }
 
     std::vector<std::string> n_grams;
-    int i = 0;
+    size_t i = 0;
     while (true) {
         if (i + 2 >= tokens.size()) break;
 
