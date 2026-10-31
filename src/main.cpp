@@ -32,6 +32,12 @@ int main()
     std::mt19937 gen(rd());
 
     std::filesystem::path filePath = std::filesystem::path(PROJECT_ROOT_DIR) / "src" / "corpus.txt";
+
+    if (!std::filesystem::exists(filePath)) {
+        std::cerr << "Corpus file does not exist on disk!\n";
+        return 1;
+    }
+
     std::ifstream file(filePath);
 
     if (!file.is_open()) {
