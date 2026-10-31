@@ -9,14 +9,18 @@
 #include <fstream>
 #include <regex>
 
-std::string next_token(std::mt19937 &gen, std::string last_token, std::vector<std::string> corpus) { 
+std::string next_token(std::mt19937 &gen, const std::string &last_token, const std::vector<std::string> &corpus) { 
     std::vector<std::string> choices;
 
-    for (int i = 0; i < corpus.size() - 1; ++i) {
+    if (corpus.size() < 2) return "";
+
+    for (size_t i = 0; i < corpus.size() - 1; ++i) {
         if (corpus[i] == last_token) {
             choices.push_back(corpus[i + 1]);
         }
     }
+
+    if (choices.empty()) return "";
 
     std::uniform_int_distribution<size_t> dis(0, choices.size() - 1);
     return choices[dis(gen)];
