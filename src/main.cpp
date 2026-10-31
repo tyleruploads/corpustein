@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 #include <deque>
 #include <string>
 #include <sstream>
@@ -8,22 +9,17 @@
 #include <filesystem>
 #include <fstream>
 #include <regex>
+#include <iterator>
 
-std::string next_token(std::mt19937 &gen, const std::string &last_token, const std::vector<std::string> &corpus) { 
-    std::vector<std::string> choices;
+std::string next_token(std::mt19937 &gen, const std::vector<std::string> &ngram_context) { 
+    std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
+    return ngram_context[dis(gen)];
+}
 
-    if (corpus.size() < 2) return "";
-
-    for (size_t i = 0; i < corpus.size() - 1; ++i) {
-        if (corpus[i] == last_token) {
-            choices.push_back(corpus[i + 1]);
-        }
-    }
-
-    if (choices.empty()) return "";
-
-    std::uniform_int_distribution<size_t> dis(0, choices.size() - 1);
-    return choices[dis(gen)];
+std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t> ngram_dis, std::unordered_map<std::string, std::vector<std::string>> &ngram_contexts) {
+    auto it = ngram_contexts.begin();
+    std::advance(it, ngram_dis(gen));
+    return it->first;
 }
 
 int main()
@@ -52,34 +48,60 @@ int main()
     std::regex square_brackets(R"(/\[.*?\]/)");
     text = std::regex_replace(text, square_brackets, "[$&]");
 
-    std::stringstream ss(text);
+    std::stringstream corpus_ss(text);
     std::vector<std::string> tokens; 
 
     std::string word;
-    while (ss >> word) tokens.push_back(word);
+    while (corpus_ss >> word) tokens.push_back(word);
 
     if (tokens.size() < 3) {
         std::cerr << "Error: Corups is too short to build 3-grams.\n";
         return 1;
     }
 
-    std::vector<std::string> n_grams;
-    size_t i = 0;
-    while (true) {
-        if (i + 2 >= tokens.size()) break;
+    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
 
-        std::string n_gram = tokens[i] + " " + tokens[i + 1] + " " + tokens[i + 2] + " ";
-
-        n_grams.push_back(n_gram);
-        ++i; 
+    for (size_t i = 0; i + 3 < tokens.size(); ++i) {
+        std::string key = tokens[i] + " " + tokens[i + 1] + " " + tokens[i + 2];
+        std::string &next_word = tokens[i + 3];
+        ngram_contexts[key].push_back(next_word);
     }
 
-    std::uniform_int_distribution<size_t> ngram_dis(0, n_grams.size() - 1);
-    std::string last_token = n_grams[ngram_dis(gen)];
+    std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
+
+    std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+    const size_t max_size = 3;
+
+    std::deque<std::string> ngram_window = {
+        std::istream_iterator<std::string>{ngram_window_ss},
+        std::istream_iterator<std::string>{}
+    };
+
+    std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2) + " ";
+
+    auto push_token = [&](const std::string &word) {
+        ngram_window.push_back(word);
+        if (ngram_window.size() > max_size) {
+            ngram_window.pop_front();
+        }
+    };
 
     while (true) {
-        last_token = next_token(gen, last_token, n_grams);
-        if (last_token.empty()) last_token = n_grams[ngram_dis(gen)]; 
-        std::cout << last_token;
+        if (!ngram_contexts.contains(ngram)) {
+            std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+
+            ngram_window.assign(
+                std::istream_iterator<std::string>{ngram_window_ss},
+                std::istream_iterator<std::string>{}
+            );
+
+            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+        }
+
+        push_token(next_token(gen, ngram_contexts[ngram]));
+
+        ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+
+        std::cout << ngram << " ";
     }
 }
