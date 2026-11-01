@@ -61,6 +61,23 @@ int main()
         return 1;
     }
 
+    std::unordered_set<std::string> allowed_repeats = {
+        "and", "or", "so", "as", "if", "then", "because",
+        "but", "yet", "we", "it", "me", "him", "her", "them",
+        "us", "my", "your", "his", "their", "theirs", "our", "ours",
+        "these", "those", "all", "any", "some", "which", "what", "who",
+        "how", "why", "where", "when", "its", "myself", "yourself"
+        "out", "down", "off", "no", "only", "very", "just",
+        "not", "dont", "cant", "don't", "can't", "more", "most", "other"
+        "i", "you", "he", "she", "they", "this", "that", "then", "here", "there"
+        "the", "a", "an", "in", "on", "at", "to", "for", "of",
+        "with", "by", "from", "up", "about", "into", "over", "after",
+        "be", "am", "is", "are", "was", "were", "being", "been",
+        "have", "has", "had", "having",
+        "do", "does", "did", "im", "youre",
+        "can", "could", "may", "might", "must", "shall", "should", "shouldnt", "will", "would"
+    };
+
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
 
     for (size_t i = 0; i + 3 < tokens.size(); ++i) {
@@ -119,24 +136,34 @@ int main()
 
         ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
 
-        for (int i = 0; i < 5; i++) {
-            if (std::ranges::find(token_history, token) != token_history.end()) {
-                token = next_token(gen, ngram_contexts[context_key]);
-            } else {
-                break;
+        std::string stripped_token = token;
+
+        std::transform(stripped_token.begin(), stripped_token.end(), stripped_token.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+        std::erase(stripped_token, '\'');
+
+        if (!allowed_repeats.contains(stripped_token)) {
+            for (int i = 0; i < 5; i++) {
+                if (std::ranges::find(token_history, token) != token_history.end()) {
+                    token = next_token(gen, ngram_contexts[context_key]);
+                } else {
+                    break;
+                }
             }
-        }
 
-        if (std::ranges::find(token_history, token) != token_history.end()) {
-            std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+            if (std::ranges::find(token_history, token) != token_history.end()) {
+                std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
 
-            ngram_window.assign(
-                std::istream_iterator<std::string>{ngram_window_ss},
-                std::istream_iterator<std::string>{}
-            );
+                ngram_window.assign(
+                    std::istream_iterator<std::string>{ngram_window_ss},
+                    std::istream_iterator<std::string>{}
+                );
 
-            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
-            continue;
+                ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+                continue;
+            }
         }
 
         push_token(token);
