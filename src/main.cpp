@@ -47,8 +47,8 @@ int main()
     std::string text;
     while (getline(file, line)) text += line;
 
-    std::regex square_brackets(R"(/\[.*?\]/)");
-    text = std::regex_replace(text, square_brackets, "[$&]");
+    std::regex square_brackets(R"(\s*\[\d+\])");
+    text = std::regex_replace(text, square_brackets, "");
 
     std::stringstream corpus_ss(text);
     std::vector<std::string> tokens; 
@@ -66,14 +66,18 @@ int main()
     for (size_t i = 0; i + 3 < tokens.size(); ++i) {
         std::string key = tokens[i] + " " + tokens[i + 1] + " " + tokens[i + 2];
         std::string &next_word = tokens[i + 3];
-        ngram_contexts[key].push_back(next_word);
+
+        auto &vec = ngram_contexts[key];
+        if (std::ranges::find(vec, next_word) == vec.end()) {
+            vec.push_back(next_word);
+        }
     }
 
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
     const size_t max_window_size = 3;
-    const size_t max_history_size = 30;
+    const size_t max_history_size = 60;
 
     std::deque<std::string> ngram_window = {
         std::istream_iterator<std::string>{ngram_window_ss},
@@ -82,26 +86,20 @@ int main()
 
     std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2) + " ";
 
+    std::deque<std::string> token_history;
+
     auto push_token = [&](const std::string &word) {
         ngram_window.push_back(word);
+        token_history.push_back(word);
+
         if (ngram_window.size() > max_window_size) {
             ngram_window.pop_front();
         }
-    };
 
-    std::unordered_set<std::string> ngram_history_set;
-    std::list<std::string> ngram_history_list;
-
-    auto push_ngram = [&](const std::string &ngram) {
-        std::pair result = ngram_history_set.insert(ngram);
-
-        if (result.second == true) ngram_history_list.push_back(ngram);
-        if (ngram_history_set.size() > max_history_size) {
-            std::string erased_ngram = ngram_history_list.front();
-            ngram_history_list.pop_front();
-            ngram_history_set.erase(erased_ngram);
+        if (token_history.size() > max_history_size) {
+            token_history.pop_front();
         }
-    };
+    }; 
 
     while (true) {
         if (!ngram_contexts.contains(ngram)) {
@@ -121,28 +119,30 @@ int main()
 
         ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
 
-        int reps = 0;
-        bool retry = false;
-        while (ngram_history_set.contains(ngram)) {
-            ++reps;
-
-            if (reps >= 20) {
-                retry = true;
+        for (int i = 0; i < 5; i++) {
+            if (std::ranges::find(token_history, token) != token_history.end()) {
+                token = next_token(gen, ngram_contexts[context_key]);
+            } else {
                 break;
             }
-
-            token = next_token(gen, ngram_contexts[context_key]);
-            ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
         }
 
-        if (retry) continue;
+        if (std::ranges::find(token_history, token) != token_history.end()) {
+            std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+
+            ngram_window.assign(
+                std::istream_iterator<std::string>{ngram_window_ss},
+                std::istream_iterator<std::string>{}
+            );
+
+            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+            continue;
+        }
 
         push_token(token);
 
         ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
 
-        push_ngram(ngram);
-
-        std::cout << ngram << " ";
+        std::cout << ngram_window.back() << " ";
     }
 }
