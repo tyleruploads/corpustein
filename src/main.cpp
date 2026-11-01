@@ -50,6 +50,9 @@ int main()
     std::regex square_brackets(R"(\s*\[\d+\])");
     text = std::regex_replace(text, square_brackets, "");
 
+    std::regex punct_spacing(R"([.!?;:\)](?=[A-Za-z]))");
+    text = std::regex_replace(text, punct_spacing, "$& ");
+
     std::stringstream corpus_ss(text);
     std::vector<std::string> tokens; 
 
