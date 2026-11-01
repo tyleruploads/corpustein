@@ -13,6 +13,82 @@
 #include <unordered_set>
 #include <list>
 
+
+std::string get_seed(std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
+    std::cout << "\nUser: ";
+    std::string prompt;
+    std::getline(std::cin, prompt);
+
+    std::stringstream ss(prompt);
+    std::vector<std::string> prompt_tokens; 
+
+    std::string word;
+    while (ss >> word) prompt_tokens.push_back(word);
+
+    std::unordered_set<std::string> cleaned_tokens;
+    for (std::string token : tokens) {
+        std::string cleaned_token = token;
+
+        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(), [](unsigned char c) {
+            return std::ispunct(c);  
+        }), cleaned_token.end());
+
+        std::erase(cleaned_token, '\'');
+
+        cleaned_tokens.insert(cleaned_token);
+    }
+
+    auto it = std::ranges::find_if(prompt_tokens, [&](const auto &token) {
+        std::string cleaned_token = token;
+
+        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+        std::erase(cleaned_token, '\'');
+
+        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(), [](unsigned char c) {
+            return std::ispunct(c);  
+        }), cleaned_token.end());
+
+        std::erase(cleaned_token, '\'');
+
+        return !allowed_repeats.contains(cleaned_token) && cleaned_tokens.contains(cleaned_token);
+    });
+
+    if (it != prompt_tokens.end()) {
+        std::string seed = *it;
+        std::transform(seed.begin(), seed.end(), seed.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+        seed.erase(std::remove_if(seed.begin(), seed.end(), [](unsigned char c) {
+            return std::ispunct(c);
+        }), seed.end());
+
+        return seed;
+    } else {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<size_t> tokens_dist(0, tokens.size() - 1);
+
+        while (true) {
+            std::string canidate = tokens[tokens_dist(gen)];
+
+            std::string cleaned = canidate;
+            std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), [](unsigned char c) {
+                return std::tolower(c);
+            });
+ 
+            if (!allowed_repeats.contains(cleaned)) return cleaned;
+        }
+    }
+}
+
 std::string next_token(std::mt19937 &gen, const std::vector<std::string> &ngram_context) { 
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
     return ngram_context[dis(gen)];
@@ -26,6 +102,9 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
 
 int main()
 {
+    std::string line_divider = "====================\n";
+    std::cout << line_divider << "corpustein v" << APP_VERSION << "\n" << line_divider;
+
     std::random_device rd;
     std::mt19937 gen(rd());
 
@@ -95,68 +174,63 @@ int main()
 
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
-    std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
-    const size_t max_window_size = 3;
-    const size_t max_history_size = 60;
-
-    std::deque<std::string> ngram_window = {
-        std::istream_iterator<std::string>{ngram_window_ss},
-        std::istream_iterator<std::string>{}
-    };
-
-    std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2) + " ";
-
-    std::deque<std::string> token_history;
-
-    auto push_token = [&](const std::string &word) {
-        ngram_window.push_back(word);
-        token_history.push_back(word);
-
-        if (ngram_window.size() > max_window_size) {
-            ngram_window.pop_front();
-        }
-
-        if (token_history.size() > max_history_size) {
-            token_history.pop_front();
-        }
-    }; 
-
     while (true) {
-        if (!ngram_contexts.contains(ngram)) {
-            std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+        int token_count = 0;
+        int sentence_count = 0;
 
-            ngram_window.assign(
-                std::istream_iterator<std::string>{ngram_window_ss},
-                std::istream_iterator<std::string>{}
-            );
+        const int max_sentence_count = 5;
+        const int max_token_count = max_sentence_count * 40;
+ 
+        const size_t max_history_size = max_token_count * 0.4;
+        const size_t max_window_size = 3;
 
-            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
-        } 
+        std::string seed = get_seed(tokens, allowed_repeats);
 
-        std::string context_key = ngram;
+        std::string starting_ngram;
+        auto it = std::ranges::find_if(ngram_contexts, [&](const auto &pair) {
+            std::string lower_key = pair.first;
+            std::transform(lower_key.begin(), lower_key.end(), lower_key.begin(), [](unsigned char c) {
+                return std::tolower(c);
+            });
 
-        std::string token = next_token(gen, ngram_contexts[context_key]);
-
-        ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
-
-        std::string stripped_token = token;
-
-        std::transform(stripped_token.begin(), stripped_token.end(), stripped_token.begin(), [](unsigned char c) {
-            return std::tolower(c);
+            return pair.first.find(seed) != std::string::npos;
         });
 
-        std::erase(stripped_token, '\'');
+        if (it != ngram_contexts.end()) {
+            starting_ngram = it->first;
+        }
+        else {
+            starting_ngram = random_ngram(gen, ngram_dis, ngram_contexts);
+        }
 
-        if (!allowed_repeats.contains(stripped_token)) {
-            for (int i = 0; i < 5; i++) {
-                if (std::ranges::find(token_history, token) != token_history.end()) {
-                    token = next_token(gen, ngram_contexts[context_key]);
-                } else {
-                    break;
-                }
+        std::stringstream ngram_window_ss(starting_ngram); 
+
+        std::deque<std::string> ngram_window = {
+            std::istream_iterator<std::string>{ngram_window_ss},
+            std::istream_iterator<std::string>{}
+        };
+
+        std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+
+        std::cout << "Corpustein: " << ngram << " ";
+
+        std::deque<std::string> token_history;
+
+        auto push_token = [&](const std::string &word) {
+            ngram_window.push_back(word);
+            token_history.push_back(word);
+
+            if (ngram_window.size() > max_window_size) {
+                ngram_window.pop_front();
             }
 
-            if (std::ranges::find(token_history, token) != token_history.end()) {
+            if (token_history.size() > max_history_size) {
+                token_history.pop_front();
+            }
+        }; 
+
+        while (true) {
+            if (!ngram_contexts.contains(ngram)) {
                 std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
 
                 ngram_window.assign(
@@ -165,14 +239,54 @@ int main()
                 );
 
                 ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
-                continue;
+            } 
+
+            std::string context_key = ngram;
+
+            std::string token = next_token(gen, ngram_contexts[context_key]);
+
+            ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
+
+            std::string stripped_token = token;
+
+            std::transform(stripped_token.begin(), stripped_token.end(), stripped_token.begin(), [](unsigned char c) {
+                return std::tolower(c);
+            });
+
+            std::erase(stripped_token, '\'');
+
+            if (!allowed_repeats.contains(stripped_token)) {
+                for (int i = 0; i < 5; i++) {
+                    if (std::ranges::find(token_history, token) != token_history.end()) {
+                        token = next_token(gen, ngram_contexts[context_key]);
+                    } else {
+                        break;
+                    }
+                }
+
+                if (std::ranges::find(token_history, token) != token_history.end()) {
+                    std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+
+                    ngram_window.assign(
+                        std::istream_iterator<std::string>{ngram_window_ss},
+                        std::istream_iterator<std::string>{}
+                    );
+
+                    ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+                    continue;
+                }
             }
+
+            push_token(token);
+
+            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+
+            std::cout << ngram_window.back() << " ";
+
+            ++token_count;
+            if (token.find_first_of(".!?") != std::string::npos) ++sentence_count;
+
+            if (sentence_count >= max_sentence_count || token_count >= max_token_count) break; 
         }
-
-        push_token(token);
-
-        ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
-
-        std::cout << ngram_window.back() << " ";
     }
 }
