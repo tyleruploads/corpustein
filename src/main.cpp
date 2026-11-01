@@ -12,10 +12,38 @@
 #include <iterator>
 #include <unordered_set>
 #include <list>
+#include <csignal>
 
+#define ALT_BUFFER_ON "\033[?1049h"
+#define ALT_BUFFER_OFF "\033[?1049l"
+#define CLEAR_SCREEN "\033[2J"
+#define CURSOR_HOME "\033[H"
+#define BG_COLOR "\033[48;5;232m"
+#define AMBER "\033[38;5;214m"
+#define DARK_AMBER "\033[38;5;130m"
+#define LIGHT_GRAY "\033[38;5;253m"
+#define RESET "\033[0m\033[48;5;232m"
+#define BOLD "\033[1m"
+#define BLINK "\033[5m"
+#define RED "\033[31m"
+
+
+void initStyling() {
+    std::cout << ALT_BUFFER_ON;
+    std::cout << BG_COLOR << AMBER;
+    std::cout << CLEAR_SCREEN;
+    std::cout << CURSOR_HOME << std::flush;
+}
+
+void handle_sigint(int signal) {
+    (void)signal;
+    std::cout << RESET << ALT_BUFFER_OFF << std::flush;
+    std::cerr << "\n\n[SYSTEM ALERT] SIGINT received. Shell aborted.\n" << std::resetiosflags(std::ios::basefield);
+    std::exit(130);
+}
 
 std::string get_seed(std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
-    std::cout << "\nUser: ";
+    std::cout << BG_COLOR << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
     std::string prompt;
     std::getline(std::cin, prompt);
 
@@ -102,8 +130,13 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
 
 int main()
 {
-    std::string line_divider = "====================\n";
-    std::cout << line_divider << "corpustein v" << APP_VERSION << "\n" << line_divider;
+    std::signal(SIGINT, handle_sigint);
+    initStyling();
+
+    std::cout << "\033]0;Corpustein v" << APP_VERSION << "\007" << std::flush;
+
+    std::string line_divider = "────────────────────────────\n";
+    std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -111,14 +144,14 @@ int main()
     std::filesystem::path filePath = std::filesystem::path(PROJECT_ROOT_DIR) / "src" / "corpus.txt";
 
     if (!std::filesystem::exists(filePath)) {
-        std::cerr << "Corpus file does not exist on disk!\n";
+        std::cerr << RED << BOLD << "Corpus file does not exist on disk!\n" << RESET;
         return 1;
     }
 
     std::ifstream file(filePath);
 
     if (!file.is_open()) {
-        std::cerr << "Failed to open corpus file\n";
+        std::cerr << RED << BOLD "Failed to open corpus file\n" << RESET;
         return 1;
     }
     
@@ -139,7 +172,7 @@ int main()
     while (corpus_ss >> word) tokens.push_back(word);
 
     if (tokens.size() < 3) {
-        std::cerr << "Error: Corups is too short to build 3-grams.\n";
+        std::cerr << RED << BOLD << "Error: Corups is too short to build 3-grams.\n" << RESET;
         return 1;
     }
 
@@ -212,7 +245,7 @@ int main()
 
         std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
 
-        std::cout << "Corpustein: " << ngram << " ";
+        std::cout << AMBER << BOLD << "Corpustein: " << RESET << LIGHT_GRAY << ngram << " ";
 
         std::deque<std::string> token_history;
 
@@ -281,12 +314,15 @@ int main()
 
             ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
 
-            std::cout << ngram_window.back() << " ";
+            std::cout << LIGHT_GRAY << ngram_window.back() << " ";
 
             ++token_count;
             if (token.find_first_of(".!?") != std::string::npos) ++sentence_count;
 
-            if (sentence_count >= max_sentence_count || token_count >= max_token_count) break; 
+            if (sentence_count >= max_sentence_count || token_count >= max_token_count) {
+                std::cout << "\n";
+                break;
+            } 
         }
     }
 }
