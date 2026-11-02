@@ -14,6 +14,9 @@
 #include <unordered_set>
 #include <list>
 #include <csignal>
+#include <thread>
+#include <chrono>
+#include <atomic>
 
 #define ALT_BUFFER_ON "\033[?1049h"
 #define ALT_BUFFER_OFF "\033[?1049l"
@@ -29,7 +32,18 @@
 #define BLINK "\033[5m"
 #define RED "\033[31m"
 
-using FunctionAction = std::function<void()>;
+using FunctionAction = std::function<void(const std::string&)>;
+
+int typewriter_delay_ms = 15;
+
+const int max_sentence_count = 5;
+const int max_token_count = max_sentence_count * 40;
+
+const size_t max_history_size = max_token_count * 0.4;
+const size_t max_window_size = 3;
+
+std::atomic<bool> is_typewriting(false);
+std::atomic<bool> skip_typewriting_delay_requested(false);
 
 void initApplication() { 
     std::cout << FULL_RESET << ALT_BUFFER_ON << BG_COLOR << AMBER << CLEAR_SCREEN << CURSOR_HOME << std::flush;
@@ -44,9 +58,40 @@ void initApplication() {
 
 void handle_user_exit(int signal = 0) {
     (void)signal;
+
+    if (is_typewriting) {
+        skip_typewriting_delay_requested = true;
+        return;
+    }
+
     std::cout << FULL_RESET << ALT_BUFFER_OFF << std::flush;
     std::cerr << FULL_RESET << "\n\n[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n" << std::resetiosflags(std::ios::basefield);
     std::exit(130);
+}
+
+void typewrite(const std::string &text, int delay_ms = 10) {
+    if (delay_ms <= 0) {
+        std::cout << text;
+        return;
+    }
+
+    is_typewriting = true; 
+
+    for (size_t i = 0; i < text.size(); ++i) {
+        if (skip_typewriting_delay_requested) {
+            std::cout << text.substr(i);
+            break;
+        }
+
+        std::cout << text[i] << std::flush;
+        std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
+    }
+
+    std::cout << RESET;
+
+    is_typewriting = false;
+
+    return;
 }
 
 std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
@@ -203,42 +248,63 @@ int main(int argc, char* argv[])
         if (std::ranges::find(vec, next_word) == vec.end()) {
             vec.push_back(next_word);
         }
-    }
+    } 
 
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
-        {"/help", []() { std::cout << "Available Commands: /help, /version, /clear, /exit"; }},
-        {"?", []() { std::cout << "Available Commands: /help, /clear, /exit"; }},
-        {"/version", []() { std::cout << "Corpustein Version: v" << APP_VERSION; }},
-        {"/clear", []() { initApplication(); }},
-        {"/exit", []() { handle_user_exit(); }}
+        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /delay <milliseconds>, /clear, /exit"; }},
+        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /delay <milliseconds>, /clear, /exit\n"; }},
+        {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
+        {"/delay", [](const std::string& args) {
+            std::stringstream ss(args);
+            int new_delay;
+            if (ss >> new_delay && new_delay >= 0) {
+                if (new_delay > 50) {
+                    std::cout << RED;
+                    typewrite("Typewriter delay may be no more than 50ms.", 10);
+                    return;
+                }
+                typewriter_delay_ms = new_delay;
+                std::cout << DARK_AMBER;
+                typewrite("Typewriter delay set to " + std::to_string(typewriter_delay_ms) + "ms.\n", typewriter_delay_ms);
+                return;
+            } else {
+                std::cout << RED;
+                typewrite("Usage: /delay <milliseconds> (e.g., /delay 15)\n", 10);
+                return;
+            }
+        }},
+        {"/clear", [](const std::string&) { initApplication(); }},
+        {"/exit", [](const std::string&) { handle_user_exit(); }}
     };
 
     while (true) {
+        skip_typewriting_delay_requested = false;
+
+        int token_count = 0;
+        int sentence_count = 0;
         std::cout << BG_COLOR << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
         std::string prompt;
         std::getline(std::cin, prompt);
 
+        if (prompt.empty()) continue;
 
         std::string lowercase_prompt = prompt;
         std::transform(lowercase_prompt.begin(), lowercase_prompt.end(), lowercase_prompt.begin(), [](unsigned char c) {
             return std::tolower(c);
         });
 
-        if (auto it = function_runner.find(prompt); it != function_runner.end()) {
-            it->second();
+        std::stringstream input_ss(prompt);
+        std::string command;
+        input_ss >> command;
+
+        if (auto it = function_runner.find(command); it != function_runner.end()) {
+            std::string args;
+            std::getline(input_ss >> std::ws, args);
+            it->second(args);
             continue;
-        }
-
-        int token_count = 0;
-        int sentence_count = 0;
-
-        const int max_sentence_count = 5;
-        const int max_token_count = max_sentence_count * 40;
- 
-        const size_t max_history_size = max_token_count * 0.4;
-        const size_t max_window_size = 3;
+        } 
 
         std::string seed = get_seed(prompt, tokens, allowed_repeats);
 
@@ -268,7 +334,8 @@ int main(int argc, char* argv[])
 
         std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
 
-        std::cout << AMBER << BOLD << "Corpustein: " << RESET << LIGHT_GRAY << ngram << " ";
+        std::cout << AMBER << BOLD << "Corpustein: " << RESET << LIGHT_GRAY;
+        typewrite(ngram + " ", typewriter_delay_ms);
 
         std::deque<std::string> token_history;
 
@@ -337,7 +404,9 @@ int main(int argc, char* argv[])
 
             ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
 
-            std::cout << LIGHT_GRAY << ngram_window.back() << " ";
+            std::cout << LIGHT_GRAY;
+
+            typewrite(ngram_window.back() + " ", typewriter_delay_ms);
 
             ++token_count;
             if (token.find_first_of(".!?") != std::string::npos) ++sentence_count;
