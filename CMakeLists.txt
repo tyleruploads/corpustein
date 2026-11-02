@@ -9,6 +9,14 @@ add_executable(corpustein
     src/main.cpp
 )
 
+add_custom_command(
+    TARGET corpustein POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/corpus.txt"
+        "${CMAKE_BINARY_DIR}/corpus.txt"
+    COMMENT "Copying corpus to build directory"
+)
+
 target_compile_options(corpustein PRIVATE
     -Wall
     -Wextra

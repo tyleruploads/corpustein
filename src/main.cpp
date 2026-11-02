@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <deque>
 #include <string>
+#include <string_view>
 #include <sstream>
 #include <vector>
 #include <random>
@@ -130,15 +131,17 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
     return it->first;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    (void)argc;
+
     std::signal(SIGINT, handle_user_exit);
     initApplication();
 
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::filesystem::path filePath = std::filesystem::path(PROJECT_ROOT_DIR) / "src" / "corpus.txt";
+    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpus.txt";
 
     if (!std::filesystem::exists(filePath)) {
         std::cerr << RED << BOLD << "Corpus file does not exist on disk!\n" << RESET;
@@ -151,7 +154,7 @@ int main()
         std::cerr << RED << BOLD "Failed to open corpus file\n" << RESET;
         return 1;
     }
-    
+
     std::string line;
     std::string text;
     while (getline(file, line)) text += line;
