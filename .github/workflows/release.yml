@@ -23,7 +23,7 @@ jobs:
         run: |
           cmake -B build
           cmake --build build --config Release
-
+          chmod +x build/corpustein
           mv build/corpustein build/corpustein.x86_64
 
       - name: Publish to GitHub Releases
