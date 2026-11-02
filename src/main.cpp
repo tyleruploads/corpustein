@@ -282,9 +282,30 @@ int main(int argc, char* argv[])
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
-        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /order <integer n>, /delay <milliseconds>, /clear, /exit"; }},
-        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /order <integer n>, /delay <milliseconds>, /clear, /exit\n"; }},
+        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /order <integer n>, /delay <milliseconds>, /clear, /exit"; }},
+        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /order <integer n>, /delay <milliseconds>, /clear, /exit\n"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
+        {"/stats", [&token_count, &ngram_contexts](const std::string&) {
+            size_t context_count = ngram_contexts.size();
+            double health_ratio = static_cast<double>(token_count) / context_count;
+
+            std::ostringstream oss;
+
+            oss << "N-gram Order Size: " << ngram_size << "\n";
+            oss << "Tokens in Corpus: " << token_count << "\n";
+            oss << "Unique N-gram Contexts: " << context_count << "\n";
+            oss << "Health Ratio: " << health_ratio << "\n";
+            oss << "Maximum Sentence Count: " << max_sentence_count << "\n";
+            oss << "Maximum Token Count: " << max_token_count << "\n";
+            oss << "Maximum Order: " << max_order << "\n";
+            oss << "Max Tokens in History : " << max_history_size << "\n";
+            oss << "Typewriting Delay (ms): " << typewriter_delay_ms << "\n";
+
+            std::cout << AMBER;
+            typewrite("----- Corpustein Statistics -----\n", 5);
+            std::cout << LIGHT_GRAY;
+            typewrite(oss.str(), 5);
+        }},
         {"/order", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
             std::stringstream ss(args);
             int new_ngram_size;
