@@ -1,0 +1,33 @@
+name: Compile and Release Corpustein
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  compile:
+    name: Compile for Linux
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - name: Compile and Release Corpustein
+        run: |
+          cmake -B build
+          cmake --build build --config Release
+
+          mv build/corpustein build/corpustein.x86_64
+
+        - name: Publish to GitHub Releases
+          uses: softprops/action-gh-release@v2
+          with:
+            files: |
+              build/corpustein.x86_64
+            generate_release_notes: true
