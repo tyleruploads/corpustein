@@ -22,31 +22,33 @@
 #define AMBER "\033[38;5;214m"
 #define DARK_AMBER "\033[38;5;130m"
 #define LIGHT_GRAY "\033[38;5;253m"
+#define FULL_RESET "\033[0m"
 #define RESET "\033[0m\033[48;5;232m"
 #define BOLD "\033[1m"
 #define BLINK "\033[5m"
 #define RED "\033[31m"
 
+using FunctionAction = std::function<void()>;
 
-void initStyling() {
-    std::cout << ALT_BUFFER_ON;
-    std::cout << BG_COLOR << AMBER;
-    std::cout << CLEAR_SCREEN;
-    std::cout << CURSOR_HOME << std::flush;
+void initApplication() { 
+    std::cout << FULL_RESET << ALT_BUFFER_ON << BG_COLOR << AMBER << CLEAR_SCREEN << CURSOR_HOME << std::flush;
+
+    std::cout << "\033]0;Corpustein v" << APP_VERSION << "\007" << std::flush;
+
+    std::string line_divider = "────────────────────────────\n";
+    std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
+
+    std::cout << LIGHT_GRAY << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n" << RESET;
 }
 
-void handle_sigint(int signal) {
+void handle_user_exit(int signal = 0) {
     (void)signal;
-    std::cout << RESET << ALT_BUFFER_OFF << std::flush;
-    std::cerr << "\n\n[SYSTEM ALERT] SIGINT received. Shell aborted.\n" << std::resetiosflags(std::ios::basefield);
+    std::cout << FULL_RESET << ALT_BUFFER_OFF << std::flush;
+    std::cerr << FULL_RESET << "\n\n[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n" << std::resetiosflags(std::ios::basefield);
     std::exit(130);
 }
 
-std::string get_seed(std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
-    std::cout << BG_COLOR << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
-    std::string prompt;
-    std::getline(std::cin, prompt);
-
+std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
     std::stringstream ss(prompt);
     std::vector<std::string> prompt_tokens; 
 
@@ -130,13 +132,8 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
 
 int main()
 {
-    std::signal(SIGINT, handle_sigint);
-    initStyling();
-
-    std::cout << "\033]0;Corpustein v" << APP_VERSION << "\007" << std::flush;
-
-    std::string line_divider = "────────────────────────────\n";
-    std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
+    std::signal(SIGINT, handle_user_exit);
+    initApplication();
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -207,7 +204,30 @@ int main()
 
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
+    std::unordered_map<std::string, FunctionAction> function_runner = {
+        {"/help", []() { std::cout << "Available Commands: /help, /version, /clear, /exit"; }},
+        {"?", []() { std::cout << "Available Commands: /help, /clear, /exit"; }},
+        {"/version", []() { std::cout << "Corpustein Version: v" << APP_VERSION; }},
+        {"/clear", []() { initApplication(); }},
+        {"/exit", []() { handle_user_exit(); }}
+    };
+
     while (true) {
+        std::cout << BG_COLOR << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
+        std::string prompt;
+        std::getline(std::cin, prompt);
+
+
+        std::string lowercase_prompt = prompt;
+        std::transform(lowercase_prompt.begin(), lowercase_prompt.end(), lowercase_prompt.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
+
+        if (auto it = function_runner.find(prompt); it != function_runner.end()) {
+            it->second();
+            continue;
+        }
+
         int token_count = 0;
         int sentence_count = 0;
 
@@ -217,7 +237,7 @@ int main()
         const size_t max_history_size = max_token_count * 0.4;
         const size_t max_window_size = 3;
 
-        std::string seed = get_seed(tokens, allowed_repeats);
+        std::string seed = get_seed(prompt, tokens, allowed_repeats);
 
         std::string starting_ngram;
         auto it = std::ranges::find_if(ngram_contexts, [&](const auto &pair) {
