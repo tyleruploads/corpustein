@@ -36,11 +36,14 @@ using FunctionAction = std::function<void(const std::string&)>;
 
 int typewriter_delay_ms = 15;
 
+int ngram_size = 3;
+
 const int max_sentence_count = 5;
 const int max_token_count = max_sentence_count * 40;
 
+const int max_order = 8;
+
 const size_t max_history_size = max_token_count * 0.4;
-const size_t max_window_size = 3;
 
 std::atomic<bool> is_typewriting(false);
 std::atomic<bool> skip_typewriting_delay_requested(false);
@@ -165,6 +168,40 @@ std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::u
     }
 }
 
+template <typename Iterator>
+std::string get_ngram_string(Iterator begin, Iterator end)
+{
+    std::string ngram;
+    for (auto it = begin; it != end; ++it) {
+        ngram += *it;
+
+        if (std::next(it) != end) {
+            ngram += " ";
+        }
+    }
+    return ngram;
+}
+
+std::unordered_map<std::string, std::vector<std::string>> get_ngram_contexts(std::vector<std::string> tokens)
+{
+    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
+
+    for (size_t i = 0; i + ngram_size < tokens.size(); ++i) {
+        std::string key = get_ngram_string(
+            tokens.begin() + i,
+            tokens.begin() + i + ngram_size
+        );
+        std::string &next_word = tokens[i + ngram_size];
+
+        auto &vec = ngram_contexts[key];
+        if (std::ranges::find(vec, next_word) == vec.end()) {
+            vec.push_back(next_word);
+        }
+    }
+
+    return ngram_contexts;
+}
+
 std::string next_token(std::mt19937 &gen, const std::vector<std::string> &ngram_context) { 
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
     return ngram_context[dis(gen)];
@@ -216,8 +253,10 @@ int main(int argc, char* argv[])
     std::string word;
     while (corpus_ss >> word) tokens.push_back(word);
 
-    if (tokens.size() < 3) {
-        std::cerr << RED << BOLD << "Error: Corups is too short to build 3-grams.\n" << RESET;
+    int token_count = tokens.size();
+
+    if (token_count < ngram_size) {
+        std::cerr << RED << BOLD << "Error: Corups is too short to build" << ngram_size << "-grams.\n" << RESET;
         return 1;
     }
 
@@ -238,24 +277,42 @@ int main(int argc, char* argv[])
         "can", "could", "may", "might", "must", "shall", "should", "shouldnt", "will", "would"
     };
 
-    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
-
-    for (size_t i = 0; i + 3 < tokens.size(); ++i) {
-        std::string key = tokens[i] + " " + tokens[i + 1] + " " + tokens[i + 2];
-        std::string &next_word = tokens[i + 3];
-
-        auto &vec = ngram_contexts[key];
-        if (std::ranges::find(vec, next_word) == vec.end()) {
-            vec.push_back(next_word);
-        }
-    } 
+    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts = get_ngram_contexts(tokens);
 
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
-        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /delay <milliseconds>, /clear, /exit"; }},
-        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /delay <milliseconds>, /clear, /exit\n"; }},
+        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /order <integer n>, /delay <milliseconds>, /clear, /exit"; }},
+        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /order <integer n>, /delay <milliseconds>, /clear, /exit\n"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
+        {"/order", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
+            std::stringstream ss(args);
+            int new_ngram_size;
+            if (ss >> new_ngram_size && new_ngram_size > 0) {
+                if (static_cast<size_t>(new_ngram_size) >= tokens.size()) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Order (n) is larger than amount of tokens in corpus. Previous order of " + std::to_string(ngram_size) + " kept\n", 10);
+                    return;
+                }
+                
+                if (new_ngram_size > max_order) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Order (" + std::to_string(new_ngram_size) + ") is larger than maximum order (" + std::to_string(max_order) + "). Previous order (" + std::to_string(ngram_size) + ") kept.\n", 10);
+                    return;
+                }
+
+                ngram_size = new_ngram_size;
+                ngram_contexts = get_ngram_contexts(tokens); 
+                ngram_dis = std::uniform_int_distribution<size_t>(0, ngram_contexts.size() - 1); 
+
+                std::cout << AMBER;
+                typewrite("Order (N) successfully set to " + std::to_string(ngram_size));
+            } else {
+                std::cout << RED;
+                typewrite("Usage: /order <integer n> (e.g., /order 3)\n", 10);
+                return;
+            }
+        }},
         {"/delay", [](const std::string& args) {
             std::stringstream ss(args);
             int new_delay;
@@ -332,7 +389,7 @@ int main(int argc, char* argv[])
             std::istream_iterator<std::string>{}
         };
 
-        std::string ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+        std::string ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
         std::cout << AMBER << BOLD << "Corpustein: " << RESET << LIGHT_GRAY;
         typewrite(ngram + " ", typewriter_delay_ms);
@@ -343,11 +400,11 @@ int main(int argc, char* argv[])
             ngram_window.push_back(word);
             token_history.push_back(word);
 
-            if (ngram_window.size() > max_window_size) {
+            if (ngram_window.size() > static_cast<size_t>(ngram_size)) {
                 ngram_window.pop_front();
             }
 
-            if (token_history.size() > max_history_size) {
+            if (token_history.size() > static_cast<size_t>(ngram_size)) {
                 token_history.pop_front();
             }
         }; 
@@ -361,14 +418,14 @@ int main(int argc, char* argv[])
                     std::istream_iterator<std::string>{}
                 );
 
-                ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+                ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
             } 
 
             std::string context_key = ngram;
 
             std::string token = next_token(gen, ngram_contexts[context_key]);
 
-            ngram = ngram_window.at(1) + " " + ngram_window.at(2) + " " + token;
+            ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
             std::string stripped_token = token;
 
@@ -395,14 +452,14 @@ int main(int argc, char* argv[])
                         std::istream_iterator<std::string>{}
                     );
 
-                    ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+                    ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
                     continue;
                 }
             }
 
             push_token(token);
 
-            ngram = ngram_window.at(0) + " " + ngram_window.at(1) + " " + ngram_window.at(2);
+            ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
             std::cout << LIGHT_GRAY;
 
