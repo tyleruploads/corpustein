@@ -29,7 +29,7 @@ jobs:
           mkdir -p release_staging
 
           cp build/corpustein.x86_64 release_staging/
-          cp src/corpus.txt release_staging/
+          cp -r build/corpora/ release_staging/
 
           tar -czvf corpustein-x86_64.tar.gz -C release_staging .
 
