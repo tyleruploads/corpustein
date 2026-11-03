@@ -1,6 +1,6 @@
 # corpustein
 
-Corpustein is a **blazingly fast trigram Markov Chain model with a rolling window system.** It is coded only in the C++20 Standard Library, which makes it **small and fast**. It even uses an **alternate terminal buffer** to make it look **sleek and beautiful.**
+Corpustein is a **blazingly fast N-gram Markov Chain model with a configurable order and a rolling window system.** It is coded only in the C++20 Standard Library, which makes it **small and fast**. It even uses an **alternate terminal buffer** to make it look **sleek and beautiful.**
 
 <img src="media/hero.png" alt="Corpustein C++20 terminal interface" width="700" />
 
