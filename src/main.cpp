@@ -38,8 +38,8 @@ int typewriter_delay_ms = 15;
 
 int ngram_size = 3;
 
-const int max_sentence_count = 5;
-const int max_token_count = max_sentence_count * 40;
+int max_sentence_count = 5;
+int max_token_count = max_sentence_count * 40;
 
 const int max_order = 8;
 
@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
 
             if (subcommand == "help") {
                 std::cout << LIGHT_GRAY;
-                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n", 10);
+                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n\t/set max_sentence_count <integer>: Sets the maximum sentence count per each Corpustein response\n", 10);
             } else if (subcommand == "order") {
                 if (subcommand_flag.empty()) {
                     std::cout << RED;
@@ -414,6 +414,50 @@ int main(int argc, char* argv[])
                     std::cout << RED;
                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
                 }
+            } else if (subcommand == "max_sentence_count") {
+                if (subcommand_flag.empty()) {
+                    std::cout << RED;
+                    typewrite("Usage: /set max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n", 10);
+                    return;
+                }
+
+                if (subcommand_flag == "help") {
+                    std::cout << LIGHT_GRAY;
+                    typewrite("Sets the maximum sentence count for each Corpustein response, and automatically scales its maximum token count.\nUsage: /set max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n", 10);
+                    return;
+                }
+
+                try {
+                    int new_max_sentence_count = std::stoi(subcommand_flag);
+
+                    if (new_max_sentence_count <= 0) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Maximum sentence count must be greater than 0.\n", 10);
+                        return;
+                    }
+
+                    if (new_max_sentence_count > 50) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Maximum sentence count must not be greater than 50.\n", 10);
+                        return;
+                    }
+
+                    max_sentence_count = new_max_sentence_count;
+                    max_token_count = max_sentence_count * 40;
+
+                    std::cout << AMBER;
+                    typewrite("Maximum sentence count set to " + std::to_string(max_sentence_count) + ". Maximum token count automatically scaled to " + std::to_string(max_token_count) + ".\n", 10);
+                    return;
+                } catch (const std::invalid_argument&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the maximum sentence count.\n", 10);
+                } catch (const std::out_of_range&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,463,647. Please check your keyboard for physical defects.\n", 10);
+                } catch (const std::exception& e) {
+                    std::cout << RED;
+                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
+                }
             }
         }},
         {"/clear", [](const std::string&) { initApplication(); }},
@@ -446,10 +490,10 @@ int main(int argc, char* argv[])
                 std::getline(input_ss >> std::ws, args);
                 it->second(args);
                 continue;
+            } else {
+                function_runner.at("/help")(std::string{});
+                continue;
             }
-
-            function_runner.at("/help")(std::string{});
-            continue;
         }
 
         std::string seed = get_seed(prompt, tokens, allowed_repeats);
