@@ -11,10 +11,10 @@ add_executable(corpustein
 
 add_custom_command(
     TARGET corpustein POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/corpus.txt"
-        "${CMAKE_BINARY_DIR}/corpus.txt"
-    COMMENT "Copying corpus to build directory"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/corpora"
+        "${CMAKE_BINARY_DIR}/corpora"
+    COMMENT "Copying corpora to build directory"
 )
 
 target_compile_options(corpustein PRIVATE

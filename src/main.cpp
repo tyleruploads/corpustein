@@ -17,6 +17,8 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <optional>
+#include <charconv>
 
 #define ALT_BUFFER_ON "\033[?1049h"
 #define ALT_BUFFER_OFF "\033[?1049l"
@@ -81,9 +83,14 @@ struct BodyText {
 
 void initApplication() {
     std::cout << FULL_RESET;
+
     if (use_alt_buffer) {
         std::cout << ALT_BUFFER_ON << BG_COLOR;
+    } else {
+        std::cout << ALT_BUFFER_OFF;
     }
+
+
     std::cout << AMBER << CLEAR_SCREEN << CURSOR_HOME;
     std::cout << std::flush;
 
@@ -92,7 +99,7 @@ void initApplication() {
     std::string line_divider = "────────────────────────────\n";
     std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
 
-    std::cout << BODY_TEXT << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n" << RESET;
+    std::cout << BODY_TEXT << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n\n" << RESET;
 }
 
 void handle_user_exit(int signal = 0) {
@@ -144,6 +151,33 @@ void typewrite(const std::string &text, int delay_ms = 10) {
     is_typewriting = false;
 
     return;
+}
+
+std::optional<std::unordered_map<int, std::string>> loadCorpora(char* argv[]) {
+    std::unordered_map<int, std::string> corpora_map;
+
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::absolute(argv[0]).parent_path() / "corpora")) {
+        std::string filename = entry.path().filename().string();
+
+        if (filename.rfind("corpus_", 0) == 0 && filename.size() > 11) {
+            try {
+                std::string num_str = filename.substr(7, filename.size() - 7 - 4);
+                int file_id = std::stoi(num_str);
+
+                std::ifstream file(entry.path());
+                std::string first_line;
+                if (file.is_open() && std::getline(file, first_line)) {
+                    corpora_map[file_id] = first_line;
+                }
+            } catch (std::exception& e) {
+                std::cout << RED;
+                typewrite("[ERROR] An unexpected error occurred while loading corpus file titled '" + filename + "': " + e.what() + "\n", 10);
+                return std::nullopt;
+            }
+        }
+    }
+
+    return corpora_map;
 }
 
 std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
@@ -266,49 +300,6 @@ int main(int argc, char* argv[])
 {
     (void)argc;
 
-    std::signal(SIGINT, handle_user_exit);
-    initApplication();
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpus.txt";
-
-    if (!std::filesystem::exists(filePath)) {
-        std::cerr << RED << BOLD << "Corpus file does not exist on disk!\n" << RESET;
-        return 1;
-    }
-
-    std::ifstream file(filePath);
-
-    if (!file.is_open()) {
-        std::cerr << RED << BOLD "Failed to open corpus file\n" << RESET;
-        return 1;
-    }
-
-    std::string line;
-    std::string text;
-    while (getline(file, line)) text += line;
-
-    std::regex square_brackets(R"(\s*\[\d+\])");
-    text = std::regex_replace(text, square_brackets, "");
-
-    std::regex punct_spacing(R"([.!?;:\)](?=[A-Za-z]))");
-    text = std::regex_replace(text, punct_spacing, "$& ");
-
-    std::stringstream corpus_ss(text);
-    std::vector<std::string> tokens; 
-
-    std::string word;
-    while (corpus_ss >> word) tokens.push_back(word);
-
-    int token_count = tokens.size();
-
-    if (token_count < ngram_size) {
-        std::cerr << RED << BOLD << "Error: Corups is too short to build" << ngram_size << "-grams.\n" << RESET;
-        return 1;
-    }
-
     std::unordered_set<std::string> allowed_repeats = {
         "and", "or", "so", "as", "if", "then", "because",
         "but", "yet", "we", "it", "me", "him", "her", "them",
@@ -326,9 +317,85 @@ int main(int argc, char* argv[])
         "can", "could", "may", "might", "must", "shall", "should", "shouldnt", "will", "would"
     };
 
-    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts = get_ngram_contexts(tokens);
+    std::signal(SIGINT, handle_user_exit);
+    initApplication();
 
-    std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
+    std::random_device rd;
+    std::mt19937 gen(rd()); 
+
+    std::vector<std::string> tokens; 
+    int token_count = 0; 
+
+    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
+    std::uniform_int_distribution<size_t> ngram_dis;
+
+    auto load_corpus = [&](std::filesystem::path filePath) {
+        std::ifstream file(filePath);
+
+        if (!std::filesystem::exists(filePath)) {
+            std::cerr << RED << BOLD << "[ERROR] Corpus file does not exist on disk!\n" << RESET;
+            return;
+        }
+
+        if (!file.is_open()) {
+            std::cerr << RED << BOLD << "[ERROR] Failed to open corpus file at " << filePath << "\n";
+            return;
+        }
+
+        std::string first_line;
+
+        if (std::getline(file, first_line)) {
+            std::cout << AMBER;
+            typewrite("Name: ", 15);
+            std::cout << BODY_TEXT;
+            typewrite(first_line + "\n", 10);
+        } else {
+            std::cout << RED;
+            typewrite("[ERROR] Failed to read first line of corpus file. Check the files line count.", 10);
+            return;
+        }
+
+        std::string line;
+        std::string text;
+        while (getline(file, line)) text += line + " ";
+
+        std::regex square_brackets(R"(\s*\[\d+\])");
+        text = std::regex_replace(text, square_brackets, "");
+
+        std::regex punct_spacing(R"([.!?;:\)](?=[A-Za-z]))");
+        text = std::regex_replace(text, punct_spacing, "$& ");
+
+        std::stringstream corpus_ss(text); 
+
+        std::string word;
+        tokens.clear();
+        while (corpus_ss >> word) tokens.push_back(word);
+
+        token_count = tokens.size();
+
+        if (token_count < ngram_size) {
+            std::cerr << RED << BOLD << "Error: Corups is too short to build" << ngram_size << "-grams.\n" << RESET;
+            return;
+        }
+
+        if (token_count < ngram_size) {
+            std::cerr << RED << BOLD << "Error: Corups is too short to build" << ngram_size << "-grams.\n" << RESET;
+            return;
+        }
+
+        ngram_contexts = get_ngram_contexts(tokens);
+        ngram_dis.param(std::uniform_int_distribution<size_t>::param_type(0, ngram_contexts.size() - 1));
+
+        std::cout << AMBER;
+        typewrite("Successfully loaded corpus at " + filePath.string() + "\n", 10);
+        return;
+    };
+
+    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" / "corpus_0.txt";
+    load_corpus(filePath);
+
+    std::cout << BODY_TEXT << BOLD;
+    typewrite("\nFor information on loading a different default corpus or your own custom corpus, run /load help\n", 5);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
         {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
@@ -544,6 +611,101 @@ int main(int argc, char* argv[])
                     std::cout << RED;
                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
                 }
+            }
+        }},
+        {"/load", [&](const std::string& args) {
+            std::stringstream ss(args);
+            std::string type;
+            std::string filename = "";
+
+            if (!(ss >> type)) {
+                std::cout << RED;
+                typewrite("Usage: /load <type> <corpus>\nRun /load help for a list of types.\nRun /load default without corpus to view default corpora.\n", 10);
+                return;
+            }
+
+            ss >> filename;
+
+            if (type == "help") {
+                std::cout << BODY_TEXT;
+                typewrite("Loads a default or custom corpus.\nUsage: /load <type> <corpus>\nTypes:\n\tDefault: Load a corpus from the corpora directory. Run without corpus to view list of corpora. Enter corpus number provided in corora list as argument to load corpus.\n\tCustom: Load a custom corpus file. Enter file path as argument.", 10);
+                return;
+            }
+
+            if (type == "default") {
+                if (!filename.empty() && filename == "help") {
+                    std::cout << BODY_TEXT;
+                    typewrite("Usage: /load default <corpus>\nPlease pass index of corpus, not its name or file path.\nTo view list of default corpus indexes, run /load default without a corpus argument.\n", 10);
+                    return;
+                }
+
+
+                std::optional<std::unordered_map<int, std::string>> corpora_map = loadCorpora(argv);
+
+                if (corpora_map == std::nullopt) {
+                    std::cout << RED;
+                    typewrite("[ERROR] An unexpected error occurrded while loading preloaded corpora.\n", 10);
+                    return;
+                }
+
+                if (filename.empty()) {
+                    std::ostringstream oss;
+
+                    for (const auto& [key, value] : *corpora_map) {
+                        oss << "\tIndex " << std::to_string(key) << ": " << value << "\n";
+                    }
+
+                    typewrite("----- Preloaded Corpora -----\n", 10);
+                    std::cout << BODY_TEXT << oss.str();
+                    return;
+                }
+
+                int file_value = 0;
+
+                auto [value_ptr, value_ec] = std::from_chars(filename.data(), filename.data() + filename.size(), file_value);
+
+                if (value_ec != std::errc{} || value_ptr != filename.data() + filename.size()) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Please provide the index of and only the index of the corpus.\n", 10);
+                    return;
+                }
+
+                if (corpora_map->empty()) {
+                    std::cout << RED;
+                    typewrite("[ERROR] No preloaded corpora. To preload a corpus, drop it in the corpora directory, which is located in the directory where this binary should be. It must be named as the following: 'corpus_index.txt' (e.g., 'corpus_12.txt'). The first line of text in the corpus file is its name.");
+                    return; 
+                }
+
+                if (corpora_map->contains(file_value)) {
+                    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" / ("corpus_" + std::to_string(file_value) + ".txt");
+                    load_corpus(filePath);
+                } else {
+                    std::cout << RED;
+                    typewrite("[ERROR] Corpus index " + std::to_string(file_value) + " is not in the corpora directory.", 10);
+                    return;
+                }
+            } else if (type == "custom") {
+                if (filename.empty()) {
+                    std::cout << RED;
+                    typewrite("Run /load custom help for usage\n", 10);
+                    return;
+                }
+
+                if (filename == "help") {
+                    std::cout << BODY_TEXT;
+                    typewrite("Usage: /load custom <absolute path> (e.g., /load custom /home/me/downloads/corpus.txt)\n", 10);
+                    return;
+                }
+
+                std::filesystem::path path = (std::filesystem::current_path() / filename).lexically_normal();
+
+                if (!std::filesystem::exists(path)) {
+                    std::cout << RED;
+                    typewrite("File at path: " + path.string() + " does not exist.\n", 10);
+                    return;
+                }
+ 
+                load_corpus(path);
             }
         }},
         {"/clear", [](const std::string&) { initApplication(); }},
