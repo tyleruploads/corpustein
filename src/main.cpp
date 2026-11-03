@@ -26,8 +26,9 @@
 #define AMBER "\033[38;5;214m"
 #define DARK_AMBER "\033[38;5;130m"
 #define LIGHT_GRAY "\033[38;5;253m"
+#define GREEN "\033[32m"
 #define FULL_RESET "\033[0m"
-#define RESET "\033[0m\033[48;5;232m"
+#define SOFT_RESET "\033[0m\033[48;5;232m"
 #define BOLD "\033[1m"
 #define BLINK "\033[5m"
 #define RED "\033[31m"
@@ -47,16 +48,51 @@ const size_t max_history_size = max_token_count * 0.4;
 
 std::atomic<bool> is_typewriting(false);
 std::atomic<bool> skip_typewriting_delay_requested(false);
+bool use_alt_buffer = true;
 
-void initApplication() { 
-    std::cout << FULL_RESET << ALT_BUFFER_ON << BG_COLOR << AMBER << CLEAR_SCREEN << CURSOR_HOME << std::flush;
+struct Reset {
+    friend std::ostream& operator<<(std::ostream& os, const Reset&) {
+        // Chooses whether to use full reset or soft reset based on if alternate buffer is enabled
+        // SOFT_RESET includes the background, which only is applied correctly if in the alternate buffer
+        if (use_alt_buffer) {
+            os << SOFT_RESET;
+        } else {
+            os << FULL_RESET;
+        }
+        return os;
+    }
+};
+
+struct BodyText {
+    friend std::ostream& operator<<(std::ostream& os, const BodyText&) {
+        // Chooses appropriate body text color based on if alternate buffer is enabled
+        // Without alternate buffer, background could be anything, so light gray is not a safe idea
+        if (use_alt_buffer) {
+            os << LIGHT_GRAY;
+        } else {
+            os << GREEN;
+        }
+        return os;
+    }
+};
+
+#define RESET Reset{}
+#define BODY_TEXT BodyText{}
+
+void initApplication() {
+    std::cout << FULL_RESET;
+    if (use_alt_buffer) {
+        std::cout << ALT_BUFFER_ON << BG_COLOR;
+    }
+    std::cout << AMBER << CLEAR_SCREEN << CURSOR_HOME;
+    std::cout << std::flush;
 
     std::cout << "\033]0;Corpustein v" << APP_VERSION << "\007" << std::flush;
 
     std::string line_divider = "────────────────────────────\n";
     std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
 
-    std::cout << LIGHT_GRAY << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n" << RESET;
+    std::cout << BODY_TEXT << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n" << RESET;
 }
 
 void handle_user_exit(int signal = 0) {
@@ -67,8 +103,21 @@ void handle_user_exit(int signal = 0) {
         return;
     }
 
-    std::cout << FULL_RESET << ALT_BUFFER_OFF << std::flush;
-    std::cerr << FULL_RESET << "\n\n[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n" << std::resetiosflags(std::ios::basefield);
+    std::string final_reset_sequence = "\033[?25h\033[?7h\033[0m";
+
+    if (use_alt_buffer) {
+        final_reset_sequence += ALT_BUFFER_OFF;
+    }
+
+    final_reset_sequence += "\033]112\007";
+
+    std::cout << final_reset_sequence << std::flush;
+
+    if (!use_alt_buffer) {
+        std::cout << "\r\n\r\n";
+    }
+
+    std::cout << "[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n\033[39m\033[49m\033[0m\r" << std::resetiosflags(std::ios::basefield) << std::flush;
     std::exit(130);
 }
 
@@ -302,7 +351,7 @@ int main(int argc, char* argv[])
 
             std::cout << AMBER;
             typewrite("----- Corpustein Statistics -----\n", 5);
-            std::cout << LIGHT_GRAY;
+            std::cout << BODY_TEXT;
             typewrite(oss.str(), 5);
         }},
         {"/set", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
@@ -320,8 +369,8 @@ int main(int argc, char* argv[])
 
 
             if (subcommand == "help") {
-                std::cout << LIGHT_GRAY;
-                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n\t/set max_sentence_count <integer>: Sets the maximum sentence count per each Corpustein response\n", 10);
+                std::cout << BODY_TEXT;
+                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n\t/set max_sentence_count <integer>: Sets the maximum sentence count per each Corpustein response\n\t/set altbuffer <true or false>: Enables or disables the alternate terminal buffer", 10);
             } else if (subcommand == "order") {
                 if (subcommand_flag.empty()) {
                     std::cout << RED;
@@ -330,7 +379,7 @@ int main(int argc, char* argv[])
                 }
 
                 if (subcommand_flag == "help") {
-                    std::cout << LIGHT_GRAY;
+                    std::cout << BODY_TEXT;
                     typewrite("Sets the order of the N-gram model.\nUsage: /set order <integer> (e.g., /set order 3)\n", 10);
                     return;
                 }
@@ -380,7 +429,7 @@ int main(int argc, char* argv[])
                 }
 
                 if (subcommand_flag == "help") {
-                    std::cout << LIGHT_GRAY;
+                    std::cout << BODY_TEXT;
                     typewrite("Sets the delay between each character printed to the screen when interacting with Corpustein.\nUsage: /set delay <integer> (e.g., /set delay 15)\n", 10);
                     return;
                 }
@@ -422,7 +471,7 @@ int main(int argc, char* argv[])
                 }
 
                 if (subcommand_flag == "help") {
-                    std::cout << LIGHT_GRAY;
+                    std::cout << BODY_TEXT;
                     typewrite("Sets the maximum sentence count for each Corpustein response, and automatically scales its maximum token count.\nUsage: /set max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n", 10);
                     return;
                 }
@@ -458,6 +507,43 @@ int main(int argc, char* argv[])
                     std::cout << RED;
                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
                 }
+            } else if (subcommand == "altbuffer") {
+                if (subcommand_flag.empty()) {
+                    std::cout << RED;
+                    typewrite("Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
+                    return;
+                }
+
+                if (subcommand_flag == "help") {
+                    std::cout << BODY_TEXT;
+                    typewrite("Enables or disables the alternate terminal buffer.\nUsage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
+                    return;
+                }
+
+                try {
+                    std::transform(subcommand_flag.begin(), subcommand_flag.end(), subcommand_flag.begin(), ::tolower);
+
+                    constexpr std::array true_strings{"true", "1", "yes", "on", "high", "set", "enabled", "enable", "active", "activate", "right", "pass"};
+                    constexpr std::array false_strings{"false", "0", "no", "off", "low", "unset", "disabled", "disable", "inactivate", "deactivate", "wrong", "fail"};
+
+                    if (std::ranges::any_of(true_strings, [&](auto s) { return subcommand_flag == s; })) {
+                        use_alt_buffer = true;
+                    } else if (std::ranges::any_of(false_strings, [&](auto s) { return subcommand_flag == s; })) {
+                        use_alt_buffer = false;
+                    } else {
+                        std::cout << RED;
+                        typewrite("Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
+                        return;
+                    }
+
+                    initApplication();
+
+                    std::cout << AMBER << BOLD;
+                    typewrite(std::string("\nAlternate buffer successfully ") + (use_alt_buffer ? "enabled" : "disabled") + "\n", 10);
+                } catch (const std::exception& e) {
+                    std::cout << RED;
+                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
+                }
             }
         }},
         {"/clear", [](const std::string&) { initApplication(); }},
@@ -469,7 +555,8 @@ int main(int argc, char* argv[])
 
         int token_count = 0;
         int sentence_count = 0;
-        std::cout << BG_COLOR << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
+        if (use_alt_buffer) std::cout << BG_COLOR;
+        std::cout << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
         std::string prompt;
         std::getline(std::cin, prompt);
 
@@ -524,7 +611,7 @@ int main(int argc, char* argv[])
 
         std::string ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
-        std::cout << AMBER << BOLD << "Corpustein: " << RESET << LIGHT_GRAY;
+        std::cout << AMBER << BOLD << "Corpustein: " << RESET << BODY_TEXT;
         typewrite(ngram + " ", typewriter_delay_ms);
 
         std::deque<std::string> token_history;
@@ -594,7 +681,7 @@ int main(int argc, char* argv[])
 
             ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
-            std::cout << LIGHT_GRAY;
+            std::cout << BODY_TEXT;
 
             typewrite(ngram_window.back() + " ", typewriter_delay_ms);
 
