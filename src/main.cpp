@@ -153,8 +153,8 @@ void typewrite(const std::string &text, int delay_ms = 10) {
     return;
 }
 
-std::optional<std::unordered_map<int, std::string>> loadCorpora(char* argv[]) {
-    std::unordered_map<int, std::string> corpora_map;
+std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
+    std::map<int, std::string> corpora_map;
 
     for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::absolute(argv[0]).parent_path() / "corpora")) {
         std::string filename = entry.path().filename().string();
@@ -640,7 +640,7 @@ int main(int argc, char* argv[])
                 }
 
 
-                std::optional<std::unordered_map<int, std::string>> corpora_map = loadCorpora(argv);
+                std::optional<std::map<int, std::string>> corpora_map = loadCorpora(argv);
 
                 if (corpora_map == std::nullopt) {
                     std::cout << RED;
