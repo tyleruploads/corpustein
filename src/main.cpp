@@ -282,8 +282,8 @@ int main(int argc, char* argv[])
     std::uniform_int_distribution<size_t> ngram_dis(0, ngram_contexts.size() - 1);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
-        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /order <integer n>, /delay <milliseconds>, /clear, /exit"; }},
-        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /order <integer n>, /delay <milliseconds>, /clear, /exit\n"; }},
+        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
+        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit\n"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
         {"/stats", [&token_count, &ngram_contexts](const std::string&) {
             size_t context_count = ngram_contexts.size();
@@ -306,51 +306,115 @@ int main(int argc, char* argv[])
             std::cout << LIGHT_GRAY;
             typewrite(oss.str(), 5);
         }},
-        {"/order", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
+        {"/set", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
             std::stringstream ss(args);
-            int new_ngram_size;
-            if (ss >> new_ngram_size && new_ngram_size > 0) {
-                if (static_cast<size_t>(new_ngram_size) >= tokens.size()) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Order (n) is larger than amount of tokens in corpus. Previous order of " + std::to_string(ngram_size) + " kept\n", 10);
-                    return;
-                }
-                
-                if (new_ngram_size > max_order) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Order (" + std::to_string(new_ngram_size) + ") is larger than maximum order (" + std::to_string(max_order) + "). Previous order (" + std::to_string(ngram_size) + ") kept.\n", 10);
-                    return;
-                }
+            std::string subcommand;
+            std::string subcommand_flag = "";
 
-                ngram_size = new_ngram_size;
-                ngram_contexts = get_ngram_contexts(tokens); 
-                ngram_dis = std::uniform_int_distribution<size_t>(0, ngram_contexts.size() - 1); 
-
-                std::cout << AMBER;
-                typewrite("Order (N) successfully set to " + std::to_string(ngram_size));
-            } else {
+            if (!(ss >> subcommand)) {
                 std::cout << RED;
-                typewrite("Usage: /order <integer n> (e.g., /order 3)\n", 10);
+                typewrite("Usage: /set <parameter> <value>\nRun /set help for a list of subcommands\n", 10);
                 return;
             }
-        }},
-        {"/delay", [](const std::string& args) {
-            std::stringstream ss(args);
-            int new_delay;
-            if (ss >> new_delay && new_delay >= 0) {
-                if (new_delay > 50) {
+
+            ss >> subcommand_flag; // Optional
+
+
+            if (subcommand == "help") {
+                std::cout << LIGHT_GRAY;
+                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n", 10);
+            } else if (subcommand == "order") {
+                if (subcommand_flag.empty()) {
                     std::cout << RED;
-                    typewrite("Typewriter delay may be no more than 50ms.", 10);
+                    typewrite("Usage: /set order <integer> (e.g., /set order 3)\n", 10);
                     return;
                 }
-                typewriter_delay_ms = new_delay;
-                std::cout << DARK_AMBER;
-                typewrite("Typewriter delay set to " + std::to_string(typewriter_delay_ms) + "ms.\n", typewriter_delay_ms);
-                return;
-            } else {
-                std::cout << RED;
-                typewrite("Usage: /delay <milliseconds> (e.g., /delay 15)\n", 10);
-                return;
+
+                if (subcommand_flag == "help") {
+                    std::cout << LIGHT_GRAY;
+                    typewrite("Sets the order of the N-gram model.\nUsage: /set order <integer> (e.g., /set order 3)\n", 10);
+                    return;
+                }
+
+                try {
+                    int new_ngram_size = std::stoi(subcommand_flag);
+
+                    if (new_ngram_size <= 0) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Order must be greater than 0.\n", 10);
+                        return;
+                    }
+
+                    if (static_cast<size_t>(new_ngram_size) >= tokens.size()) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Order (n) is larger than amount of tokens in corpus. Previous order of " + std::to_string(ngram_size) + " kept\n", 10);
+                        return;
+                    }
+
+                    if (new_ngram_size > max_order) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Order (" + std::to_string(new_ngram_size) + ") is larger than maximum order (" + std::to_string(max_order) + "). Previous order (" + std::to_string(ngram_size) + ") kept.\n", 10);
+                        return;
+                    }
+
+                    ngram_size = new_ngram_size;
+                    ngram_contexts = get_ngram_contexts(tokens);
+                    ngram_dis = std::uniform_int_distribution<size_t>(0, ngram_contexts.size() - 1);
+
+                    std::cout << AMBER;
+                    typewrite("Order (N) successfully set to " + std::to_string(ngram_size));
+                } catch (const std::invalid_argument&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the order.\n", 10);
+                } catch (const std::out_of_range&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,483,647. Please check your keyboard for physical defects.", 10);
+                } catch (const std::exception& e) {
+                    std::cout << RED;
+                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
+                }
+            } else if (subcommand == "delay") {
+                if (subcommand_flag.empty()) {
+                    std::cout << RED;
+                    typewrite("Usage: /set delay <integer> (e.g., /set delay 15)\n", 10);
+                    return;
+                }
+
+                if (subcommand_flag == "help") {
+                    std::cout << LIGHT_GRAY;
+                    typewrite("Sets the delay between each character printed to the screen when interacting with Corpustein.\nUsage: /set delay <integer> (e.g., /set delay 15)\n", 10);
+                    return;
+                }
+
+                try {
+                    int new_typewriter_delay_ms = std::stoi(subcommand_flag);
+
+                    if (new_typewriter_delay_ms <= 0) {
+                        std::cout << RED;
+                        typewrite("[ERROR] Typewriter delay must be greater than 0.\n", 10);
+                        return;
+                    }
+
+                    if (new_typewriter_delay_ms > 50) {
+                       std::cout << RED;
+                        typewrite("Typewriter delay may be no more than 50ms.", 10);
+                        return;
+                    }
+
+                    typewriter_delay_ms = new_typewriter_delay_ms;
+                    std::cout << DARK_AMBER;
+                    typewrite("Typewriter delay set to " + std::to_string(typewriter_delay_ms) + "ms.\n", typewriter_delay_ms);
+                    return;
+                } catch (const std::invalid_argument&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the typewriter delay in milliseconds.\n", 10);
+                } catch (const std::out_of_range&) {
+                    std::cout << RED;
+                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,483,647. Please check your keyboard for physical defects.", 10);
+                } catch (const std::exception& e) {
+                    std::cout << RED;
+                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
+                }
             }
         }},
         {"/clear", [](const std::string&) { initApplication(); }},
