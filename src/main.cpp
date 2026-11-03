@@ -283,7 +283,6 @@ int main(int argc, char* argv[])
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
         {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
-        {"?", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit\n"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
         {"/stats", [&token_count, &ngram_contexts](const std::string&) {
             size_t context_count = ngram_contexts.size();
@@ -441,12 +440,17 @@ int main(int argc, char* argv[])
         std::string command;
         input_ss >> command;
 
-        if (auto it = function_runner.find(command); it != function_runner.end()) {
-            std::string args;
-            std::getline(input_ss >> std::ws, args);
-            it->second(args);
+        if (command.starts_with("/")) {
+            if (auto it = function_runner.find(command); it != function_runner.end()) {
+                std::string args;
+                std::getline(input_ss >> std::ws, args);
+                it->second(args);
+                continue;
+            }
+
+            function_runner.at("/help")(std::string{});
             continue;
-        } 
+        }
 
         std::string seed = get_seed(prompt, tokens, allowed_repeats);
 
