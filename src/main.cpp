@@ -353,6 +353,8 @@ int main(int argc, char* argv[])
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
     std::uniform_int_distribution<size_t> ngram_dis;
 
+    std::string current_corpus_name;
+
     auto load_corpus = [&](std::filesystem::path filePath) {
         std::ifstream file(filePath);
 
@@ -417,6 +419,8 @@ int main(int argc, char* argv[])
                     typewrite("Name: ", 15);
                     std::cout << BODY_TEXT;
                     typewrite(std::string(value) + "\n", 10);
+
+                    current_corpus_name = value;
                 } else if (key == "default_order") {
                     try {
                         ngram_size = std::stoi(std::string(value));
@@ -496,12 +500,13 @@ int main(int argc, char* argv[])
     std::unordered_map<std::string, FunctionAction> function_runner = {
         {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
-        {"/stats", [&token_count, &ngram_contexts](const std::string&) {
+        {"/stats", [&current_corpus_name, &token_count, &ngram_contexts](const std::string&) {
             size_t context_count = ngram_contexts.size();
             double health_ratio = static_cast<double>(token_count) / context_count;
 
             std::ostringstream oss;
 
+            oss << "Corpus Name: " << current_corpus_name << "\n";
             oss << "N-gram Order Size: " << ngram_size << "\n";
             oss << "Tokens in Corpus: " << token_count << "\n";
             oss << "Unique N-gram Contexts: " << context_count << "\n";
