@@ -1,0 +1,1257 @@
+Blog Articles by Tyler N.
+
+Recently, I was working on creating a website on a cloud-based IDE
+(CodeHS). One night, I was editing, and then when I was done, I simply
+turned off my monitor and disabled my mouse and keyboard. Then, the next
+day at school, I continued to work on the website, and made significant
+changes. When I got home, I made more significant changes, but then
+realized something very important. What I realized is that when I
+continued to work on the project at home, the cloud-based IDE hadn’t
+refreshed to the new code, and overwrote the work I did at school when I
+saved my new work.
+
+So, what is the purpose of me telling you this? Is it to say that you
+should always close your code editor when you’re done working, or some
+other trick to prevent this from happening? No, it definitely is not.
+
+After the initial panic, I realized that the cloud-based IDE had a
+history section, which has a detailed log of every change that happened
+to every file. I then looked back at my old copy, copied the changes,
+and put them back into my new code.
+
+Now, imagine you aren’t using a cloud-based IDE, and your just editing a
+file on your computer, in an IDE, or simply your terminal. To clarify,
+Git is not cloud-based, it is local, (sitting on your computer), that
+connects to the cloud (GitHub). What happens when something breaks? For
+some environments, this could be catastrophic, and make you loose a lot
+of work. When you make an update to a file, the last state and all the
+states before it are gone.
+
+But, this isn’t the only thing that can happen. When you use a version
+control system (VCS), like Git, you can always go back to your previous
+commits, (snapshots of your code).
+
+The work I almost lost wasn’t very important; that work didn’t effect
+anyone, except myself. Imagine what would happen if I was working on
+something more important, or even just working on something for a job.
+
+Before learning how to manage your project, it helps to understand what
+Git actually is. Git is overwhelmingly the most popular version control
+system (VCS), and is completely free to use.
+
+  “By far, the most widely used modern version control system in the
+  world today is Git. Git is a mature, actively maintained open source
+  project originally developed in 2005 by Linus Torvalds, the famous
+  creator of the Linux operating system kernel.” - Source: Atlassian
+
+In this guide, you will learn how to use the Git version control system
+(VCS) to manage a GitHub repository by initializing a project, linking
+it your GitHub repository, and using it to manage your GitHub
+repository.
+
+Section 1: Installing and Setting Up Git
+
+In this section, we will navigate to our terminal and install Git.
+
+Step 1: Opening your terminal
+
+-   Windows: Press the Windows Key, type Powershell, and hit enter.
+-   macOS: Press Cmd + Space, type Terminal, and hit enter.
+-   Linux: Press Ctrl + Alt + T to open your default shell.
+
+Step 2: Installing Git
+
+In your terminal, run the following command to determine if you have Git
+installed
+
+    git --version
+
+-   If a version number appears, you are ready to go to step 3.
+-   If the command is not recognized, follow the steps below to install
+    Git.
+
+Windows Installation:
+
+To install Git on Windows, you can do so in one of the following ways.
+
+1.  Run the following command to install Git with Winget:
+    winget install --id Git.Git -e --source winget
+2.  Run one of the standalone installers found at Git-scm
+
+macOS Installation:
+
+To install Git on macOS, you can do so by installing Git with homebrew.
+
+If you do not have homebrew, install homebrew with the following
+command:
+
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+Once you have homebrew, run:
+
+    brew install git` to install Git.
+
+Linux Installation:
+
+To install Git on Linux, use your distributions package manager.
+
+-   Debian/Ubuntu: sudo apt-get install git
+-   Fedora: sudo dnf install git
+-   Arch: sudo pacman -S git
+
+Step 3: Setting up Git (Identity Configuration)
+
+The next step to using git is to set variables that let Git know who you
+are. These are permanently attached to every commit you do, which allows
+platforms like GitHub to attach it to your profile card.
+
+    # Set your display name (can be your real name, your GitHub username, or many other things)
+    git config --global user.name "Your Name"
+
+    # Set your email (MUST match your GitHub email)
+    git config --global user.email "your-email@example.com"
+
+Section 2: Tracking Version History
+
+In this section, we will initialize a local git project and learn how to
+use basic git commands to track the files.
+
+Step 1: Initializing local Git Project
+
+In this step, we will initialize our local Git project. First, navigate
+to the directory you would like to store your project, and run the
+following command.
+
+    git init -b main
+
+-b main ensures the default branch is named main, matching GitHub’s
+default layout.
+
+Step 2: Stage and Commit files
+
+In this step, we will stage our files, (which means to tell Git to start
+tracking the files), and to commit our files (making a snapshot of the
+file on our local machine.)
+
+To stage the files, type the following command:
+
+    git add .
+
+The . symbol is our current directory, which tells Git to stage all the
+files in your current location.
+
+Next, we will commit these files and add a commit message. It is
+standard practice to use the imperative mood (e.g. “Add css rule to fix
+whitespacing”, not “Added css rule to preserve whitespacing”) for commit
+messages, as this follows the convention used by Git itself.
+
+    git commit -m "Initial commit"
+
+The -m flag stands for message, which is why we put our commit message
+after it.
+
+Section 3: Making GitHub repository and linking with local project
+
+In this section, we will make a GitHub repository and link our local
+project with it.
+
+Step 1: Initializing Repository
+
+In this step, we will make a GitHub repository, which is where we
+publish our project. If you do not have a GitHub account, please make
+one.
+
+1.  Navigate to the GitHub homepage and sign in if you are not already.
+2.  Click the green New button located at the top right of the
+    Top Repositories menu that is on the left side of your screen. If
+    you are unable to find this button, click on this link instead,
+    which will take you to the same location.
+3.  Set a repository name, and make sure that all of the Add ... boxes
+    are unchecked.
+4.  Click Create Repository
+5.  Remember the URL for your repository
+
+Step 2: Linking local project to repository
+
+In this step, we will link our local project to the GitHub repository we
+just made.
+
+Navigate to your local project, and run the following command, while
+ensuring to replace <REPOSITORY LINK> with the link you remembered in
+3.1.5
+
+    git remote add origin <REPOSITORY LINK>
+
+Step 3: Pushing
+
+In this step, we will push to our repository on GitHub. This means that
+your local project and all the changes you made, along with your commit
+messages, will be put on GitHub.
+
+Navigate to your local project, and run the following command
+
+    git push -u origin main
+
+The flag -u stands for upstream, which links your local branch to the
+remote branch so that in the future, Git knows exactly where to send
+your code.
+
+Section 4: Wrapping up and Next Steps
+
+You have successfully initialized a local project, tracked your changes,
+and pushed your code securely to the cloud on GitHub.
+
+Now that your local project is linked to your remote GitHub repository,
+your workflow becomes way more simpler.
+
+What to do in the future
+
+[Graph of workflow]
+
+In the future, your workflow isn’t as complicated as it just may have
+been. You just need to remember 4 simple commands for the most part.
+
+First, you need to know the git status command. This command shows
+you: 1. The branch you are on 2. How many commits above or behind you
+are compared to the GitHub 3. Changes that have not been staged to
+commit 4. Untracked files It is recommended to look at the output of
+this command before you start working.
+
+When you want to stage files (tell Git to track them), you simply run
+the command git add <FILES, or . for every file in the directory>
+
+When you want to commit these files (to save a snapshot of them to your
+local machine), you simply run the command
+git commit -m "COMMIT MESSAGE" Keep in mind that at this point, the new
+changes have not left your computer.
+
+Then, when you want to put them onto GitHub, you just run the command
+git push If you want to be extra sure that the git push -u origin main
+was remembered, you can always just run git push origin main if you want
+to be sure.
+
+And, that’s your workflow now. See how simple it is?
+
+Important Note: .gitignore
+
+It is standard practice to add a .gitignore file in your root directory.
+The purpose of the .gitignore file is to tell Git what files to not
+track, keeping it from the public (GitHub). You simply type specific
+rules into the file with one line for each. Here is quick tutorial.
+
+-   You can use # signs to indicate that everything after it on the line
+    is a comment
+-   If you type a literal name (i.e. secret.txt), that specific file
+    will be ignored
+-   Patterns ending with a / (i.e. private/) match only directories and
+    their entire contents
+-   * Matches any amount of characters. For example, *.txt matches all
+    files ending in .txt, and log* matches all files starting in log
+-   ** matches directories recursively. For example, **logs matches any
+    directory named logs in the project
+-   Lines starting with ! re-include a file that was excluded by a
+    previous rule
+-   Using a / anchors the pattern to where the .gitignore file resides,
+    NOT the root of the computer
+
+Section 5: Ending Notes
+
+In this tutorial, you learned how to use Git to manage a local project
+and to link that local project with GitHub.
+
+Now that you see how you do it, I think it’s important that I explain a
+bit more about why we do it.
+
+Imagine you are working on an Automated Market-Making (AMM) System,
+which is a system that place buy and sell orders for many stocks
+simultaneously, that pocket small price differences without human
+intervention, and you accidentally make an error in the code, which is
+costing the company money.
+
+If there was no version control system (VCS), the company could
+experience significant downtime and financial loss. With the usage of a
+version control system (VCS) like Git, the company can easily revert
+back to slightly older working code and restart the program, saving the
+company a lot of money.
+
+Keep in mind that with Git and GitHub, there are many features that
+allow code to be collaborated on by many people at the same time, and
+also provides features to make sure code can be checked by other
+collaborators before it is approved.
+
+This is why version control systems (VCS) are so important in the
+development workforce.
+
+Even if you do not have a coding job and are just coding on your own,
+you can still loose significant progress when you do not use version
+control systems (VCS), (like we just discussed).
+
+Also, I want to put out that while I may not write the best commit
+statements, I am working to make better ones. A good standard for
+writing commits that I found is the Conventional Commits standard. I
+will not describe the standard here, but I recommend to read this
+summary to learn more about it.
+
+Developers often ignore their profile picture by keeping default
+geometric placeholders or blank banners because design tools can be
+intimidating. Up until recently, my GitHub profile was simply a green,
+Pacman-like geometric pattern, which doesn’t show anything about me, or
+a spec of my creativity. I didn’t know how to use any design software,
+except basic Photopea. With almost no design knowledge, I wanted to make
+myself an awesome profile picture, without spending money on proprietary
+software subscriptions, so I turned to Inkscape, (a free, open-source
+vector editor).
+
+Standard raster images (like PNGs and JPGs) are just grids of colored
+pixels that blur when scaled. Vector files (like SVG) are built on
+mathematical coordinates and nodes. In fact, SVG vector files are really
+just XML data. Because I chose to design my profile picture with vector
+graphics, it is able to stay completely crisp, no matter how I resize
+it. The pixelation issues that occur when you enlarge standard images
+simply does not exist in vector graphics.
+
+The way I got a basic understanding of Inkscape without watching long
+videos or signing up for paid courses was by applying a different
+philosophy of learning that I find is also highly effective when
+learning programming languages or concepts.This philosophy of learning
+emphasizes applying concepts as you learn them, rather than learning
+concepts and only applying them once you completely understand them.
+This approach is even more powerful in Inkscape because you see visual
+results directly on your canvas. Unlike coding, where your code must be
+correct before you can run it (generally), design lets you learn simply
+by doing.
+
+The way I applied this philosophy of learning to Inkscape was by
+following along with a simple and short (~15 minutes) tutorial, and
+using tools the second the instructor explained them. I frequently
+paused to experiment more with the tools, which worked very well, except
+for the Bézier tool and it’s paths, which I still sadly can not use well
+(I tried to make a smiley face with it, and I made an upside down ^
+symbol, which is why I made it with the calligraphy tool). When there
+was something I truly did not know how to do (like wrapping text around
+an ellipse), I simply searched for it online and applied it immediately.
+
+To design the profile picture, I centered a large ellipse onto a 500 by
+500 pixel canvas with a smooth blue to pink linear gradient, leaving the
+corners transparent. From there, I built the features: 3D boxes for
+eyes, ovals for ears, the hair, and my initials for the nose. I even
+layered a duplicated calligraphy path to make depth for the smile.
+Finally, I exported the finished asset as a PNG file to preserve
+transparency.
+
+I then updated my GitHub and DEV.to profile picture to be my newly
+designed profile picture. My custom Hugo blog even updated its main page
+automatically once I reran my GitHub actions workflow, since it pulls my
+profile picture dynamically from GitHub.
+
+I also use Inkscape to make cover images for my DEV.to articles, like
+this one with a canvas size of 1000 by 420 pixels, for a clean,
+professional look. Because the original asset is a vector, I can shrink
+it into the corner to be a small logo or blow it up to be the center of
+attention of an article cover, and it always stays crisp.
+
+Learning how to use an open-source creative tool is just like learning
+how to use a CLI utility. You don’t need to master the entire tool; you
+only need to learn the parts you are actually going to use.
+
+What do your profile pictures look like? Did you make them yourself, or
+are they still placeholders? If you are still using a placeholder, are
+you planning on making one now? If you are confused by Inkscape, I’m
+sure someone in the comments could help you.
+
+Also, if anyone has any experience using Inkscape or other graphic
+design software, I would love to hear your thoughts!
+
+Not too long ago, I was terrible at Markdown. I was illiterate in
+arguably the most critical markup language in modern technology,
+spanning from Software Development and Artificial Intelligence to
+Technical Writing and Workspace Communications. I couldn’t even make a
+basic README!
+
+To be able to write code but be unable to make documentation is like
+knowing an alien language without being able to travel to the alien
+planet. To be fair, I wasn’t much good at coding then anyway.
+
+I tried to use GitHub Skills Communicate using Markdown, but as a
+beginner in GitHub, I wasn’t able to trigger the required Actions to
+move forward.
+
+I believe that everyone should be able to learn Markdown easily,
+regardless of what other tools they can use. The way I learned was
+through tutorials like this, so I decided to contribute a nice tutorial
+to the community.
+
+Here is a quick-reference guide to common Markdown syntax to help you
+get started.
+
+  -----------------------------------------------------------------------------------------
+  Element           Markdown          HTML                                Output
+  ----------------- ----------------- ----------------------------------- -----------------
+  Heading Level One # H1              <h1>H1</h1>                         
+
+  Heading Level Six ###### H6         <h6>H6</h6>                         
+
+  Bold              **text**          <b>text</b>                         text
+
+  Italic            *text*            <i>text</i>                         text
+
+  Link              [Title](URL)      <a href='URL'>Title</a>             Title
+
+  Inline Code       code              <code>code</code>                   code
+
+  Image             ![Alt](URL)       <img src="URL" alt="Alt">           
+
+  Strikethrough     ~~text~~          <del>text</del>                     text
+
+  Horizontal        ---               <hr>                                
+  Divider                                                                 
+
+  Unordered list    * item OR - item  <ul><li>item</li></ul>              
+
+  Ordered list      1. item           <ol><li>item</li></ol>              
+
+  Blockquote        > quote           <blockquote>quote</blockquote>      
+
+  Code Blocks       ```language       <pre><code>code</code></pre>        
+                    code```                                               
+
+  Checked Box       - [x] Task        <input type="checkbox" checked>     ☑ Task
+
+  Unchecked Box     - [] Task         <input type="checkbox" unchecked>   ☐ Task
+  -----------------------------------------------------------------------------------------
+
+How to use tables
+
+1.  To make the headers, write the column names separated with | symbols
+    like this: Column 1 | Column 2 | Column 3 |
+2.  Add the alignment indicators, also separated with | symbols:
+
+-   Left aligned: :---
+-   Right aligned: ---:
+-   Center: :---:
+
+3.  Enter the content with more | tags
+
+An example of a completed table is:
+
+    Left | Center | Right |
+    :--- | :---: | ---: |
+    Left-aligned text | Center-aligned text | Right-aligned text |
+    Column 1 | 2 | 3 |
+
+And, it renders as:
+
+  Left                       Center                        Right
+  ------------------- --------------------- --------------------
+  Left-aligned text    Center-aligned text    Right-aligned text
+  Column 1                      2                              3
+
+“How do I practice this?”
+
+“How do I practice this?” is a question you are probably asking right
+now, or definitely will in the future. The way you practice is simply by
+using Markdown in your daily life. Instead of pulling up a WYSIWYG
+editor like Google Docs or Microsoft Word, you could use Markdown.
+
+Conclusion
+
+Markdown is a valuable tool in many areas, and you just learned some of
+it. You’ll eventually realize that Markdown isn’t really as hard as it
+seems.
+
+I originally wrote this article and expected it to be published while I
+was at a sleepaway camp, but there was an issue with the scheduler, and
+it was not published. This article has been manually published after I
+returned home from the sleepaway camp in question.
+
+It was a Friday, and school was out for the weekend. I made a bit of a
+Spelling Bee page for my website while I was at school, but that wasn’t
+enough. I was bored and had no clue what to make (because I always code
+over the weekend).
+
+When I was at a free ‘boost’ period at school, I checked my DEV.to
+notifications to find some new articles to read. And, I was shocked by
+how fast you can gain an audience on DEV.to. But there was just one
+thing I couldn’t completely get a grasp on. There wasn’t a good way to
+view and export your follower base, or even print a list of your
+followers in a nice format without it just being a big list of profile
+pictures, names, and usernames (from the dashboard).
+
+So, when I came home, I began to create devto-followers2md, an
+open-source Python program that exports information about a user’s
+followers on DEV.to in a beautiful Markdown file or a complete CSV or
+JSON file.
+
+Here is an example of a nice Markdown output the program made (yes, I
+spent a long time making sure the program outputs it in a way that looks
+nice):
+
+------------------------------------------------------------------------
+
+devto-followers2md
+
+  Generated by devto-followers2md. It is not limited to Markdown files;
+  it supports Markdown, JSON, and CSV exports
+
+Profile: Tyler N
+
+  -----------------------------------------------------------------------
+  Attribute                           Details
+  ----------------------------------- -----------------------------------
+  Name                                Tyler N
+
+  Username                            thetylern
+
+  Summary                             Hello, I am Tyler N. On GitHub, I
+                                      am @tyleruploads. I just ditched my
+                                      default green geometric identicon
+                                      profile picture using
+                                      Inkscape–check out my latest post
+                                      to hear more about it!
+
+  Location                            The United States of America
+
+  Joined At                           May 28, 2026
+
+  User ID                             3956829
+
+                                      
+  -----------------------------------------------------------------------
+
+  --------------------------------------------------------------------------------------------------
+  Index          Username                     Name             Followed At            User ID
+  -------------- ---------------------------- ---------------- ---------------------- --------------
+  0              @charice_silverman_975926c   Charice          2026-06-06T10:55:55Z   3971127
+                                              Silverman                               
+
+  1              @david_maina_0fa61e59b303c   David Maina      2026-06-05T05:06:24Z   3957041
+
+  2              @youngalpaccino              Amir Mohammad    2026-06-03T09:54:01Z   3966207
+                                              Hemmati                                 
+
+  3              @coreuptech1                 Coreuptech       2026-06-02T21:14:19Z   3965374
+
+  4              @uixlaby                     Natalia          2026-06-02T21:03:15Z   3965362
+
+  5              @lenovatus                   Lenovatus        2026-06-02T20:57:38Z   3965358
+                                              Levelian                                
+
+  6              @asraym                      Ashishraymajhi   2026-06-02T20:53:05Z   3965353
+  --------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+The Features
+
+devto-followers2md has many features that make it a solid, quality
+project.
+
+Easy Usage
+
+The project allows people who are not able to comfortably use CLI
+(command-line interface) applications to still benefit from the detailed
+and beautiful information it provides. It employs a custom banner, an
+API Key security notice, and a custom-made function that asks you to
+input save paths for each file format. Simple instructions on how to
+make a DEV.to API Key and a simple download and usage process is
+outlined in the README file.
+
+Multi-Format Exporting
+
+The project allows you to export to Markdown, CSV, and JSON files
+seamlessly in the terminal, without out-of-place GUI file pickers. This
+ensures that you can see both a beautiful overview and a complete log of
+the information about your audience. The CSV and JSON files contain the
+same data that was received from the server.
+
+Secure API Key Handling
+
+The script handles the input of your DEV.to API Key with the Python
+Standard Library module getpass, which, in this case, allows you to
+enter your API Key without it appearing in your terminal history. This
+prevents you from accidentally including your API Key when copying and
+pasting the output of the program, or experiencing other security
+issues.
+
+The program also includes a notice near the top of its output that helps
+you understand how an API Key is not just a toy, but is essentially an
+all-accessing password. This notice helps prevent your DEV.to account
+from getting compromised.
+
+Smart Rate-Limiting
+
+The script ensures that every call to the DEV.to API endpoint is almost
+always accepted in 3 ways:
+
+1.  The script waits one second in between each call to ensure the
+    server will not be angry (one second is its favorite wait time—yes,
+    this is not a joke).
+2.  The script inspects the Retry-After header to find the optimal time
+    to pause after receiving an HTTP code 429 Too Many Requests
+    response, which means we are above the server’s stated usage
+    thresholds. This ensures that you will not get your IP address
+    banned from the API endpoint and that no time is wasted on
+    unnecessary wait times.
+3.  The script includes a user-agent in the header of the request to
+    ensure full acceptance.
+
+Beautiful and Detailed, but Concise
+
+The application allows you to export the follower information into a
+beautiful and detailed but concise Markdown file, or a CSV or JSON file
+that has every single field of information the DEV.to API gives the
+script. And, you don’t have to choose between beautiful and complete!
+The program gives you the opportunity to export to any one or all of
+those formats in one execution.
+
+More on how I built it
+
+While 300 lines of code may seem very simple (which is true on the
+outside because of how short it is), each line of its code is in a
+compact form and contributes greatly to the final result, including
+formatting and white space.
+
+Behind the small 300 lines of code were hours of development, thinking,
+debugging, linting (to the best of my ability; I am not even in high
+school), Information Architecture (deciding how to structure and
+organize information), and Document Engineering (converting messy API
+data to a beautiful Markdown output—in my case).
+
+Originally, it only supported Markdown outputs. But after some thinking,
+I determined that it was best to add JSON and CSV outputs to enable you
+to analyze your data with code or spreadsheet formulas and to do other
+similar tasks. The way the program helps with analysis—other than the
+beautiful human-readable output—is by automatically collecting each page
+of your followers into one output, which you would have to do manually
+or create your own script to do so without the application.
+
+Future Plans
+
+A simple weekend project turns into a trustworthy and handy tool when it
+is contributed to and updated over time. I am already envisioning new
+features that I can add to the project, such as:
+
+-   More Platforms: Imagine if you had one tool that analyzed your
+    audience across many different platforms, and even compared those
+    audiences to find users who are engaging with you in multiple
+    mediums. Think of one space to understand all of your audience, both
+    for developers and non-developers. This is a large goal for the
+    project, and would require community input as to what platforms
+    should be targeted.
+-   Gender and Nationality Analytics: Understanding your user base in
+    this sense can help you decide when to publish articles based on
+    time zones, routines, and preferences. It can also help you decide
+    what topics may be more appealing to your user base. This data could
+    be added as 2 columns to the main followers table.
+-   Collecting More Information: The reason each user does not have all
+    the information that the main user’s profile does is simple: time.
+    To comply with the API thresholds of DEV.to, it would take a long
+    time to gather this information for each of your audience members.
+    In the future, I am planning on making it gather this information
+    about each audience member, which will take time to ensure it is
+    coded to run as fast as it can while still complying with the DEV.to
+    API thresholds.
+-   Comparing to Past Outputs: Currently, the script does not compare
+    the new API responses to any old ones, meaning it can not tell you
+    the rate at which you are growing, if you gained or lost followers,
+    or any more detailed information. I plan to have it compare multiple
+    outputs to give more detailed analytics.
+-   More File Formats: While the application already supports Markdown,
+    JSON, and CSV exports, I plan on adding support for more export
+    formats. Some of the formats I plan on incorporating into the
+    application are: HTML table snippet, full HTML page, PDF, SQLite,
+    and more.
+-   An Analytics Section: I am planning on adding a simple section in
+    between the header and the followers table in the Markdown output
+    that tells you how many followers you have, and the date the program
+    was run. Aggregated gender and nationality information could also be
+    put here.
+
+Wrap-Up and Contributing
+
+This project started as a simple weekend project to keep me from being
+profusely bored. But, as you just saw, I plan to maintain it.
+
+If you want to try it out, export your own follower list, or contribute
+to help the ideas above become more possible, look at the repository on
+GitHub:
+
+https://github.com/tyleruploads/devto-followers2md
+
+What is your favorite project that you or someone else made? Also, which
+one of the features do you think I should prioritize?
+
+  IMPORTANT NOTE: On 06/14/2026, devto-followers2md has been renamed to
+  devtkit (DEV Toolkit). I chose to rename the project so it can be
+  expanded to include more tools beyond just exporting followers. I plan
+  to add many features in addition to the previously listed ones,
+  including a tool that lets users input an article ID and output a
+  Markdown/HTML/PDF of it that includes the article’s title, cover
+  image, publish date, name and username, content, and full comment tree
+  and the ability to do this automatically for every article of a
+  specific user, and more. The new project can be accessed here (old
+  links will redirect)
+
+One day, I was working on a Python project. I had my ‘reliable and
+speedy’ Windows and my ‘fast and optimized’ VS Code. But, the only issue
+with this, is that those adjectives, are false. To have three browser
+tabs and one VS Code window open at the same time was like a death wish
+to my 16GB of RAM. And, as you may have guessed, this wasn’t just ‘one
+day’, but rather, every single time I wanted to do any sort of
+development in the Microsoft ecosystem (minus the browser, I viewed
+Microsoft Edge as terrible and Chrome as just the only replacement,
+despite its lag).
+
+At that rate, imagine how slow it was for me to code. I was running the
+newest Windows, the newest VS Code, didn’t have any unnecessary
+background apps, and followed every single ‘secret’ step to ‘optimize’
+and ‘speed up’ Windows and its associated applications. I was doing
+everything right, but it still was too slow. Oftentimes, a large portion
+of my 16GB of RAM, was used simply by thousands of background services
+that added up to use a large amount of memory.
+
+So, approximately three months ago, on March 10th, 2026, I decided to
+experiment with dual-booting a Linux distribution on my main computer. I
+shrunk my Windows partition with the Disk Management application and
+proceeded to allocate around 300GB of space on my 1TB SSD (solid-state
+drive) for Debian 13.3, (Trixie), a Linux distribution notable for its
+stability, large software repository, extensive architecture support,
+strict free and open source software (FOSS) philosophy, and upgrade
+reliability. And, so far, I have only used 62GB of space on the 300GB
+partition, meaning that I could have been very comfortable with 100GB.
+This data usage is including large media files.
+
+I originally thought I would only use Linux as a side project or hobby,
+and that I would often boot to Windows, too. But, two facts made me
+never boot Windows again with the intent to use it for purposes other
+than data collection. Those facts are:
+
+1.  I have never experienced lagginess on Linux that I deemed to not
+    have a reasonable cause.
+2.  It was not as hard to use as I thought it would be.
+
+To elaborate more on fact two, at least to me, the complexity of Linux
+is decided by your Desktop Environment (DE). On Windows, you are locked
+down to one Desktop Environment (DE) that can be very laggy, but is
+extremely simple to use for basic tasks. On the other hand, Linux
+generally allows users to choose their own Desktop Environment (DE),
+with the exception being certain immutable distributions and Operating
+Systems like Android OS and Chrome OS (yes, they rely on Linux). On
+Linux, users can choose themselves the correct balance between
+accessibility, usability, and speed for their specific circumstances by
+making an educated choice on which Desktop Environment (DE) to utilize.
+
+I originally tried my best to find the ‘perfect’, light-weight IDE for
+Linux. I tried Sublime Text, and I was fine with it for a while. But, I
+eventually decided to strip out the IDE, and instead, simply code in the
+terminal.
+
+When using the terminal to code via a code or text editor (like micro or
+nano), the tools you write code with generally do not significantly
+contribute to the resource usage of your computer, with the exception of
+certain advanced code analysis tools to prevent security, speed, and
+other issues or errors, along with certain other applications. For
+example, if you can have 5 browser tabs open without any lag, adding on
+something like micro will not make your experience any more laggy.
+
+With my new development workflow, I am able to code—minus the lag. I can
+have 10 different terminal tabs open, and it’s not even as hard on my
+laptop as resting a feather on its lid, (figuratively). It’s 2 cents
+compared to the resource utilization on the rest of the computer.
+
+And, my choice of using Linux also greatly contributed to reduced lag
+when using my computer, both in general and in development workflows,
+—in addition to utilizing terminal based code editing. Because of
+Linux’s open-source nature, every single line of code is scrutinized by
+the public, and every issue is eventually caught and handled (if you are
+going to comment about copy fail and similar issues, it was in fact,
+eventually fixed). On the contrary, Windows’ proprietary nature allows
+for extreme telemetry and non-optimization, despite their claims of
+speed. Windows is even thinking about utilizing more system
+resources—instead of actually optimizing—to make the Windows experience
+faster.
+
+My General Workflow for Making Python Projects on Linux While Utilizing the Terminal
+
+-   I generally use the micro code editor or the nano text editor, both
+    terminal-based applications.
+-   I may have the Firefox FOSS (free and open-source) web browser open
+    to a documentation page or a forum of some sorts. Web browsers like
+    Google Chrome, Apple Safari, and Microsoft Edge are not FOSS (free
+    and open-source).
+-   Now that I have started my Python project devto-followers2md, I have
+    recently started checking my code with Ruff, a fast Rust-based
+    Python linter and code formatter. I also started using pyright,
+    (yes, I know it is very ironic, it is made by Microsoft), and will
+    be working on making sure the project aligns with its standards too.
+
+(If you are wondering more about my Python project, I have an awesome
+article about it coming out on Friday morning, here on DEV.to. When it
+comes out, I will insert the link for it, here).
+
+The Final Anecdote (for now)
+
+Due to Windows’ confusing file storage locations (including Microsoft
+OneDrive), I was forced to boot Windows in order to recover my coding
+folder that was not visible when I decrypted my Windows partition with
+my BitLocker recovery key. I tried to copy it to my Google Drive
+account, but it was transferring at a rate close to ZERO megabits per
+second, so that was a no go. I tried to transfer to a flash drive that
+generally works just fine, and it said my 16GB or so of data would take
+16 hours, then 20 hours, then just weeks to copy. That, also, was not
+going to work. It turns out that the Antivirus system, BitDefender,
+completely crashed, on every level. Because Windows does not allow the
+administrator to force kill the antivirus process or its associated
+programs, the antivirus GUI dashboard and control center hung and never
+closed due to the crash of its antivirus process. Possibly, the
+antivirus software was attempting to scan files when it was not able to,
+causing this issue. I eventually was able to transfer it (very slowly),
+with the terminal!
+
+Conclusion
+
+While I switched from Windows to Linux and greatly benefited from it, I
+acknowledge that it is not the right move for everyone. People may be
+locked into it because of their jobs, or they may have a certain
+circumstance making Linux not the best for their specific workflow. And,
+of course, I acknowledge macOS, too. Since macOS is built on a UNIX
+foundation (like Linux), it is much closer to Linux than Windows is.
+
+Windows users who want to experience Linux can utilize WSL, which lets
+Windows users utilize a Linux environment on their Windows computer. (It
+is made by Microsoft, so if you are wondering, no, it is not unofficial
+or dangerous). WSL is free to use, but is not completely FOSS (free and
+open-source).
+
+What is your favorite coding workflow, and, what OS do you use? Do you
+agree with what I said?
+
+I’ll share my OS:
+
+OS: Debian GNU/Linux 13 (trixie) x86_64 Kernel: Linux
+6.12.90+deb13.1-amd64 DE: KDE Plasma 6.3.6 WM: KWin (Wayland) Shell:
+bash 5.2.37 Display: 1920x1080 @ 60 Hz CPU: 12th Gen Intel(R) Core(TM)
+i7-1255U (12) GPU: Intel Iris Xe Graphics [Integrated] Memory: 16GB
+
+I had just recently completed a couple of medium-sized projects for
+Stardance, a global teen hackathon hosted by Hack Club, a global
+nonprofit organization for teen coders. To continue, I decided to follow
+a beginner mission that required just 5 hours of coding. I thought this
+project would be a quick and easy way to get a relatively small amount
+of digital currency for the Stardance shop, which allows you to purchase
+both physical and digital items. This digital currency is called
+Stardust.
+
+I decided to name the project CodeWare; more on that in a minute. I went
+through the missions tutorial and finished in a decent amount of time.
+But I kept going back and making sure everything was perfect, squashing
+bugs before a real user would see them.
+
+But I thought to myself one thing. This one thing completely transformed
+the rest of the project (did you really think I ended it there?) The one
+thing I thought to myself was, “Am I really going to just submit a
+simple project following a beginner tutorial?”
+
+The answer to that question, and quite frankly the reason why I am
+making this article, is an absolute, firm “no.” I was not just going to
+turn in a simple beginner project following a simple beginner tutorial.
+
+[The Tyleruploads mountain range, which is the background of the title
+image for the CodeWare video game created by Tyleruploads]
+
+The title screen of the game is the Tyleruploads Mountain Range, which
+contains many mountains connected via land bridges. The suspension for
+those bridges is the game’s logo turned into a bunch of small links.
+Metaphysically, the game’s goal is to cross those bridges. Based on the
+abstract nature of this game, it also has two very abstract endings: one
+for when you win, and one for when you lose all of your five lives.
+However, I am not going to explain exactly what happens in these
+endings, but I will explain their significance.
+
+They highlight the eternity of coding in the realm of bureaucratic and
+automatic computer-generated code files. When you take a deeper look
+into this seemingly elementary project, you may see a full world of
+possible interpretations. In the death scene, the user is said to be
+between the two sides of eternity, represented by the bicycle-looking
+infinity loop in the logo of the game.
+
+The game is a collection of fast-paced, action-filled minigames. Each
+minigame has a timer you can hear ticking throughout the game. If the
+timer strikes zero, you either lose one of your five lives and redo the
+minigame, or continue to the next one. The distinction depends on the
+minigame type. The two types are minigames in which you need to do
+something within a set time or survive until the time runs out.
+
+To set the record straight, before making this, I had absolutely no
+experience in any sort of game development. I didn’t even have Godot—or
+any game engine, as a matter of fact—on my computer. I thought that
+Stardance Mission would be a “gentle introduction to game development
+and Godot.” Originally.
+
+But it was more like “ditch the mission and get actual game development
+skills.” Currently, I have invested 51 hours and 38 minutes of real
+(slightly underrepresented) coding time, backed by a time tracker also
+provided by Hack Club. That was at least 5x larger than any project I
+had ever worked on before.
+
+The reason I was able to get in so many hours is because of an
+unexpected plot twist. That plot twist, something that may earn me a
+Bambu Lab A1 Mini 3D Printer (I don’t know yet), is a One-Month
+Extension. I had joined the Stardance hackathon late in the summer,
+partly due to my one-month-long sleepaway camp that doesn’t even allow
+certain MP3 players or any E-Readers—and definitely not any sort of
+personal computing device but a calculator. So, I was thinking I will
+never have enough time to get a nice prize. And while that could still
+possibly be true, at least now I have a chance to have every single type
+of printer I could possibly think of in my room.
+
+To be fair, that last sentence is actually very anticlimactic; the two
+types of printers I can think of are old HP printers with dirt-cheap
+generic toner cartridges and 3D printers. But what matters much more
+than what type of printer you have is how you use it.
+
+In the Stardance hackathon, your Stardust payout is determined with a
+very simple formula: Multiplier * Hours Spent Coding = Stardust. In case
+you didn’t catch it in the first paragraph, Stardust is what you use to
+buy rewards (like a 3D printer) in the digital shop. The multiplier is a
+bit harder to explain. It is based on 12 reviews from other teenage
+coders around the world, and they rate it on the following topics:
+
+-   Originality: “How distinct is the project from common projects?”
+-   Technicality: “How much effort did the creator put into the
+    implementation?”
+-   Usability: “Did you like using it? Could you use it at all?”
+-   Storytelling: “How well does the creator document the development
+    journey through devlogs, documentation, commit messages, and
+    READMEs?”
+
+I honestly think my project would get a pretty mediocre rating in terms
+of originality. It’s just a video game. It could be boosted if the
+reviewers understand the philosophical aspects of the game, but they
+probably won’t.
+
+For technicality, I really think this is where it’ll shine. In the 51
+hours and 38 minutes I spent working on this project, I really think I
+made something spectacular. I went over it so many times until I was
+really sure it was perfect.
+
+As for usability, this has to be great. CodeWare is accessible on its
+own Itch.io page and GitHub Pages site. It also has Linux, Windows, and
+even Web downloads available at its GitHub Releases Page.
+
+I also think I did really well in storytelling. I made some very
+detailed devlogs (updates on what I code).
+
+Feel free to check out my game at the links a bit above here. You can
+also check out its Stardance project page. Right now, you are
+essentially stuck in the biggest cliffhanger ever: Will Tyler get a 3D
+Printer? Well, that is going to take until November of this year to find
+out.
+
+SCROLL DOWN FOR IMPORTANT INFORMATION
+
+It turns out I did not need to wait until November! I did so well on
+this project that I got an unimaginable payout of 1013 Stardust with a
+16.45x out of 20x multiplier, with a 20% bonus for being “Blessed”
+because of my thoughtful voting. With this unimaginable payout, I did
+not need to wait any longer to be able to purchase the 3D Printer! For
+perspective, it costs 802 Stardust. I am so happy with the awesome,
+thoughtful, and detailed reviews I got on my project! Here are some of
+them:
+
+  Review #1/12: “This project is so cool. I really like how you used so
+  many different pretty [colors on] the website and how you can watch
+  gameplay videos because it is super confusing, but after I watched the
+  gameplay videos, I [understood] exactly what to do, so I will make
+  sure to tell this project to all of my friends and family so they can
+  play it too!!”
+
+  Review #4/12: “I really enjoyed the game. It was really fun [to] play.
+  At first the ticking was annoying, but you get used to it. I liked how
+  simple, yet so [addictive] it was. The levels are creative and match
+  the game really well. No level was way too hard; they were just fine.
+  Maybe [it] could be a bit harder. Very good project!”
+
+  Review #5/12: “The game is fun to play and difficult too. I [tried] to
+  beat level 1 but [wasn’t] able to. The mix of dodging, typing, and RGB
+  matching gives CodeWare plenty of variety, and your detailed devlogs
+  make the development journey easy to follow. One useful code
+  improvement would be making the orb-expiry timer in minigame 3 pause
+  alongside the countdown by passing false to create_timer(). Well,
+  overall, the project is cool and fun to play.”
+
+  Review #7/12: “Hi, as an OG WII player, I gotta say that the vibe fits
+  perfectly [with] the meaning of ”WarioWare-like game”. I bet it was
+  extremely fun to build and it would be crazy good if you could play
+  this with someone. Apart from my crazy and unrealistic ideas, you did
+  an amazing job!”
+
+  Review: #10/12: “YOOO THIS PROJECT IS SOOOO GOOOD YOU SHOULD ADD MORE
+  FEATURES LIKE A TUTORIAL.”
+
+  Review: #12/12 (grammatical edits skipped to show full enthusiasm):
+  “The art is really cool and homemade, all the games are intuitive to
+  me. I know exactly what to do with those really helpful instructions
+  at the bottom. I completed the game on my second try. Really fun.
+
+  None of the games seemed unfair in my opinion, but maybe make the
+  games run for shorter time.
+
+  devlogs, communication is really good, highlights what have done,
+  challenges you faced, future plans and more. NICE! Your README is also
+  very detailed and has lots of info, GOOD JOB
+
+  The extras page is really cool! Never seen that before. The gallery
+  walk as well as credits! how unique. tuff
+
+  lemme tell you something, lemme tell you something. YOU DO NOT NEED a
+  licence for a simple WarioWare video game. RAAA
+
+  Something better, if can like leave the boring writing license stuff
+  outside of the gameplay loop, like in the extras, that would be really
+  appreciated!😁😁😁😁
+
+  One thing I experienced while playing is that you can actually pause
+  the timer screen before the game starts, not sure if that’s
+  intentional but just FYI. maybe fix.
+
+  But overall you have put a lot of effort into this, this game is
+  really fun, best WarioWare type-game i’ve seen so far.”
+
+I also happen to be 4th on the global leaderboard for hours shipped on
+my team, which consists of approximately half of the Stardancers. But I
+know there are definitely some super large 200-hour projects from other
+people waiting to be submitted. I won’t stand a chance a couple of days
+before it ends (actually, this time).
+
+I also got a beautiful certificate because of this project!
+
+------------------------------------------------------------------------
+
+What’s Next?
+
+Thank you to everyone in the Hack Club community who played, reviewed,
+and supported CodeWare! I truly learnt so much about game development,
+Godot, and projects that take over 50 hours!
+
+If you haven’t played CodeWare yet, view its Itch.io page, GitHub Pages
+Site, GitHub Repository, or Stardance Project Page.
+
+Just over two weeks ago, I made an article here on DEV about how I made
+an action video game with the Godot game engine during a global digital
+couple-month-long hackathon for teenagers named Stardance. An important
+part of the article was the prizes involved in participating in the
+hackathon, and how I earned a Bambu Lab A1 Mini 3D Printer because of my
+work. I also mentioned that I made some smaller projects before that
+one. The article is here: How I Built an Action Game with Godot During a
+Global Teen Hackathon with Prizes. Well, I guess I didn’t mention my
+plans for what I would do after! This article is all about that!
+
+I just very recently made MDEZ++ (mdez), a lightweight Markdown editor.
+It is built with C++20 and the Qt Framework for the need for speed.
+Instead of a WYSIWYG (What You See Is What You Get) editor, or the polar
+opposite, a raw Markdown editor with a separate option to render it, it
+renders the raw Markdown as you type it on the right side of the screen.
+There’s essentially no knowledge required to use MDEZ++, not even
+knowledge of Markdown syntax. This is because of the Format menu, which
+allows you to apply Markdown syntax by clicking on unambiguous buttons.
+It can even render HTML files too, with almost the same workflow as
+Markdown files. It can also edit any other plaintext file format, making
+it highly versatile.
+
+[MDEZ++ (mdez), a lightweight markdown editor, editing its own README
+document]
+
+While this project only took me 40 hours (10 less than the last
+project), these hours were definitely harder than my last project. I had
+to find unique solutions to some problems that traditionally can never
+be solved without embedding a resource-expensive, bulky Chromium
+instance into the rendering side, which would completely defeat the
+purpose of the project. Those types of issues all stem from Qt’s
+Markdown rendering. It applies some really weird rendering to Markdown.
+Two of these issues were blockquotes not having ANY special coloring,
+and the same with code blocks (not even a grey background). I solved
+those issues with unique, complex regexes. While brittle, they still
+seem to work.
+
+I even had to work with permission issues for a while, especially while
+getting it ready for Flathub. And when I implemented the feature of
+clicking a link in the document to automatically open up a new tab with
+that content, I had to do so many conditionals to make sure the end user
+doesn’t see something ridiculously ambiguous as an error sent right to
+their screen, even for a C++ coder. Fun fact: it took over 100 lines of
+code to implement something as simple as that. And I then had to go back
+and make even more changes to make it work in unique environments, and
+when users enter a fake link.
+
+I am so proud of myself for getting my project on Flathub. I had
+considered getting my last project (a video game in Godot) onto Flathub
+in the past, but I thought it would be a bit too hard for me. I was
+thinking, “Oh, imagine how many files I’ll need! A manifest, a metadata
+information file, CI/CD, human review, manual SHA256 sum changes in the
+manifest! There’s no way I’ll ever be able to do it!” But I definitely
+did it with this project! And it looks pretty good on there too!
+
+When I look through the features section of my README (which I just
+recently updated), I don’t think of MDEZ++ as a small project made by an
+indie developer (I don’t like the word Indie for some reason; it just
+seems too culturally appealing in the sense of turning coding into some
+sort of a social media lifestyle), but rather, just as a
+professional-grade project. I can’t even imagine how I made something as
+complex as this. The features section has 12 points, which still skips
+over the non-cumbersome or medium-to-easy-difficulty features.
+
+Even the Downloads & Installation section of the README has complexity
+greater than anything I have endeavored to do before. It has an
+introduction, two ways to run the Linux Setup Script I made (which has
+four options inside it), a download table containing an AppImage file,
+the Flathub webpage, a Windows executable, a WebAssembly download, and a
+webpage, then a note for Linux users, and a note for Windows users.
+
+Even the Keyboard Shortcuts section and the Menu Tree section of the
+README were orchestrated with a degree of precision beyond what I
+thought I was capable of. They read more like documentation for Google
+Docs or Microsoft Word, rather than a one-man 40-hour C++20 Qt Markdown
+Editor.
+
+And, I do admit, I had a lot of trouble with the GitHub Actions CI/CD
+Workflow. It’s 164 lines long. But the line count shouldn’t matter. It’s
+that I was dealing with one of the hardest things in all of computer
+science: compiling C++ using Qt in a CI/CD (sorry if that was
+anticlimactic, since you probably guessed it already).
+
+But a harder trouble than the GitHub Actions CI/CD Workflow was that I
+was essentially a beginner to C++ before I started this project! I had
+briefly touched some C++ maybe a year or so ago, but in my mind, I was a
+complete beginner when I started MDEZ++. That was evident in my
+unfamiliarity with absolutely every single thing I had to do, and
+especially with those compiler errors (and segmentation faults,
+especially when implementing the ability to use a tabbed interface) I
+had never experienced before. But I powered through with those Qt Docs,
+and I did beautifully! But I still don’t think I know C++. I have only
+been working within the Qt ecosystem, which does a lot of stuff for you.
+It even has its own class for strings! Strings, of all things! The
+simplest things ever! All a string is is just characters stored in
+adjacent memory addresses with a character pointer to the first one,
+terminated with a null terminator character! (I know, I was describing a
+C-style string. That’s because my reliance on QStrings has made me not
+know the full definition of an std::string. I read up on that from a
+random coding slideshow presentation from some university that was
+probably used in one class like 20 years ago.)
+
+With my unfamiliarity with the C++ coding language, I was debugging
+randomly for many hours on end. And I was even personally targeted by
+segmentation faults! Yes, personally! I didn’t even know about gdb (GNU
+Project Debugger) until a few days ago when I saw a random Reddit post.
+I was essentially thinking, “Which one of these lines looks most
+suspicious?” for most of my debugging of this project, which isn’t even
+the correct way to find a segmentation fault! (It’s usually the
+communication of multiple different things. But philosophically, that
+statement is always right, just not elaborated upon properly).
+
+Sorry if this is reading like a whitepaper so far! When I started
+writing this, I had just gotten back from an intense bike ride. I had
+just essentially gone forward until I couldn’t go any further. That
+doesn’t even include the ride back. So, my tone switches from fast and
+engaging to stone-cold, academic, very quickly. Or I could just be
+imagining that, especially considering my vocabulary is completely
+standard and non-domain-specific (I literally had to Google what an
+adjacent memory address was when I read it in that random coding
+slideshow for a college course from like 20 years ago, despite the fact
+I’m in Geometry! I was thinking something about opposite sides, not
+right next to each other!)
+
+How to Use MDEZ++
+
+When you open MDEZ++, you will see two panes: one on the left and one on
+the right. As you type Markdown on the left, it automatically renders on
+the right. The black bar separating them can be dragged with your cursor
+to resize the two panes.
+
+Near the top of the window, there is a bar that contains all of the
+document tabs in the application. To create a new tab, click the +
+button on the far right side of the bar. The first tab will be
+automatically titled “Tab 1,” and all subsequently created tabs will be
+titled accordingly. To delete a tab, click the red X next to the tab
+name. All other tab names will be automatically updated based on their
+new index caused by the deletion.
+
+Arguably, the most important menu is the File menu. It consists of Open
+File, Save As, Save, Save All Files, Print, and Export as HTML buttons.
+The Save As, Save, Print, and Export buttons apply only to the selected
+tab. The Open File button will create a new tab to open the file in
+automatically, and that tab will be instantaneously selected for the
+user. The Save All Files button saves all of the documents from every
+single tab. If a tab has not already been saved, you will not be asked
+to set a save path when clicking the Save All Files button. Instead,
+only files that have already been saved, therefore giving them a save
+path, will be saved.
+
+Another important menu is the Format menu, which contains many buttons
+that allow you to apply Markdown syntax without knowing Markdown. If
+text is selected, the syntax will be automatically applied to it.
+Whereas, selecting a syntax button with no text selected will apply the
+syntax with no text inside of it and automatically move your cursor to
+the appropriate location for you to continue typing. All of these
+buttons also have keyboard shortcuts that can be invoked from anywhere
+throughout the application. Below is a table that contains all of the
+syntax shortcuts in the Format menu.
+
+         Format         Keyboard Shortcut           Description
+  -------------------- ------------------- ------------------------------
+          Bold               Ctrl+B               Insert bold text
+         Italic              Ctrl+I            Insert italicized text
+       Heading 1           Ctrl+Alt+1        Insert a level one heading
+       Heading 2           Ctrl+Alt+2        Insert a level two heading
+       Heading 3           Ctrl+Alt+3       Insert a level three heading
+   Horizontal Divider        Ctrl+D          Insert horizontal divider
+      Block Quote            Ctrl+]             Insert a block quote
+     Strikethrough         Alt+Shift+5       Insert strikethrough text
+          Link               Ctrl+K                Insert a link
+         Image            Ctrl+Shift+I            Insert an image
+          Code               Ctrl+\             Insert a code block
+      Inline Code            Ctrl+E              Insert inline code
+
+MDEZ++ also contains a Settings Menu, which saves across application
+instances and is automatically applied to each and every tab. The first
+setting is the Autosave setting, which can be enabled or disabled and
+have its interval altered through a number input in seconds. Its default
+is to be disabled. There are also separate options for the font point
+size of the editor and the font point size for the rendering pane. For
+the font point size setting of the rendering pane, other elements will
+be scaled accordingly relative to the font point size provided. Another
+setting is the end-of-line character option, which lets you choose
+between UNIX / macOS (LF) and Windows (CRLF) line endings. The final two
+settings are toggles for line wrapping in the editor and showing fun
+facts after application initialization.
+
+The End
+
+Stardance was the first ever hackathon I ever participated in. And it is
+ending tomorrow, on Halloween, October 31, 2026. In the previous
+article, I was so happy about how I got a certificate that showed I did
+70 hours of work with Stardance. Now that I am at 110 hours and it’s
+officially wrapping up, I can really take a step back and think about
+how I grew as a result of my spontaneous joining of Hack Club and its
+associated hackathon. I have done so many things I never thought I would
+be able to do before because of the wide community, incentives, and
+support that Hack Club has to offer. And Stardance isn’t just a one-off
+thing. They run many events like it. They are called YSWS (You Ship We
+Ship) and are always completely free to enter. They just about always
+have intriguing and, more importantly, useful prizes that will last you
+a lifetime.
+
+Also, I mentioned how I got a Bambu Lab A1 Mini 3D Printer from my last
+project. Well, that’s technically leaving out some stuff, at least now.
+I just recently got an RTL-SDR Blog v3 and an ESP32 Kit from the
+Stardance store with the rest of the Stardust after the project before
+this! They haven’t arrived yet, but I’m anticipating! And, I still have
+a bunch of Stardust I am going to get when I ship this project, which
+will probably get me a lot of stuff from the store.
+
+If you haven’t already downloaded or even checked out MDEZ++ yet, feel
+free to. The GitHub Repository for MDEZ++ is here. Its Flathub page (for
+Linux users) is here. The Downloads & Installation section of the README
+can be found here. And, if you don’t want to download or install it, you
+can always check out the WebAssembly version here on GitHub Pages. It is
+almost as good as the actual downloaded thing.
