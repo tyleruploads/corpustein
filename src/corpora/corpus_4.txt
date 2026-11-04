@@ -1,4 +1,8 @@
-The Three Charters of Freedom of the United States of America
+io.github.tyleruploads.corpustein:corpus-file
+name: The Three Charters of Freedom of the United States of America
+default_order: 2
+max_sentence_count: 5
+===
 
 In Congress, July 4, 1776
 

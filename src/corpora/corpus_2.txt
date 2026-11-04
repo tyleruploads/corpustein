@@ -1,4 +1,9 @@
-[EASTER EGG - EXPERIMENTAL] Main C++ Code File for Corpustein
+io.github.tyleruploads.corpustein:corpus-file
+name: [EASTER EGG - EXPERIMENTAL] Main C++ Code File for Corpustein
+default_order: 4
+max_sentence_count: 15
+===
+
 
 #include <iostream>
 #include <unordered_map>

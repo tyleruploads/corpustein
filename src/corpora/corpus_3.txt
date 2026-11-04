@@ -1,4 +1,8 @@
-Inaugural Addresses of The Presidents of the United States (1789 to 2025)
+io.github.tyleruploads.corpustein:corpus-file
+name: Inaugural Addresses of The Presidents of the United States (1789 to 2025)
+default_order: 2
+max_sentence_count: 7
+===
 
 GEORGE WASHINGTON, FIRST INAUGURAL ADDRESS
 

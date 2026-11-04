@@ -1,4 +1,9 @@
-Blog Articles by Tyler N.
+io.github.tyleruploads.corpustein:corpus-file
+name: Blog Articles by Tyler N.
+default_order: 2
+max_sentence_count: 15
+===
+
 
 Recently, I was working on creating a website on a cloud-based IDE
 (CodeHS). One night, I was editing, and then when I was done, I simply
