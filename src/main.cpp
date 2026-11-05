@@ -46,7 +46,7 @@ int max_token_count = max_sentence_count * 40;
 
 const int max_order = 8;
 
-const size_t max_history_size = max_token_count * 0.4;
+size_t max_history_size = (max_token_count * 4) / 10;
 
 std::atomic<bool> is_typewriting(false);
 std::atomic<bool> skip_typewriting_delay_requested(false);
@@ -437,6 +437,7 @@ int main(int argc, char* argv[])
                     try {
                         max_sentence_count = std::stoi(std::string(value));
                         max_token_count = max_sentence_count * 40;
+                        max_history_size = (max_token_count * 4) / 10;
                     } catch (std::exception& e) {
                         std::cout << RED;
                         typewrite("[WARNING] Value for max_sentence_count key on line " + line + " of corpus metadata contains an invalid integer or integer overflow, or the integer contributed to an integer overflow in arithmetic to calculate the maximum token count. Setting maximum sentence count to 10 as a default fallback. Line:\n", 10);
@@ -445,6 +446,7 @@ int main(int argc, char* argv[])
 
                         max_sentence_count = 10;
                         max_token_count = max_sentence_count * 40;
+                        max_history_size = (max_token_count * 4) / 10;
                     }
                 } else {
                     std::cout << DARK_AMBER;
@@ -661,6 +663,7 @@ int main(int argc, char* argv[])
 
                     max_sentence_count = new_max_sentence_count;
                     max_token_count = max_sentence_count * 40;
+                    max_history_size = (max_token_count * 4) / 10;
 
                     std::cout << AMBER;
                     typewrite("Maximum sentence count set to " + std::to_string(max_sentence_count) + ". Maximum token count automatically scaled to " + std::to_string(max_token_count) + ".\n", 10);
