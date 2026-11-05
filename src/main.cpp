@@ -1,3 +1,8 @@
+#ifndef APP_VERSION
+extern const char* APP_VERSION; // Silences linters
+#error "BUILD ERROR: APP_VERSION must be passed by CMake definitions."
+#endif
+
 #include <iostream>
 #include <unordered_map>
 #include <deque>
