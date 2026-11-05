@@ -5,6 +5,10 @@ extern const char* APP_VERSION; // Silences linters
 #error "BUILD ERROR: APP_VERSION must be passed by CMake definitions."
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <iostream>
 #include <unordered_map>
 #include <deque>
@@ -330,6 +334,29 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
 int main(int argc, char* argv[])
 {
     (void)argc;
+
+#ifdef _WIN32
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode)) {
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        }
+    }
+
+    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+    if (hIn != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hIn, &dwMode)) {
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_INPUT;
+            SetConsoleMode(hIn, dwMode);
+        }
+    }
+#endif
 
     std::unordered_set<std::string> allowed_repeats = {
         "and", "or", "so", "as", "if", "then", "because",

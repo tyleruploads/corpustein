@@ -12,14 +12,14 @@ permissions:
 
 jobs:
   compile:
-    name: Compile for Linux
+    name: Compile for Linux and Windows
     runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
         name: Checkout
 
-      - name: Compile Corpustein
+      - name: Compile Corpustein for Linux
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
@@ -35,9 +35,31 @@ jobs:
 
           rm -rf release_staging
 
+      - name: Install MinGW Toolchain to Compile for Windows
+        run: sudo apt-get install -y mingw-w64
+
+      - name: Compile Corpustein for Windows
+        run: |
+          cmake -B build-windows \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=Windows \
+            -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+            -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
+            -DCMAKE_SHARED_LINKER_FLAGS="-static -static-libgcc -static-libstdc++"
+          
+          cmake --build build-windows --config Release
+
+          mkdir -p release_staging_windows
+          cp build-windows/corpustein.exe release_staging_windows/
+          cp -r build-windows/corpora release_staging_windows/
+
+          zip -r corpustein-win64.zip release_staging_windows
+          rm -rf releas_staging_windows
+
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           files: |
             corpustein-x86_64.tar.gz
+            corpustein-win64.zip
           generate_release_notes: true
