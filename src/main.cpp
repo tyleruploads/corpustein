@@ -204,7 +204,7 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
     return corpora_map;
 }
 
-std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
+std::string get_seed(const std::string &prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
     std::stringstream ss(prompt);
     std::vector<std::string> prompt_tokens; 
 
@@ -212,7 +212,7 @@ std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::u
     while (ss >> word) prompt_tokens.push_back(word);
 
     std::unordered_set<std::string> cleaned_tokens;
-    for (std::string token : tokens) {
+    for (const std::string &token : tokens) {
         std::string cleaned_token = token;
 
         std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(), [](unsigned char c) {
@@ -263,7 +263,7 @@ std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::u
         std::uniform_int_distribution<size_t> tokens_dist(0, tokens.size() - 1);
 
         while (true) {
-            std::string canidate = tokens[tokens_dist(gen)];
+            const std::string &canidate = tokens[tokens_dist(gen)];
 
             std::string cleaned = canidate;
             std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), [](unsigned char c) {
@@ -276,7 +276,7 @@ std::string get_seed(std::string prompt, std::vector<std::string> tokens, std::u
 }
 
 template <typename Iterator>
-std::string get_ngram_string(Iterator begin, Iterator end)
+std::string get_ngram_string(const Iterator &begin, const Iterator &end)
 {
     std::string ngram;
     for (auto it = begin; it != end; ++it) {
@@ -355,7 +355,7 @@ int main(int argc, char* argv[])
 
     std::string current_corpus_name;
 
-    auto load_corpus = [&](std::filesystem::path filePath) {
+    auto load_corpus = [&](const std::filesystem::path &filePath) {
         std::ifstream file(filePath);
 
         if (!std::filesystem::exists(filePath)) {
