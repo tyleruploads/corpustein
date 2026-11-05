@@ -1,3 +1,5 @@
+static_assert(__cplusplus >= 202002L, "Corpustein requires C++20 or later.");
+
 #ifndef APP_VERSION
 extern const char* APP_VERSION; // Silences linters
 #error "BUILD ERROR: APP_VERSION must be passed by CMake definitions."
