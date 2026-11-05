@@ -336,10 +336,10 @@ int main(int argc, char* argv[])
         "but", "yet", "we", "it", "me", "him", "her", "them",
         "us", "my", "your", "his", "their", "theirs", "our", "ours",
         "these", "those", "all", "any", "some", "which", "what", "who",
-        "how", "why", "where", "when", "its", "myself", "yourself"
+        "how", "why", "where", "when", "its", "myself", "yourself",
         "out", "down", "off", "no", "only", "very", "just",
-        "not", "dont", "cant", "don't", "can't", "more", "most", "other"
-        "i", "you", "he", "she", "they", "this", "that", "then", "here", "there"
+        "not", "dont", "cant", "don't", "can't", "more", "most", "other",
+        "i", "you", "he", "she", "they", "this", "that", "then", "here", "there",
         "the", "a", "an", "in", "on", "at", "to", "for", "of",
         "with", "by", "from", "up", "about", "into", "over", "after",
         "be", "am", "is", "are", "was", "were", "being", "been",
