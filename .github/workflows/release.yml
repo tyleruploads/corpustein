@@ -43,6 +43,8 @@ jobs:
           cmake -B build-windows \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=Windows \
+            -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON \
             -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
             -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++" \
             -DCMAKE_SHARED_LINKER_FLAGS="-static -static-libgcc -static-libstdc++"
