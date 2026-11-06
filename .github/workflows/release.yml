@@ -13,7 +13,7 @@ permissions:
 jobs:
   compile:
     name: Compile for Linux and Windows
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,6 @@ jobs:
 
       - name: Install MinGW Toolchain to Compile for Windows
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
           sudo apt-get install -y g++-mingw-w64-x86-64-posix
 
