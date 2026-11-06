@@ -8,23 +8,108 @@ Corpustein is a **blazingly fast N-gram Markov Chain model with a configurable o
 [![GitHub Issues](https://img.shields.io/github/issues/tyleruploads/mdez)](https://github.com/tyleruploads/corpustein/issues)
 [![C++](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
 
+## Features
+
 ## Usage
 
-Type your prompt after the `>` symbol, and press enter. Corpustein will instantly generate text, faster than a blink of the eye.
+Type your prompt after the `>` symbol, and press Enter. Corpustein will instantly generate text, faster than a blink of the eye.
 
+Corpustein also supports many slash commands. See the [Commands](#commands) section to view available slash commands.
 
 ## Download
 
-Installation of Corpustein is very, very simple. For Linux users, download the executable in a tar.gz below.
+To run Corpustein, simply download the appropriate binary for your Operating System from the table below.
 
-[**Linux Executable**](https://github.com/tyleruploads/corpustein/releases/latest/download/corpustein-x86_64.tar.gz)
+| Linux | Windows | macOS |
+| :---: | :---: | :---: |
+| [**Linux Executable tar.gz (x86_64)**](https://github.com/tyleruploads/corpustein/releases/latest/download/corpustein-x86_64.tar.gz) | [**Windows Executable ZIP (x86_64)**](https://github.com/tyleruploads/corpustein/releases/latest/download/corpustein-win64.zip) | Not Automatically Compiled by CI/CD |
 
+### Note for Linux Users
+
+You may need to mark the binary as executable before it can be run.
+
+```bash
+mkdir corpustein
+tar -xzvf corpustein-x86_64.tar.gz -C corpustein
+cd corpustein
+
+
+chmod +x corpustein.x86_64
+```
+
+### Note for Windows Users
+
+If you do not know what to do with the zip file, follow these steps.
+
+1. Download [corpustein-win64.zip](https://github.com/tyleruploads/corpustein/releases/latest/download/corpustein-win64.zip) and extract it
+2. Open the extracted folder, navigate to the `release_staging_windows` folder, and then run the file named `corpustein.exe` (the file extension may not be automatically shown to you)
+3. If a SmartScreen window is displayed:
+    + Click More Info under the text
+    + Click the Run Anyway button at the bottom
+    + Note: This is normal behavior for open-source software not signed with a commercial Microsoft developer key
+
+## Commands
+
+To run a command, simply type a slash and then the command name after the `>` mark signifying user input.
+
+### /help
+
+The `/help` command displays a list of all other available slash commands. No arguments are processed.
+
+### /version
+
+The `/version` command views the version of Corpustein being run. No arguments are processed.
+
+### /stats
+
+The `/stats` command shows many variables relating to the current N-gram model. No arguments are processed.
+
+**Statistics Shown, Ordered**
+
+| Human-Readable Name | Variable | Description |
+| :---: | :---: | :---: |
+| Corpus Name | `current_corpus_name` | The name of the current loaded corpus. |
+| N-gram Order Size | `ngram_size` | The current order of the unique N-gram contexts and rolling token window |
+| Tokens in Corpus | `token_count` | The total amount of tokens in the current loaded corpus. Duplicates are not removed from the count |
+| Unique N-gram Contexts | `context_count` (scope limited to `function_runner` set) | The total number of unique N-gram contexts created by the tokens found in the current loaded corpus |
+| Health Ratio | `health_ratio` (scope limited to `function_runner` set) | A health ratio created by dividing the total token count by the unique N-gram contexts |
+| Maximum Sentence Count | `max_sentence_count` | The number of sentences Corpustein will generate per response, unless stopped early by the maximum token count |
+| Maximum Token Count | `max_token_count` | The number of tokens Corpustein will generate per response, unless stopped early by the maximum sentence count |
+| Max Tokens in History | `max_history_size` | The maximum number of tokens stored in the history, which is used to prevent repetitions of tokens. Tokens corresponding to common English words such as "the", "as", "and", etc., are allowed to be repeated by the model |
+| Typewriting Delay (ms) | `typewriter_delay_ms` | The delay between the sending of each character in the model's output to the standard output buffer in milliseconds |
+
+
+### /set
+
+The `/set` command allows users to change certain application variables.
+
+**Subcommands and Flags with Detailed Explanations**
+
+| Subcommand | Flag | Variables Affected | Description |
+| :---: | :---: | :---: | :---: |
+| `help` | N/A | N/A | Displays a list of available subcommands |
+| `order` | `<integer 1-8>` | `ngram_size`, `ngram_contexts`, `ngram_dis` | Changes the order of the N-gram model to the integer provided in the subcommand flag. |
+| `delay` | `<integer 1-50>` | `typewriter_delay_ms` | Changes the delay between the sending of each character in the model's output to the standard output buffer in milliseconds |
+| `max_sentence_count` | `<integer 1-50>` | `max_sentence_count`, `max_token_count`, `max_history_size` | Sets the maximum sentence count for each of the model's responses. The maximum token count and maximum history size are automatically scaled to 40 times greater than the new maximum sentence count and four tenths of the new maximum token count, respectively |
+| `altbuffer` | `<boolean>` | `use_alt_buffer` | Enables or disables the alternate terminal buffer. While using the alternate terminal buffer, detailed styling is applied, but scrolling and viewing the output after the application's execution ends is disabled. |
+
+
+### /load
+
+The `/load` command allows users to load either default or custom corpora. It takes a type and a corpus file in the following format: `/load <type> <corpus>`. The two types are `default` and `custom`.
+
+**Default:** Load a default corpus file for the model to use. You must pass just the index of the corpus to load it. To view default corpora, run the default subcommand with no flag, and you will be provided with a list of corpus IDs, linked to their name. Default corpus files are found in the `corpora` sibling directory to the binary directory. The corpora directory is automatically populated by GitHub Actions for the downloads attached to Releases, but users can also add corpora on their own, as long as they follow the naming scheme of `corpora_integer.txt`.
+**Custom:** Load a custom corpus file. Pass the path of the corpus, preferably absolute. If the path is not absolute, it will be expanded using the current working directory.
+
+### /clear & /exit
+
+The `/clear` command clears the current terminal buffer, applies ANSI codes initially run during initialization, and remakes the header at the top of the terminal. The `/exit` command reverts ANSI codes and exits the application. No arguments are processed by either command.
 
 ## Contributing
 
 Contributions are what make open-source projects important. All contributions are highly appreciated.
 
-* **Found a bug or issue**: Open an Issue and throughly explain the problem and the steps to reproduce it.
+* **Found a bug or issue**: Open an Issue and thoroughly explain the problem and the steps to reproduce it.
 * **Have an idea**: Open an Issue and explain your idea as much as possible and why you think it would be a good addition to Corpustein.
 
 ## Security
