@@ -9,27 +9,27 @@ extern const char* APP_VERSION; // Silences linters
 #include <windows.h>
 #endif
 
-#include <iostream>
-#include <unordered_map>
-#include <deque>
-#include <string>
-#include <string_view>
-#include <sstream>
-#include <vector>
-#include <random>
 #include <algorithm>
+#include <atomic>
+#include <charconv>
+#include <chrono>
+#include <csignal>
+#include <deque>
 #include <filesystem>
 #include <fstream>
-#include <regex>
+#include <iostream>
 #include <iterator>
-#include <unordered_set>
 #include <list>
-#include <csignal>
-#include <thread>
-#include <chrono>
-#include <atomic>
 #include <optional>
-#include <charconv>
+#include <random>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #define ALT_BUFFER_ON "\033[?1049h"
 #define ALT_BUFFER_OFF "\033[?1049l"
@@ -63,10 +63,13 @@ std::atomic<bool> is_typewriting(false);
 std::atomic<bool> skip_typewriting_delay_requested(false);
 bool use_alt_buffer = true;
 
-struct Reset {
-    friend std::ostream& operator<<(std::ostream& os, const Reset&) {
+struct Reset
+{
+    friend std::ostream& operator<<(std::ostream& os, const Reset&)
+    {
         // Chooses whether to use full reset or soft reset based on if alternate buffer is enabled
-        // SOFT_RESET includes the background, which only is applied correctly if in the alternate buffer
+        // SOFT_RESET includes the background, which only is applied correctly if in the alternate
+        // buffer
         if (use_alt_buffer) {
             os << SOFT_RESET;
         } else {
@@ -76,8 +79,10 @@ struct Reset {
     }
 };
 
-struct BodyText {
-    friend std::ostream& operator<<(std::ostream& os, const BodyText&) {
+struct BodyText
+{
+    friend std::ostream& operator<<(std::ostream& os, const BodyText&)
+    {
         // Chooses appropriate body text color based on if alternate buffer is enabled
         // Without alternate buffer, background could be anything, so light gray is not a safe idea
         if (use_alt_buffer) {
@@ -89,10 +94,13 @@ struct BodyText {
     }
 };
 
-#define RESET Reset{}
-#define BODY_TEXT BodyText{}
+#define RESET                                                                                      \
+    Reset {}
+#define BODY_TEXT                                                                                  \
+    BodyText {}
 
-void initApplication() {
+void initApplication()
+{
     std::cout << FULL_RESET;
 
     if (use_alt_buffer) {
@@ -101,19 +109,23 @@ void initApplication() {
         std::cout << ALT_BUFFER_OFF;
     }
 
-
     std::cout << AMBER << CLEAR_SCREEN << CURSOR_HOME;
     std::cout << std::flush;
 
     std::cout << "\033]0;Corpustein v" << APP_VERSION << "\007" << std::flush;
 
     std::string line_divider = "────────────────────────────\n";
-    std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION << "\n" << RESET << DARK_AMBER << line_divider << RESET;
+    std::cout << DARK_AMBER << line_divider << RESET << AMBER << "corpustein v" << APP_VERSION
+              << "\n"
+              << RESET << DARK_AMBER << line_divider << RESET;
 
-    std::cout << BODY_TEXT << BOLD << "Enter prompt below. Or, enter /help to view a list of commands.\n\n" << RESET;
+    std::cout << BODY_TEXT << BOLD
+              << "Enter prompt below. Or, enter /help to view a list of commands.\n\n"
+              << RESET;
 }
 
-void handle_user_exit(int signal = 0) {
+void handle_user_exit(int signal = 0)
+{
     (void)signal;
 
     if (is_typewriting) {
@@ -135,17 +147,20 @@ void handle_user_exit(int signal = 0) {
         std::cout << "\r\n\r\n";
     }
 
-    std::cout << "[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n\033[39m\033[49m\033[0m\r" << std::resetiosflags(std::ios::basefield) << std::flush;
+    std::cout << "[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion "
+                 "has completed and all ANSI codes have been reverted.\n\033[39m\033[49m\033[0m\r"
+              << std::resetiosflags(std::ios::basefield) << std::flush;
     std::_Exit(130);
 }
 
-void typewrite(const std::string &text, int delay_ms = 10) {
+void typewrite(const std::string& text, int delay_ms = 10)
+{
     if (delay_ms <= 0) {
         std::cout << text;
         return;
     }
 
-    is_typewriting = true; 
+    is_typewriting = true;
 
     for (size_t i = 0; i < text.size(); ++i) {
         if (skip_typewriting_delay_requested) {
@@ -164,17 +179,21 @@ void typewrite(const std::string &text, int delay_ms = 10) {
     return;
 }
 
-std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(modernize-avoid-c-arrays)
+std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
+{ // NOLINT(modernize-avoid-c-arrays)
     std::map<int, std::string> corpora_map;
     std::error_code ec;
 
-    std::filesystem::path corpora_path = std::filesystem::absolute(argv[0], ec).parent_path() / "corpora";
+    std::filesystem::path corpora_path =
+        std::filesystem::absolute(argv[0], ec).parent_path() / "corpora";
 
     auto dir_it = std::filesystem::directory_iterator(corpora_path, ec);
 
     if (ec) {
         std::cout << RED;
-        typewrite("[ERROR] An unexpected error occurred while loading default corpora from '" + corpora_path.string() + "'. \nError:\n\tCode: " + std::to_string(ec.value()) + "\tCategory: " + ec.category().name() + "\n\t" + ec.message() + "\n");
+        typewrite("[ERROR] An unexpected error occurred while loading default corpora from '" +
+                  corpora_path.string() + "'. \nError:\n\tCode: " + std::to_string(ec.value()) +
+                  "\tCategory: " + ec.category().name() + "\n\t" + ec.message() + "\n");
         return std::nullopt;
     }
 
@@ -188,8 +207,8 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(
 
                 std::ifstream file(entry.path());
                 std::string line;
-                std::getline(file, line);  // The name is on the second line
- 
+                std::getline(file, line); // The name is on the second line
+
                 if (file.is_open() && std::getline(file, line)) {
                     std::string_view delim = ":";
                     auto first_pos = line.find(delim);
@@ -206,7 +225,8 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(
                         continue;
                     }
 
-                    std::string_view name = std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
+                    std::string_view name =
+                        std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
 
                     if (name.empty()) {
                         corpora_map[file_id] = "Unnamed";
@@ -217,7 +237,10 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(
                 }
             } catch (std::exception& e) {
                 std::cout << RED;
-                typewrite("[ERROR] An unexpected error occurred while loading corpus file titled '" + filename + "': " + e.what() + "\n", 10);
+                typewrite(
+                    "[ERROR] An unexpected error occurred while loading corpus file titled '" +
+                        filename + "': " + e.what() + "\n",
+                    10);
                 return std::nullopt;
             }
         }
@@ -226,42 +249,43 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(
     return corpora_map;
 }
 
-std::string get_seed(const std::string &prompt, const std::vector<std::string> &tokens, std::unordered_set<std::string> allowed_repeats) {
+std::string get_seed(const std::string& prompt, const std::vector<std::string>& tokens,
+                     std::unordered_set<std::string> allowed_repeats)
+{
     std::stringstream ss(prompt);
-    std::vector<std::string> prompt_tokens; 
+    std::vector<std::string> prompt_tokens;
 
     std::string word;
-    while (ss >> word) prompt_tokens.push_back(word);
+    while (ss >> word)
+        prompt_tokens.push_back(word);
 
     std::unordered_set<std::string> cleaned_tokens;
-    for (const std::string &token : tokens) {
+    for (const std::string& token : tokens) {
         std::string cleaned_token = token;
 
-        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
+        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
 
-        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(), [](unsigned char c) {
-            return std::ispunct(c);  
-        }), cleaned_token.end());
+        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(),
+                                           [](unsigned char c) { return std::ispunct(c); }),
+                            cleaned_token.end());
 
         std::erase(cleaned_token, '\'');
 
         cleaned_tokens.insert(cleaned_token);
     }
 
-    auto it = std::ranges::find_if(prompt_tokens, [&](const auto &token) {
+    auto it = std::ranges::find_if(prompt_tokens, [&](const auto& token) {
         std::string cleaned_token = token;
 
-        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
+        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
 
         std::erase(cleaned_token, '\'');
 
-        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(), [](unsigned char c) {
-            return std::ispunct(c);  
-        }), cleaned_token.end());
+        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(),
+                                           [](unsigned char c) { return std::ispunct(c); }),
+                            cleaned_token.end());
 
         std::erase(cleaned_token, '\'');
 
@@ -270,13 +294,12 @@ std::string get_seed(const std::string &prompt, const std::vector<std::string> &
 
     if (it != prompt_tokens.end()) {
         std::string seed = *it;
-        std::transform(seed.begin(), seed.end(), seed.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
+        std::transform(seed.begin(), seed.end(), seed.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
 
-        seed.erase(std::remove_if(seed.begin(), seed.end(), [](unsigned char c) {
-            return std::ispunct(c);
-        }), seed.end());
+        seed.erase(std::remove_if(seed.begin(), seed.end(),
+                                  [](unsigned char c) { return std::ispunct(c); }),
+                   seed.end());
 
         return seed;
     } else {
@@ -285,20 +308,20 @@ std::string get_seed(const std::string &prompt, const std::vector<std::string> &
         std::uniform_int_distribution<size_t> tokens_dist(0, tokens.size() - 1);
 
         while (true) {
-            const std::string &canidate = tokens[tokens_dist(gen)];
+            const std::string& canidate = tokens[tokens_dist(gen)];
 
             std::string cleaned = canidate;
-            std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), [](unsigned char c) {
-                return std::tolower(c);
-            });
- 
-            if (!allowed_repeats.contains(cleaned)) return cleaned;
+            std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
+
+            if (!allowed_repeats.contains(cleaned))
+                return cleaned;
         }
     }
 }
 
 template <typename Iterator>
-std::string get_ngram_string(const Iterator &begin, const Iterator &end)
+std::string get_ngram_string(const Iterator& begin, const Iterator& end)
 {
     std::string ngram;
     for (auto it = begin; it != end; ++it) {
@@ -311,18 +334,18 @@ std::string get_ngram_string(const Iterator &begin, const Iterator &end)
     return ngram;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> get_ngram_contexts(std::vector<std::string> tokens)
+std::unordered_map<std::string, std::vector<std::string>>
+get_ngram_contexts(std::vector<std::string> tokens)
 {
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
 
     for (size_t i = 0; i + ngram_size < tokens.size(); ++i) {
-        std::string key = get_ngram_string(
-            tokens.begin() + static_cast<std::ptrdiff_t>(i),
-            tokens.begin() + static_cast<std::ptrdiff_t>(i + ngram_size)
-        );
-        std::string &next_word = tokens[i + ngram_size];
+        std::string key =
+            get_ngram_string(tokens.begin() + static_cast<std::ptrdiff_t>(i),
+                             tokens.begin() + static_cast<std::ptrdiff_t>(i + ngram_size));
+        std::string& next_word = tokens[i + ngram_size];
 
-        auto &vec = ngram_contexts[key];
+        auto& vec = ngram_contexts[key];
         if (std::ranges::find(vec, next_word) == vec.end()) {
             vec.push_back(next_word);
         }
@@ -331,12 +354,15 @@ std::unordered_map<std::string, std::vector<std::string>> get_ngram_contexts(std
     return ngram_contexts;
 }
 
-std::string next_token(std::mt19937 &gen, const std::vector<std::string> &ngram_context) { 
+std::string next_token(std::mt19937& gen, const std::vector<std::string>& ngram_context)
+{
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
     return ngram_context[dis(gen)];
 }
 
-std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t> ngram_dis, std::unordered_map<std::string, std::vector<std::string>> &ngram_contexts) {
+std::string random_ngram(std::mt19937& gen, std::uniform_int_distribution<size_t> ngram_dis,
+                         std::unordered_map<std::string, std::vector<std::string>>& ngram_contexts)
+{
     auto it = ngram_contexts.begin();
     std::advance(it, ngram_dis(gen));
     return it->first;
@@ -370,37 +396,34 @@ try {
 #endif
 
     std::unordered_set<std::string> allowed_repeats = {
-        "and", "or", "so", "as", "if", "then", "because",
-        "but", "yet", "we", "it", "me", "him", "her", "them",
-        "us", "my", "your", "his", "their", "theirs", "our", "ours",
-        "these", "those", "all", "any", "some", "which", "what", "who",
-        "how", "why", "where", "when", "its", "myself", "yourself",
-        "out", "down", "off", "no", "only", "very", "just",
-        "not", "dont", "cant", "don't", "can't", "more", "most", "other",
-        "i", "you", "he", "she", "they", "this", "that", "then", "here", "there",
-        "the", "a", "an", "in", "on", "at", "to", "for", "of",
-        "with", "by", "from", "up", "about", "into", "over", "after",
-        "be", "am", "is", "are", "was", "were", "being", "been",
-        "have", "has", "had", "having",
-        "do", "does", "did", "im", "youre",
-        "can", "could", "may", "might", "must", "shall", "should", "shouldnt", "will", "would"
-    };
+        "and",    "or",       "so",     "as",    "if",     "then",     "because", "but",   "yet",
+        "we",     "it",       "me",     "him",   "her",    "them",     "us",      "my",    "your",
+        "his",    "their",    "theirs", "our",   "ours",   "these",    "those",   "all",   "any",
+        "some",   "which",    "what",   "who",   "how",    "why",      "where",   "when",  "its",
+        "myself", "yourself", "out",    "down",  "off",    "no",       "only",    "very",  "just",
+        "not",    "dont",     "cant",   "don't", "can't",  "more",     "most",    "other", "i",
+        "you",    "he",       "she",    "they",  "this",   "that",     "then",    "here",  "there",
+        "the",    "a",        "an",     "in",    "on",     "at",       "to",      "for",   "of",
+        "with",   "by",       "from",   "up",    "about",  "into",     "over",    "after", "be",
+        "am",     "is",       "are",    "was",   "were",   "being",    "been",    "have",  "has",
+        "had",    "having",   "do",     "does",  "did",    "im",       "youre",   "can",   "could",
+        "may",    "might",    "must",   "shall", "should", "shouldnt", "will",    "would"};
 
     static_cast<void>(std::signal(SIGINT, handle_user_exit));
     initApplication();
 
     std::random_device rd;
-    std::mt19937 gen(rd()); 
+    std::mt19937 gen(rd());
 
-    std::vector<std::string> tokens; 
-    size_t corpus_token_count = 0; 
+    std::vector<std::string> tokens;
+    size_t corpus_token_count = 0;
 
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
     std::uniform_int_distribution<size_t> ngram_dis;
 
     std::string current_corpus_name;
 
-    auto load_corpus = [&](const std::filesystem::path &filePath) {
+    auto load_corpus = [&](const std::filesystem::path& filePath) {
         std::ifstream file(filePath);
 
         if (!std::filesystem::exists(filePath)) {
@@ -409,7 +432,8 @@ try {
         }
 
         if (!file.is_open()) {
-            std::cerr << RED << BOLD << "[ERROR] Failed to open corpus file at " << filePath << "\n";
+            std::cerr << RED << BOLD << "[ERROR] Failed to open corpus file at " << filePath
+                      << "\n";
             return;
         }
 
@@ -418,46 +442,57 @@ try {
 
         if (!std::getline(file, signature_line)) {
             std::cout << RED;
-            typewrite("[ERROR] Failed to read first line of corpus file, which should contain Corpustein signature. Check the files line count.", 10);
+            typewrite("[ERROR] Failed to read first line of corpus file, which should contain "
+                      "Corpustein signature. Check the files line count.",
+                      10);
             return;
         }
 
         if (signature_line != "io.github.tyleruploads.corpustein:corpus-file") {
             supported_format = false;
             std::cout << DARK_AMBER;
-            typewrite("Corpus file is not in custom Corpustein format. Loading without extra metadata.\n", 10);
+            typewrite(
+                "Corpus file is not in custom Corpustein format. Loading without extra metadata.\n",
+                10);
         }
 
         if (supported_format) {
             std::string line;
             int line_number = 1;
             while (getline(file, line)) {
-                if (line == "===") break;
+                if (line == "===")
+                    break;
 
                 ++line_number;
 
                 if (line_number > 10) {
                     std::cout << DARK_AMBER;
-                    typewrite("[WARNING] Line number is greater than 10 but end of metadata delimeter (===) has not been reached. The rest of the corpus will be treated as tokens. Line:\n", 10);
+                    typewrite("[WARNING] Line number is greater than 10 but end of metadata "
+                              "delimeter (===) has not been reached. The rest of the corpus will "
+                              "be treated as tokens. Line:\n",
+                              10);
                     std::cout << BODY_TEXT;
                     typewrite("\t" + line + "\n", 10);
                     break;
                 }
-                
+
                 std::string_view delim = ":";
 
                 auto first_pos = line.find(delim);
 
                 if (first_pos == std::string_view::npos || first_pos != line.rfind(delim)) {
                     std::cout << DARK_AMBER;
-                    typewrite("[WARNING] Line " + std::to_string(line_number) + " either has no delimeter or many delimeters. Line: \n", 10);
+                    typewrite("[WARNING] Line " + std::to_string(line_number) +
+                                  " either has no delimeter or many delimeters. Line: \n",
+                              10);
                     std::cout << BODY_TEXT;
                     typewrite("\t" + line + "\n", 10);
                     continue;
                 }
 
                 std::string_view key(line.data(), first_pos);
-                std::string_view value = std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
+                std::string_view value =
+                    std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
 
                 if (key == "name") {
                     std::cout << AMBER;
@@ -471,7 +506,10 @@ try {
                         ngram_size = std::stoi(std::string(value));
                     } catch (std::exception& e) {
                         std::cout << RED;
-                        typewrite("[WARNING] Value for default_order key on line " + line + " of corpus metadata contains an invalid integer or integer overflow. Setting order to 2 as a default fallback. Line:\n", 10);
+                        typewrite("[WARNING] Value for default_order key on line " + line +
+                                      " of corpus metadata contains an invalid integer or integer "
+                                      "overflow. Setting order to 2 as a default fallback. Line:\n",
+                                  10);
                         std::cout << BODY_TEXT;
                         typewrite("\t" + line + "\n", 10);
 
@@ -485,7 +523,12 @@ try {
                         max_history_size = (max_token_count * 4) / 10;
                     } catch (std::exception& e) {
                         std::cout << RED;
-                        typewrite("[WARNING] Value for max_sentence_count key on line " + line + " of corpus metadata contains an invalid integer or integer overflow, or the integer contributed to an integer overflow in arithmetic to calculate the maximum token count. Setting maximum sentence count to 10 as a default fallback. Line:\n", 10);
+                        typewrite("[WARNING] Value for max_sentence_count key on line " + line +
+                                      " of corpus metadata contains an invalid integer or integer "
+                                      "overflow, or the integer contributed to an integer overflow "
+                                      "in arithmetic to calculate the maximum token count. Setting "
+                                      "maximum sentence count to 10 as a default fallback. Line:\n",
+                                  10);
                         std::cout << BODY_TEXT;
                         typewrite("\t" + line + "\n", 10);
 
@@ -495,7 +538,10 @@ try {
                     }
                 } else {
                     std::cout << DARK_AMBER;
-                    typewrite("[WARNING] Line " + std::to_string(line_number) + " contains an unrecognized metadata key: " + std::string(key) + ". Continuing.\n", 10);
+                    typewrite("[WARNING] Line " + std::to_string(line_number) +
+                                  " contains an unrecognized metadata key: " + std::string(key) +
+                                  ". Continuing.\n",
+                              10);
                     std::cout << BODY_TEXT;
                     typewrite("\t" + line + "\n", 10);
                 }
@@ -504,7 +550,8 @@ try {
 
         std::string line;
         std::string text;
-        while (getline(file, line))  text += line;
+        while (getline(file, line))
+            text += line;
 
         std::regex square_brackets(R"(\s*\[\d+\])");
         text = std::regex_replace(text, square_brackets, "");
@@ -512,366 +559,474 @@ try {
         std::regex punct_spacing(R"([.!?;:\)](?=[A-Za-z]))");
         text = std::regex_replace(text, punct_spacing, "$& ");
 
-        std::stringstream corpus_ss(text); 
+        std::stringstream corpus_ss(text);
 
         std::string word;
         tokens.clear();
-        while (corpus_ss >> word) tokens.push_back(word);
+        while (corpus_ss >> word)
+            tokens.push_back(word);
 
         corpus_token_count = tokens.size();
 
         if (corpus_token_count < ngram_size) {
-            std::cerr << RED << BOLD << "Error: Corups is too short to build " << ngram_size << "-grams.\n" << RESET;
+            std::cerr << RED << BOLD << "Error: Corups is too short to build " << ngram_size
+                      << "-grams.\n"
+                      << RESET;
             return;
         }
 
         ngram_contexts = get_ngram_contexts(tokens);
-        ngram_dis.param(std::uniform_int_distribution<size_t>::param_type(0, ngram_contexts.size() - 1));
+        ngram_dis.param(
+            std::uniform_int_distribution<size_t>::param_type(0, ngram_contexts.size() - 1));
 
         std::cout << AMBER;
         typewrite("Successfully loaded corpus at " + filePath.string() + "\n", 10);
         return;
     };
 
-    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" / "corpus_0.txt";
+    std::filesystem::path filePath =
+        std::filesystem::absolute(argv[0]).parent_path() / "corpora" / "corpus_0.txt";
     load_corpus(filePath);
 
     std::cout << BODY_TEXT << BOLD;
-    typewrite("\nFor information on loading a different default corpus or your own custom corpus, run /load help\n", 5);
+    typewrite("\nFor information on loading a different default corpus or your own custom corpus, "
+              "run /load help\n",
+              5);
 
     std::unordered_map<std::string, FunctionAction> function_runner = {
-        {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
-        {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
-        {"/stats", [&current_corpus_name, &corpus_token_count, &ngram_contexts](const std::string&) {
-            size_t context_count = ngram_contexts.size();
-            double health_ratio = static_cast<double>(corpus_token_count) / static_cast<double>(context_count);
+        {"/help",
+         [](const std::string&) {
+             std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, "
+                          "/clear, /exit";
+         }},
+        {"/version",
+         [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
+        {"/stats",
+         [&current_corpus_name, &corpus_token_count, &ngram_contexts](const std::string&) {
+             size_t context_count = ngram_contexts.size();
+             double health_ratio =
+                 static_cast<double>(corpus_token_count) / static_cast<double>(context_count);
 
-            std::ostringstream oss;
+             std::ostringstream oss;
 
-            oss << "Corpus Name: " << current_corpus_name << "\n";
-            oss << "N-gram Order Size: " << ngram_size << "\n";
-            oss << "Tokens in Corpus: " << corpus_token_count << "\n";
-            oss << "Unique N-gram Contexts: " << context_count << "\n";
-            oss << "Health Ratio: " << health_ratio << "\n";
-            oss << "Maximum Sentence Count: " << max_sentence_count << "\n";
-            oss << "Maximum Token Count: " << max_token_count << "\n";
-            oss << "Maximum Order: " << max_order << "\n";
-            oss << "Max Tokens in History : " << max_history_size << "\n";
-            oss << "Typewriting Delay (ms): " << typewriter_delay_ms << "\n";
+             oss << "Corpus Name: " << current_corpus_name << "\n";
+             oss << "N-gram Order Size: " << ngram_size << "\n";
+             oss << "Tokens in Corpus: " << corpus_token_count << "\n";
+             oss << "Unique N-gram Contexts: " << context_count << "\n";
+             oss << "Health Ratio: " << health_ratio << "\n";
+             oss << "Maximum Sentence Count: " << max_sentence_count << "\n";
+             oss << "Maximum Token Count: " << max_token_count << "\n";
+             oss << "Maximum Order: " << max_order << "\n";
+             oss << "Max Tokens in History : " << max_history_size << "\n";
+             oss << "Typewriting Delay (ms): " << typewriter_delay_ms << "\n";
 
-            std::cout << AMBER;
-            typewrite("----- Corpustein Statistics -----\n", 5);
-            std::cout << BODY_TEXT;
-            typewrite(oss.str(), 5);
-        }},
-        {"/set", [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
-            std::stringstream ss(args);
-            std::string subcommand;
-            std::string subcommand_flag = "";
+             std::cout << AMBER;
+             typewrite("----- Corpustein Statistics -----\n", 5);
+             std::cout << BODY_TEXT;
+             typewrite(oss.str(), 5);
+         }},
+        {"/set",
+         [&tokens, &ngram_contexts, &ngram_dis](const std::string& args) {
+             std::stringstream ss(args);
+             std::string subcommand;
+             std::string subcommand_flag = "";
 
-            if (!(ss >> subcommand)) {
-                std::cout << RED;
-                typewrite("Usage: /set <parameter> <value>\nRun /set help for a list of subcommands\n", 10);
-                return;
-            }
+             if (!(ss >> subcommand)) {
+                 std::cout << RED;
+                 typewrite(
+                     "Usage: /set <parameter> <value>\nRun /set help for a list of subcommands\n",
+                     10);
+                 return;
+             }
 
-            ss >> subcommand_flag; // Optional
+             ss >> subcommand_flag; // Optional
 
+             if (subcommand == "help") {
+                 std::cout << BODY_TEXT;
+                 typewrite(
+                     "Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram "
+                     "model.\n\t/set delay <integer>: Sets the delay between each character "
+                     "printed to the screen\n\t/set max_sentence_count <integer>: Sets the maximum "
+                     "sentence count per each Corpustein response\n\t/set altbuffer <true or "
+                     "false>: Enables or disables the alternate terminal buffer",
+                     10);
+             } else if (subcommand == "order") {
+                 if (subcommand_flag.empty()) {
+                     std::cout << RED;
+                     typewrite("Usage: /set order <integer> (e.g., /set order 3)\n", 10);
+                     return;
+                 }
 
-            if (subcommand == "help") {
-                std::cout << BODY_TEXT;
-                typewrite("Available subcommands:\n\t/set order <integer>: Sets the order of the N-gram model.\n\t/set delay <integer>: Sets the delay between each character printed to the screen\n\t/set max_sentence_count <integer>: Sets the maximum sentence count per each Corpustein response\n\t/set altbuffer <true or false>: Enables or disables the alternate terminal buffer", 10);
-            } else if (subcommand == "order") {
-                if (subcommand_flag.empty()) {
-                    std::cout << RED;
-                    typewrite("Usage: /set order <integer> (e.g., /set order 3)\n", 10);
-                    return;
-                }
+                 if (subcommand_flag == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Sets the order of the N-gram model.\nUsage: /set order <integer> "
+                               "(e.g., /set order 3)\n",
+                               10);
+                     return;
+                 }
 
-                if (subcommand_flag == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Sets the order of the N-gram model.\nUsage: /set order <integer> (e.g., /set order 3)\n", 10);
-                    return;
-                }
+                 try {
+                     size_t new_ngram_size = std::stoi(subcommand_flag);
 
-                try {
-                    size_t new_ngram_size = std::stoi(subcommand_flag);
+                     if (new_ngram_size <= 0) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Order must be greater than 0.\n", 10);
+                         return;
+                     }
 
-                    if (new_ngram_size <= 0) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Order must be greater than 0.\n", 10);
-                        return;
-                    }
+                     if (static_cast<size_t>(new_ngram_size) >= tokens.size()) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Order (n) is larger than amount of tokens in corpus. "
+                                   "Previous order of " +
+                                       std::to_string(ngram_size) + " kept\n",
+                                   10);
+                         return;
+                     }
 
-                    if (static_cast<size_t>(new_ngram_size) >= tokens.size()) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Order (n) is larger than amount of tokens in corpus. Previous order of " + std::to_string(ngram_size) + " kept\n", 10);
-                        return;
-                    }
+                     if (new_ngram_size > max_order) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Order (" + std::to_string(new_ngram_size) +
+                                       ") is larger than maximum order (" +
+                                       std::to_string(max_order) + "). Previous order (" +
+                                       std::to_string(ngram_size) + ") kept.\n",
+                                   10);
+                         return;
+                     }
 
-                    if (new_ngram_size > max_order) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Order (" + std::to_string(new_ngram_size) + ") is larger than maximum order (" + std::to_string(max_order) + "). Previous order (" + std::to_string(ngram_size) + ") kept.\n", 10);
-                        return;
-                    }
+                     ngram_size = new_ngram_size;
+                     ngram_contexts = get_ngram_contexts(tokens);
+                     ngram_dis =
+                         std::uniform_int_distribution<size_t>(0, ngram_contexts.size() - 1);
 
-                    ngram_size = new_ngram_size;
-                    ngram_contexts = get_ngram_contexts(tokens);
-                    ngram_dis = std::uniform_int_distribution<size_t>(0, ngram_contexts.size() - 1);
+                     std::cout << AMBER;
+                     typewrite("Order (N) successfully set to " + std::to_string(ngram_size));
+                 } catch (const std::invalid_argument&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Invalid argument. Please provide a valid integer for the "
+                               "order.\n",
+                               10);
+                 } catch (const std::out_of_range&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than "
+                               "2,147,483,647. Please check your keyboard for physical defects.",
+                               10);
+                 } catch (const std::exception& e) {
+                     std::cout << RED;
+                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() +
+                                   "\n",
+                               10);
+                 }
+             } else if (subcommand == "delay") {
+                 if (subcommand_flag.empty()) {
+                     std::cout << RED;
+                     typewrite("Usage: /set delay <integer> (e.g., /set delay 15)\n", 10);
+                     return;
+                 }
 
-                    std::cout << AMBER;
-                    typewrite("Order (N) successfully set to " + std::to_string(ngram_size));
-                } catch (const std::invalid_argument&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the order.\n", 10);
-                } catch (const std::out_of_range&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,483,647. Please check your keyboard for physical defects.", 10);
-                } catch (const std::exception& e) {
-                    std::cout << RED;
-                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
-                }
-            } else if (subcommand == "delay") {
-                if (subcommand_flag.empty()) {
-                    std::cout << RED;
-                    typewrite("Usage: /set delay <integer> (e.g., /set delay 15)\n", 10);
-                    return;
-                }
+                 if (subcommand_flag == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Sets the delay between each character printed to the screen when "
+                               "interacting with Corpustein.\nUsage: /set delay <integer> (e.g., "
+                               "/set delay 15)\n",
+                               10);
+                     return;
+                 }
 
-                if (subcommand_flag == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Sets the delay between each character printed to the screen when interacting with Corpustein.\nUsage: /set delay <integer> (e.g., /set delay 15)\n", 10);
-                    return;
-                }
+                 try {
+                     int new_typewriter_delay_ms = std::stoi(subcommand_flag);
 
-                try {
-                    int new_typewriter_delay_ms = std::stoi(subcommand_flag);
+                     if (new_typewriter_delay_ms <= 0) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Typewriter delay must be greater than 0.\n", 10);
+                         return;
+                     }
 
-                    if (new_typewriter_delay_ms <= 0) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Typewriter delay must be greater than 0.\n", 10);
-                        return;
-                    }
+                     if (new_typewriter_delay_ms > 50) {
+                         std::cout << RED;
+                         typewrite("Typewriter delay may be no more than 50ms.", 10);
+                         return;
+                     }
 
-                    if (new_typewriter_delay_ms > 50) {
-                       std::cout << RED;
-                        typewrite("Typewriter delay may be no more than 50ms.", 10);
-                        return;
-                    }
+                     typewriter_delay_ms = new_typewriter_delay_ms;
+                     std::cout << DARK_AMBER;
+                     typewrite("Typewriter delay set to " + std::to_string(typewriter_delay_ms) +
+                                   "ms.\n",
+                               typewriter_delay_ms);
+                     return;
+                 } catch (const std::invalid_argument&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Invalid argument. Please provide a valid integer for the "
+                               "typewriter delay in milliseconds.\n",
+                               10);
+                 } catch (const std::out_of_range&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than "
+                               "2,147,483,647. Please check your keyboard for physical defects.",
+                               10);
+                 } catch (const std::exception& e) {
+                     std::cout << RED;
+                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() +
+                                   "\n",
+                               10);
+                 }
+             } else if (subcommand == "max_sentence_count") {
+                 if (subcommand_flag.empty()) {
+                     std::cout << RED;
+                     typewrite("Usage: /set max_sentence_count <integer> (e.g., /set "
+                               "max_sentence_count 7)\n",
+                               10);
+                     return;
+                 }
 
-                    typewriter_delay_ms = new_typewriter_delay_ms;
-                    std::cout << DARK_AMBER;
-                    typewrite("Typewriter delay set to " + std::to_string(typewriter_delay_ms) + "ms.\n", typewriter_delay_ms);
-                    return;
-                } catch (const std::invalid_argument&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the typewriter delay in milliseconds.\n", 10);
-                } catch (const std::out_of_range&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,483,647. Please check your keyboard for physical defects.", 10);
-                } catch (const std::exception& e) {
-                    std::cout << RED;
-                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
-                }
-            } else if (subcommand == "max_sentence_count") {
-                if (subcommand_flag.empty()) {
-                    std::cout << RED;
-                    typewrite("Usage: /set max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n", 10);
-                    return;
-                }
+                 if (subcommand_flag == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Sets the maximum sentence count for each Corpustein response, and "
+                               "automatically scales its maximum token count.\nUsage: /set "
+                               "max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n",
+                               10);
+                     return;
+                 }
 
-                if (subcommand_flag == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Sets the maximum sentence count for each Corpustein response, and automatically scales its maximum token count.\nUsage: /set max_sentence_count <integer> (e.g., /set max_sentence_count 7)\n", 10);
-                    return;
-                }
+                 try {
+                     int new_max_sentence_count = std::stoi(subcommand_flag);
 
-                try {
-                    int new_max_sentence_count = std::stoi(subcommand_flag);
+                     if (new_max_sentence_count <= 0) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Maximum sentence count must be greater than 0.\n", 10);
+                         return;
+                     }
 
-                    if (new_max_sentence_count <= 0) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Maximum sentence count must be greater than 0.\n", 10);
-                        return;
-                    }
+                     if (new_max_sentence_count > 50) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Maximum sentence count must not be greater than 50.\n",
+                                   10);
+                         return;
+                     }
 
-                    if (new_max_sentence_count > 50) {
-                        std::cout << RED;
-                        typewrite("[ERROR] Maximum sentence count must not be greater than 50.\n", 10);
-                        return;
-                    }
+                     max_sentence_count = new_max_sentence_count;
+                     max_token_count = max_sentence_count * 40;
+                     max_history_size = (max_token_count * 4) / 10;
 
-                    max_sentence_count = new_max_sentence_count;
-                    max_token_count = max_sentence_count * 40;
-                    max_history_size = (max_token_count * 4) / 10;
+                     std::cout << AMBER;
+                     typewrite("Maximum sentence count set to " +
+                                   std::to_string(max_sentence_count) +
+                                   ". Maximum token count automatically scaled to " +
+                                   std::to_string(max_token_count) + ".\n",
+                               10);
+                     return;
+                 } catch (const std::invalid_argument&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Invalid argument. Please provide a valid integer for the "
+                               "maximum sentence count.\n",
+                               10);
+                 } catch (const std::out_of_range&) {
+                     std::cout << RED;
+                     typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than "
+                               "2,147,463,647. Please check your keyboard for physical defects.\n",
+                               10);
+                 } catch (const std::exception& e) {
+                     std::cout << RED;
+                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() +
+                                   "\n",
+                               10);
+                 }
+             } else if (subcommand == "altbuffer") {
+                 if (subcommand_flag.empty()) {
+                     std::cout << RED;
+                     typewrite(
+                         "Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
+                     return;
+                 }
 
-                    std::cout << AMBER;
-                    typewrite("Maximum sentence count set to " + std::to_string(max_sentence_count) + ". Maximum token count automatically scaled to " + std::to_string(max_token_count) + ".\n", 10);
-                    return;
-                } catch (const std::invalid_argument&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Invalid argument. Please provide a valid integer for the maximum sentence count.\n", 10);
-                } catch (const std::out_of_range&) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Integer is lower than -2,147,483,648 or greater than 2,147,463,647. Please check your keyboard for physical defects.\n", 10);
-                } catch (const std::exception& e) {
-                    std::cout << RED;
-                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
-                }
-            } else if (subcommand == "altbuffer") {
-                if (subcommand_flag.empty()) {
-                    std::cout << RED;
-                    typewrite("Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
-                    return;
-                }
+                 if (subcommand_flag == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Enables or disables the alternate terminal buffer.\nUsage: /set "
+                               "altbuffer <true or false> (e.g., /set altbuffer true)\n",
+                               10);
+                     return;
+                 }
 
-                if (subcommand_flag == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Enables or disables the alternate terminal buffer.\nUsage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
-                    return;
-                }
+                 try {
+                     std::transform(subcommand_flag.begin(), subcommand_flag.end(),
+                                    subcommand_flag.begin(), ::tolower);
 
-                try {
-                    std::transform(subcommand_flag.begin(), subcommand_flag.end(), subcommand_flag.begin(), ::tolower);
+                     constexpr std::array true_strings{"true",   "1",        "yes",     "on",
+                                                       "high",   "set",      "enabled", "enable",
+                                                       "active", "activate", "right",   "pass"};
+                     constexpr std::array false_strings{
+                         "false",    "0",       "no",         "off",        "low",   "unset",
+                         "disabled", "disable", "inactivate", "deactivate", "wrong", "fail"};
 
-                    constexpr std::array true_strings{"true", "1", "yes", "on", "high", "set", "enabled", "enable", "active", "activate", "right", "pass"};
-                    constexpr std::array false_strings{"false", "0", "no", "off", "low", "unset", "disabled", "disable", "inactivate", "deactivate", "wrong", "fail"};
+                     if (std::ranges::any_of(true_strings,
+                                             [&](auto s) { return subcommand_flag == s; })) {
+                         use_alt_buffer = true;
+                     } else if (std::ranges::any_of(false_strings,
+                                                    [&](auto s) { return subcommand_flag == s; })) {
+                         use_alt_buffer = false;
+                     } else {
+                         std::cout << RED;
+                         typewrite(
+                             "Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n",
+                             10);
+                         return;
+                     }
 
-                    if (std::ranges::any_of(true_strings, [&](auto s) { return subcommand_flag == s; })) {
-                        use_alt_buffer = true;
-                    } else if (std::ranges::any_of(false_strings, [&](auto s) { return subcommand_flag == s; })) {
-                        use_alt_buffer = false;
-                    } else {
-                        std::cout << RED;
-                        typewrite("Usage: /set altbuffer <true or false> (e.g., /set altbuffer true)\n", 10);
-                        return;
-                    }
+                     initApplication();
 
-                    initApplication();
+                     std::cout << AMBER << BOLD;
+                     typewrite(std::string("\nAlternate buffer successfully ") +
+                                   (use_alt_buffer ? "enabled" : "disabled") + "\n",
+                               10);
+                 } catch (const std::exception& e) {
+                     std::cout << RED;
+                     typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() +
+                                   "\n",
+                               10);
+                 }
+             }
+         }},
+        {"/load",
+         [&](const std::string& args) {
+             std::stringstream ss(args);
+             std::string type;
+             std::string filename = "";
 
-                    std::cout << AMBER << BOLD;
-                    typewrite(std::string("\nAlternate buffer successfully ") + (use_alt_buffer ? "enabled" : "disabled") + "\n", 10);
-                } catch (const std::exception& e) {
-                    std::cout << RED;
-                    typewrite(std::string("[ERROR] An unexpected error occurred: ") + e.what() + "\n", 10);
-                }
-            }
-        }},
-        {"/load", [&](const std::string& args) {
-            std::stringstream ss(args);
-            std::string type;
-            std::string filename = "";
+             if (!(ss >> type)) {
+                 std::cout << RED;
+                 typewrite("Usage: /load <type> <corpus>\nRun /load help for a list of types.\nRun "
+                           "/load default without corpus to view default corpora.\n",
+                           10);
+                 return;
+             }
 
-            if (!(ss >> type)) {
-                std::cout << RED;
-                typewrite("Usage: /load <type> <corpus>\nRun /load help for a list of types.\nRun /load default without corpus to view default corpora.\n", 10);
-                return;
-            }
+             ss >> filename;
 
-            ss >> filename;
+             if (type == "help") {
+                 std::cout << BODY_TEXT;
+                 typewrite("Loads a default or custom corpus.\nUsage: /load <type> "
+                           "<corpus>\nTypes:\n\tDefault: Load a corpus from the corpora directory. "
+                           "Run without corpus to view list of corpora. Enter corpus number "
+                           "provided in corora list as argument to load corpus.\n\tCustom: Load a "
+                           "custom corpus file. Enter file path as argument.",
+                           10);
+                 return;
+             }
 
-            if (type == "help") {
-                std::cout << BODY_TEXT;
-                typewrite("Loads a default or custom corpus.\nUsage: /load <type> <corpus>\nTypes:\n\tDefault: Load a corpus from the corpora directory. Run without corpus to view list of corpora. Enter corpus number provided in corora list as argument to load corpus.\n\tCustom: Load a custom corpus file. Enter file path as argument.", 10);
-                return;
-            }
+             if (type == "default") {
+                 if (!filename.empty() && filename == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Usage: /load default <corpus>\nPlease pass index of corpus, not "
+                               "its name or file path.\nTo view list of default corpus indexes, "
+                               "run /load default without a corpus argument.\n",
+                               10);
+                     return;
+                 }
 
-            if (type == "default") {
-                if (!filename.empty() && filename == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Usage: /load default <corpus>\nPlease pass index of corpus, not its name or file path.\nTo view list of default corpus indexes, run /load default without a corpus argument.\n", 10);
-                    return;
-                }
+                 std::optional<std::map<int, std::string>> corpora_map =
+                     loadCorpora(argv); // NOLINT(modernize-avoid-c-arrays)
 
+                 if (corpora_map == std::nullopt) {
+                     std::cout << RED;
+                     typewrite(
+                         "[ERROR] An unexpected error occurred while loading preloaded corpora.\n",
+                         10);
+                     return;
+                 }
 
-                std::optional<std::map<int, std::string>> corpora_map = loadCorpora(argv); // NOLINT(modernize-avoid-c-arrays)
+                 if (filename.empty()) {
+                     std::ostringstream oss;
 
-                if (corpora_map == std::nullopt) {
-                    std::cout << RED;
-                    typewrite("[ERROR] An unexpected error occurred while loading preloaded corpora.\n", 10);
-                    return;
-                }
+                     for (const auto& [key, value] : *corpora_map) {
+                         oss << "\tIndex " << std::to_string(key) << ": " << value << "\n";
+                     }
 
-                if (filename.empty()) {
-                    std::ostringstream oss;
+                     typewrite("----- Preloaded Corpora -----\n", 10);
+                     std::cout << BODY_TEXT << oss.str();
+                     return;
+                 }
 
-                    for (const auto& [key, value] : *corpora_map) {
-                        oss << "\tIndex " << std::to_string(key) << ": " << value << "\n";
-                    }
+                 int file_value = 0;
 
-                    typewrite("----- Preloaded Corpora -----\n", 10);
-                    std::cout << BODY_TEXT << oss.str();
-                    return;
-                }
+                 auto [value_ptr, value_ec] = std::from_chars(
+                     filename.data(), filename.data() + filename.size(), file_value);
 
-                int file_value = 0;
+                 if (value_ec != std::errc{} || value_ptr != filename.data() + filename.size()) {
+                     std::cout << RED;
+                     typewrite(
+                         "[ERROR] Please provide the index of and only the index of the corpus.\n",
+                         10);
+                     return;
+                 }
 
-                auto [value_ptr, value_ec] = std::from_chars(filename.data(), filename.data() + filename.size(), file_value);
+                 if (corpora_map->empty()) {
+                     std::cout << RED;
+                     typewrite("[ERROR] No preloaded corpora. To preload a corpus, drop it in the "
+                               "corpora directory, which is located in the directory where this "
+                               "binary should be. It must be named as the following: "
+                               "'corpus_index.txt' (e.g., 'corpus_12.txt'). The first line of text "
+                               "in the corpus file is its name.");
+                     return;
+                 }
 
-                if (value_ec != std::errc{} || value_ptr != filename.data() + filename.size()) {
-                    std::cout << RED;
-                    typewrite("[ERROR] Please provide the index of and only the index of the corpus.\n", 10);
-                    return;
-                }
+                 if (corpora_map->contains(file_value)) {
+                     std::filesystem::path filePath =
+                         std::filesystem::absolute(argv[0]).parent_path() / "corpora" /
+                         ("corpus_" + std::to_string(file_value) + ".txt");
+                     load_corpus(filePath);
+                 } else {
+                     std::cout << RED;
+                     typewrite("[ERROR] Corpus index " + std::to_string(file_value) +
+                                   " is not in the corpora directory.",
+                               10);
+                     return;
+                 }
+             } else if (type == "custom") {
+                 if (filename.empty()) {
+                     std::cout << RED;
+                     typewrite("Run /load custom help for usage\n", 10);
+                     return;
+                 }
 
-                if (corpora_map->empty()) {
-                    std::cout << RED;
-                    typewrite("[ERROR] No preloaded corpora. To preload a corpus, drop it in the corpora directory, which is located in the directory where this binary should be. It must be named as the following: 'corpus_index.txt' (e.g., 'corpus_12.txt'). The first line of text in the corpus file is its name.");
-                    return; 
-                }
+                 if (filename == "help") {
+                     std::cout << BODY_TEXT;
+                     typewrite("Usage: /load custom <absolute path> (e.g., /load custom "
+                               "/home/me/downloads/corpus.txt)\n",
+                               10);
+                     return;
+                 }
 
-                if (corpora_map->contains(file_value)) {
-                    std::filesystem::path filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" / ("corpus_" + std::to_string(file_value) + ".txt");
-                    load_corpus(filePath);
-                } else {
-                    std::cout << RED;
-                    typewrite("[ERROR] Corpus index " + std::to_string(file_value) + " is not in the corpora directory.", 10);
-                    return;
-                }
-            } else if (type == "custom") {
-                if (filename.empty()) {
-                    std::cout << RED;
-                    typewrite("Run /load custom help for usage\n", 10);
-                    return;
-                }
+                 std::filesystem::path path =
+                     (std::filesystem::current_path() / filename).lexically_normal();
 
-                if (filename == "help") {
-                    std::cout << BODY_TEXT;
-                    typewrite("Usage: /load custom <absolute path> (e.g., /load custom /home/me/downloads/corpus.txt)\n", 10);
-                    return;
-                }
+                 if (!std::filesystem::exists(path)) {
+                     std::cout << RED;
+                     typewrite("File at path: " + path.string() + " does not exist.\n", 10);
+                     return;
+                 }
 
-                std::filesystem::path path = (std::filesystem::current_path() / filename).lexically_normal();
-
-                if (!std::filesystem::exists(path)) {
-                    std::cout << RED;
-                    typewrite("File at path: " + path.string() + " does not exist.\n", 10);
-                    return;
-                }
- 
-                load_corpus(path);
-            }
-        }},
+                 load_corpus(path);
+             }
+         }},
         {"/clear", [](const std::string&) { initApplication(); }},
-        {"/exit", [](const std::string&) { handle_user_exit(); }}
-    };
+        {"/exit", [](const std::string&) { handle_user_exit(); }}};
 
     while (true) {
         skip_typewriting_delay_requested = false;
 
         int output_token_count = 0;
         int output_sentence_count = 0;
-        if (use_alt_buffer) std::cout << BG_COLOR;
+        if (use_alt_buffer)
+            std::cout << BG_COLOR;
         std::cout << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
         std::string prompt;
         std::getline(std::cin, prompt);
 
-        if (prompt.empty()) continue;
+        if (prompt.empty())
+            continue;
 
         std::string lowercase_prompt = prompt;
-        std::transform(lowercase_prompt.begin(), lowercase_prompt.end(), lowercase_prompt.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
+        std::transform(lowercase_prompt.begin(), lowercase_prompt.end(), lowercase_prompt.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
 
         std::stringstream input_ss(prompt);
         std::string command;
@@ -892,28 +1047,24 @@ try {
         std::string seed = get_seed(prompt, tokens, allowed_repeats);
 
         std::string starting_ngram;
-        auto it = std::ranges::find_if(ngram_contexts, [&](const auto &pair) {
+        auto it = std::ranges::find_if(ngram_contexts, [&](const auto& pair) {
             std::string lower_key = pair.first;
-            std::transform(lower_key.begin(), lower_key.end(), lower_key.begin(), [](unsigned char c) {
-                return std::tolower(c);
-            });
+            std::transform(lower_key.begin(), lower_key.end(), lower_key.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
 
             return pair.first.find(seed) != std::string::npos;
         });
 
         if (it != ngram_contexts.end()) {
             starting_ngram = it->first;
-        }
-        else {
+        } else {
             starting_ngram = random_ngram(gen, ngram_dis, ngram_contexts);
         }
 
-        std::stringstream ngram_window_ss(starting_ngram); 
+        std::stringstream ngram_window_ss(starting_ngram);
 
-        std::deque<std::string> ngram_window = {
-            std::istream_iterator<std::string>{ngram_window_ss},
-            std::istream_iterator<std::string>{}
-        };
+        std::deque<std::string> ngram_window = {std::istream_iterator<std::string>{ngram_window_ss},
+                                                std::istream_iterator<std::string>{}};
 
         std::string ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
@@ -922,7 +1073,7 @@ try {
 
         std::deque<std::string> token_history;
 
-        auto push_token = [&](const std::string &word) {
+        auto push_token = [&](const std::string& word) {
             ngram_window.push_back(word);
             token_history.push_back(word);
 
@@ -933,20 +1084,18 @@ try {
             if (token_history.size() > static_cast<size_t>(ngram_size)) {
                 token_history.pop_front();
             }
-        }; 
+        };
 
         while (true) {
             if (!ngram_contexts.contains(ngram)) {
                 ngram_window_ss.str(random_ngram(gen, ngram_dis, ngram_contexts));
                 ngram_window_ss.clear();
 
-                ngram_window.assign(
-                    std::istream_iterator<std::string>{ngram_window_ss},
-                    std::istream_iterator<std::string>{}
-                );
+                ngram_window.assign(std::istream_iterator<std::string>{ngram_window_ss},
+                                    std::istream_iterator<std::string>{});
 
                 ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
-            } 
+            }
 
             std::string context_key = ngram;
 
@@ -956,9 +1105,8 @@ try {
 
             std::string stripped_token = token;
 
-            std::transform(stripped_token.begin(), stripped_token.end(), stripped_token.begin(), [](unsigned char c) {
-                return std::tolower(c);
-            });
+            std::transform(stripped_token.begin(), stripped_token.end(), stripped_token.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
 
             std::erase(stripped_token, '\'');
 
@@ -975,10 +1123,8 @@ try {
                     ngram_window_ss.str(random_ngram(gen, ngram_dis, ngram_contexts));
                     ngram_window_ss.clear();
 
-                    ngram_window.assign(
-                        std::istream_iterator<std::string>{ngram_window_ss},
-                        std::istream_iterator<std::string>{}
-                    );
+                    ngram_window.assign(std::istream_iterator<std::string>{ngram_window_ss},
+                                        std::istream_iterator<std::string>{});
 
                     ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
                     continue;
@@ -994,16 +1140,20 @@ try {
             typewrite(ngram_window.back() + " ", typewriter_delay_ms);
 
             ++output_token_count;
-            if (token.find_first_of(".!?") != std::string::npos) ++output_sentence_count;
+            if (token.find_first_of(".!?") != std::string::npos)
+                ++output_sentence_count;
 
-            if (output_sentence_count >= max_sentence_count || output_token_count >= max_token_count) {
+            if (output_sentence_count >= max_sentence_count ||
+                output_token_count >= max_token_count) {
                 std::cout << "\n";
                 break;
-            } 
+            }
         }
     }
-}
-catch (const std::exception& e) {
+} catch (const std::exception& e) {
     std::cout << RED;
-    typewrite("[ERROR] An unexpected error occurred during the main function's execution that was not handled in any downstrean function.\n\t" + std::string(e.what()) + "\n", 10);
+    typewrite("[ERROR] An unexpected error occurred during the main function's execution that was "
+              "not handled in any downstrean function.\n\t" +
+                  std::string(e.what()) + "\n",
+              10);
 }
