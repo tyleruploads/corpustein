@@ -50,7 +50,7 @@ using FunctionAction = std::function<void(const std::string&)>;
 
 int typewriter_delay_ms = 15;
 
-int ngram_size = 3;
+size_t ngram_size = 3;
 
 int max_sentence_count = 5;
 int max_token_count = max_sentence_count * 40;
@@ -136,7 +136,7 @@ void handle_user_exit(int signal = 0) {
     }
 
     std::cout << "[SYSTEM ALERT] SIGINT or other user trigger caused Corpustein abortion. Abortion has completed and all ANSI codes have been reverted.\n\033[39m\033[49m\033[0m\r" << std::resetiosflags(std::ios::basefield) << std::flush;
-    std::exit(130);
+    std::_Exit(130);
 }
 
 void typewrite(const std::string &text, int delay_ms = 10) {
@@ -164,13 +164,24 @@ void typewrite(const std::string &text, int delay_ms = 10) {
     return;
 }
 
-std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
+std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) { // NOLINT(modernize-avoid-c-arrays)
     std::map<int, std::string> corpora_map;
+    std::error_code ec;
 
-    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::absolute(argv[0]).parent_path() / "corpora")) {
+    std::filesystem::path corpora_path = std::filesystem::absolute(argv[0], ec).parent_path() / "corpora";
+
+    auto dir_it = std::filesystem::directory_iterator(corpora_path, ec);
+
+    if (ec) {
+        std::cout << RED;
+        typewrite("[ERROR] An unexpected error occurred while loading default corpora from '" + corpora_path.string() + "'. \nError:\n\tCode: " + std::to_string(ec.value()) + "\tCategory: " + ec.category().name() + "\n\t" + ec.message() + "\n");
+        return std::nullopt;
+    }
+
+    for (const auto& entry : std::filesystem::directory_iterator(dir_it)) {
         std::string filename = entry.path().filename().string();
 
-        if (filename.rfind("corpus_", 0) == 0 && filename.size() > 11) {
+        if (filename.starts_with("corpus_") && filename.size() > 11) {
             try {
                 std::string num_str = filename.substr(7, filename.size() - 7 - 4);
                 int file_id = std::stoi(num_str);
@@ -306,8 +317,8 @@ std::unordered_map<std::string, std::vector<std::string>> get_ngram_contexts(std
 
     for (size_t i = 0; i + ngram_size < tokens.size(); ++i) {
         std::string key = get_ngram_string(
-            tokens.begin() + i,
-            tokens.begin() + i + ngram_size
+            tokens.begin() + static_cast<std::ptrdiff_t>(i),
+            tokens.begin() + static_cast<std::ptrdiff_t>(i + ngram_size)
         );
         std::string &next_word = tokens[i + ngram_size];
 
@@ -332,7 +343,7 @@ std::string random_ngram(std::mt19937 &gen, std::uniform_int_distribution<size_t
 }
 
 int main(int argc, char* argv[])
-{
+try {
     (void)argc;
 
 #ifdef _WIN32
@@ -375,14 +386,14 @@ int main(int argc, char* argv[])
         "can", "could", "may", "might", "must", "shall", "should", "shouldnt", "will", "would"
     };
 
-    std::signal(SIGINT, handle_user_exit);
+    static_cast<void>(std::signal(SIGINT, handle_user_exit));
     initApplication();
 
     std::random_device rd;
     std::mt19937 gen(rd()); 
 
     std::vector<std::string> tokens; 
-    int corpus_token_count = 0; 
+    size_t corpus_token_count = 0; 
 
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
     std::uniform_int_distribution<size_t> ngram_dis;
@@ -533,7 +544,7 @@ int main(int argc, char* argv[])
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
         {"/stats", [&current_corpus_name, &corpus_token_count, &ngram_contexts](const std::string&) {
             size_t context_count = ngram_contexts.size();
-            double health_ratio = static_cast<double>(corpus_token_count) / context_count;
+            double health_ratio = static_cast<double>(corpus_token_count) / static_cast<double>(context_count);
 
             std::ostringstream oss;
 
@@ -584,7 +595,7 @@ int main(int argc, char* argv[])
                 }
 
                 try {
-                    int new_ngram_size = std::stoi(subcommand_flag);
+                    size_t new_ngram_size = std::stoi(subcommand_flag);
 
                     if (new_ngram_size <= 0) {
                         std::cout << RED;
@@ -773,11 +784,11 @@ int main(int argc, char* argv[])
                 }
 
 
-                std::optional<std::map<int, std::string>> corpora_map = loadCorpora(argv);
+                std::optional<std::map<int, std::string>> corpora_map = loadCorpora(argv); // NOLINT(modernize-avoid-c-arrays)
 
                 if (corpora_map == std::nullopt) {
                     std::cout << RED;
-                    typewrite("[ERROR] An unexpected error occurrded while loading preloaded corpora.\n", 10);
+                    typewrite("[ERROR] An unexpected error occurred while loading preloaded corpora.\n", 10);
                     return;
                 }
 
@@ -991,4 +1002,8 @@ int main(int argc, char* argv[])
             } 
         }
     }
+}
+catch (const std::exception& e) {
+    std::cout << RED;
+    typewrite("[ERROR] An unexpected error occurred during the main function's execution that was not handled in any downstrean function.\n\t" + std::string(e.what()) + "\n", 10);
 }
