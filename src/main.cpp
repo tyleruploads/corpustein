@@ -179,8 +179,9 @@ void typewrite(const std::string& text, int delay_ms = 10)
     return;
 }
 
+// NOLINT(modernize-avoid-c-arrays)
 std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
-{ // NOLINT(modernize-avoid-c-arrays)
+{
     std::map<int, std::string> corpora_map;
     std::error_code ec;
 

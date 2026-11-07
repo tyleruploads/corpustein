@@ -4,6 +4,7 @@ project(corpustein VERSION 0.3.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(corpustein
     src/main.cpp
@@ -23,6 +24,43 @@ target_compile_options(corpustein PRIVATE
     -Wpedantic
     -Werror
 )
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(corpustein PRIVATE
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+    )
+    target_link_options(corpustein PRIVATE
+        -fsanitize=address,undefined
+    )
+
+    find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+    if(CLANG_TIDY_EXE)
+        set_target_properties(corpustein PROPERTIES
+            CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-p=${CMAKE_BINARY_DIR}"
+        )
+    endif()
+
+    find_program(CLANG_FORMAT_EXE NAMES clang-format)
+    find_program(CPPCHECK_EXE NAMES cppcheck)
+
+    if(CLANG_FORMAT_EXE AND CPPCHECK_EXE)
+        add_custom_target(enforce_quality_checks
+            COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+            COMMAND ${CPPCHECK_EXE}
+                --project=${CMAKE_BINARY_DIR}/compile_commands.json
+                --enable=all
+                --suppress=missingIncludeSystem
+                --check-level=exhaustive
+                --error-exitcode=1
+            COMMENT "Running Clang-Format and Cppcheck"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            USES_TERMINAL
+        )
+
+        add_dependencies(corpustein enforce_quality_checks)
+    endif()
+endif()
 
 target_compile_definitions(corpustein PRIVATE
     APP_VERSION="${PROJECT_VERSION}"
