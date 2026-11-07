@@ -178,9 +178,9 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
                 std::ifstream file(entry.path());
                 std::string line;
                 std::getline(file, line);  // The name is on the second line
-
-                std::string_view delim = ":";
+ 
                 if (file.is_open() && std::getline(file, line)) {
+                    std::string_view delim = ":";
                     auto first_pos = line.find(delim);
 
                     if (first_pos == std::string_view::npos || first_pos != line.rfind(delim)) {
@@ -195,7 +195,7 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
                         continue;
                     }
 
-                    std::string_view name(line.data() + first_pos + 1, line.size() - first_pos - 1);
+                    std::string_view name = std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
 
                     if (name.empty()) {
                         corpora_map[file_id] = "Unnamed";
@@ -215,7 +215,7 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[]) {
     return corpora_map;
 }
 
-std::string get_seed(const std::string &prompt, std::vector<std::string> tokens, std::unordered_set<std::string> allowed_repeats) {
+std::string get_seed(const std::string &prompt, const std::vector<std::string> &tokens, std::unordered_set<std::string> allowed_repeats) {
     std::stringstream ss(prompt);
     std::vector<std::string> prompt_tokens; 
 
@@ -382,7 +382,7 @@ int main(int argc, char* argv[])
     std::mt19937 gen(rd()); 
 
     std::vector<std::string> tokens; 
-    int token_count = 0; 
+    int corpus_token_count = 0; 
 
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
     std::uniform_int_distribution<size_t> ngram_dis;
@@ -446,7 +446,7 @@ int main(int argc, char* argv[])
                 }
 
                 std::string_view key(line.data(), first_pos);
-                std::string_view value(line.data() + first_pos + 1, line.size() - first_pos - 1);
+                std::string_view value = std::string_view(line).substr(first_pos + 1, line.size() - first_pos - 1);
 
                 if (key == "name") {
                     std::cout << AMBER;
@@ -507,14 +507,9 @@ int main(int argc, char* argv[])
         tokens.clear();
         while (corpus_ss >> word) tokens.push_back(word);
 
-        token_count = tokens.size();
+        corpus_token_count = tokens.size();
 
-        if (token_count < ngram_size) {
-            std::cerr << RED << BOLD << "Error: Corups is too short to build " << ngram_size << "-grams.\n" << RESET;
-            return;
-        }
-
-        if (token_count < ngram_size) {
+        if (corpus_token_count < ngram_size) {
             std::cerr << RED << BOLD << "Error: Corups is too short to build " << ngram_size << "-grams.\n" << RESET;
             return;
         }
@@ -536,15 +531,15 @@ int main(int argc, char* argv[])
     std::unordered_map<std::string, FunctionAction> function_runner = {
         {"/help", [](const std::string&) { std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, /clear, /exit"; }},
         {"/version", [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
-        {"/stats", [&current_corpus_name, &token_count, &ngram_contexts](const std::string&) {
+        {"/stats", [&current_corpus_name, &corpus_token_count, &ngram_contexts](const std::string&) {
             size_t context_count = ngram_contexts.size();
-            double health_ratio = static_cast<double>(token_count) / context_count;
+            double health_ratio = static_cast<double>(corpus_token_count) / context_count;
 
             std::ostringstream oss;
 
             oss << "Corpus Name: " << current_corpus_name << "\n";
             oss << "N-gram Order Size: " << ngram_size << "\n";
-            oss << "Tokens in Corpus: " << token_count << "\n";
+            oss << "Tokens in Corpus: " << corpus_token_count << "\n";
             oss << "Unique N-gram Contexts: " << context_count << "\n";
             oss << "Health Ratio: " << health_ratio << "\n";
             oss << "Maximum Sentence Count: " << max_sentence_count << "\n";
@@ -853,8 +848,8 @@ int main(int argc, char* argv[])
     while (true) {
         skip_typewriting_delay_requested = false;
 
-        int token_count = 0;
-        int sentence_count = 0;
+        int output_token_count = 0;
+        int output_sentence_count = 0;
         if (use_alt_buffer) std::cout << BG_COLOR;
         std::cout << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
         std::string prompt;
@@ -931,7 +926,8 @@ int main(int argc, char* argv[])
 
         while (true) {
             if (!ngram_contexts.contains(ngram)) {
-                std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+                ngram_window_ss.str(random_ngram(gen, ngram_dis, ngram_contexts));
+                ngram_window_ss.clear();
 
                 ngram_window.assign(
                     std::istream_iterator<std::string>{ngram_window_ss},
@@ -965,7 +961,8 @@ int main(int argc, char* argv[])
                 }
 
                 if (std::ranges::find(token_history, token) != token_history.end()) {
-                    std::stringstream ngram_window_ss(random_ngram(gen, ngram_dis, ngram_contexts));
+                    ngram_window_ss.str(random_ngram(gen, ngram_dis, ngram_contexts));
+                    ngram_window_ss.clear();
 
                     ngram_window.assign(
                         std::istream_iterator<std::string>{ngram_window_ss},
@@ -985,10 +982,10 @@ int main(int argc, char* argv[])
 
             typewrite(ngram_window.back() + " ", typewriter_delay_ms);
 
-            ++token_count;
-            if (token.find_first_of(".!?") != std::string::npos) ++sentence_count;
+            ++output_token_count;
+            if (token.find_first_of(".!?") != std::string::npos) ++output_sentence_count;
 
-            if (sentence_count >= max_sentence_count || token_count >= max_token_count) {
+            if (output_sentence_count >= max_sentence_count || output_token_count >= max_token_count) {
                 std::cout << "\n";
                 break;
             } 
