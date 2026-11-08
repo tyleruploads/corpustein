@@ -599,7 +599,7 @@ try {
          [](const std::string&) {
              std::cout << "Available Commands: /help, /about, /version, /stats, /set <parameter> "
                           "<value>, "
-                          "/load <type> <file>, /clear, /exit";
+                          "/load <type> <file>, /reload, /clear, /exit";
          }},
         {"/about",
          [](const std::string&) {
@@ -997,9 +997,8 @@ try {
                  }
 
                  if (corpora_map->contains(file_value)) {
-                     std::filesystem::path filePath =
-                         std::filesystem::absolute(argv[0]).parent_path() / "corpora" /
-                         ("corpus_" + std::to_string(file_value) + ".txt");
+                     filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" /
+                                ("corpus_" + std::to_string(file_value) + ".txt");
                      load_corpus(filePath);
                  } else {
                      std::cout << RED;
@@ -1023,22 +1022,43 @@ try {
                      return;
                  }
 
-                 std::filesystem::path path =
-                     (std::filesystem::current_path() / filename).lexically_normal();
+                 filePath = (std::filesystem::current_path() / filename).lexically_normal();
 
-                 if (!std::filesystem::exists(path)) {
+                 if (!std::filesystem::exists(filePath)) {
                      std::cout << RED;
-                     typewrite("File at path: " + path.string() + " does not exist.\n", 10);
+                     typewrite("File at path: " + filePath.string() + " does not exist.\n", 10);
                      return;
                  }
 
-                 load_corpus(path);
+                 load_corpus(filePath);
              } else {
                  std::cout << RED;
                  typewrite("Invalid corpus type: '" + type +
                                "'. Please run /load help for usage information.\n",
                            10);
              }
+         }},
+        {"/reload",
+         [&](const std::string& args) {
+             std::stringstream ss(args);
+             std::string argument;
+
+             ss >> argument;
+
+             if (argument == "help") {
+                 std::cout << BODY_TEXT;
+                 typewrite("Reloads the current corpus. No arguments necessary.\n", 10);
+                 return;
+             }
+
+             if (!std::filesystem::exists(filePath)) {
+                 std::cout << RED;
+                 typewrite("Current corpus at path: " + filePath.string() + " no longer exists.\n",
+                           10);
+                 return;
+             }
+
+             load_corpus(filePath);
          }},
         {"/clear", [](const std::string&) { initApplication(); }},
         {"/exit", [](const std::string&) { handle_user_exit(); }}};

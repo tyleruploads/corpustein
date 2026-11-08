@@ -141,12 +141,16 @@ The `/set` command allows users to change certain application variables.
 | `altbuffer` | `<boolean>` | `use_alt_buffer` | Enables or disables the alternate terminal buffer. While using the alternate terminal buffer, detailed styling is applied, but scrolling and viewing the output after the application's execution ends is disabled. |
 
 
-### /load
+### /load & /reload
 
 The `/load` command allows users to load either default or custom corpora. It takes a type and a corpus file in the following format: `/load <type> <corpus>`. The two types are `default` and `custom`.
 
 **Default:** Load a default corpus file for the model to use. You must pass just the index of the corpus to load it. To view default corpora, run the default subcommand with no flag, and you will be provided with a list of corpus IDs, linked to their name. Default corpus files are found in the `corpora` sibling directory to the binary directory. The corpora directory is automatically populated by GitHub Actions for the downloads attached to Releases, but users can also add corpora on their own, as long as they follow the naming scheme of `corpora_integer.txt`.
 **Custom:** Load a custom corpus file. Pass the path of the corpus, preferably absolute. If the path is not absolute, it will be expanded using the current working directory.
+
+---
+
+The `/reload` command reloads the current corpus, which is important for when users are making custom corpora and would like to make a hot-swap. It takes no arguments.
 
 ### /clear & /exit
 
