@@ -424,6 +424,8 @@ try {
 
     std::string current_corpus_name;
 
+    std::vector<std::string> gen_history;
+
     auto load_corpus = [&](const std::filesystem::path& filePath) {
         std::ifstream file(filePath);
 
@@ -599,7 +601,7 @@ try {
          [](const std::string&) {
              std::cout << "Available Commands: /help, /about, /version, /stats, /set <parameter> "
                           "<value>, "
-                          "/load <type> <file>, /reload, /clear, /exit";
+                          "/load <type> <file>, /reload, /history <argument>, /clear, /exit";
          }},
         {"/about",
          [](const std::string&) {
@@ -1060,6 +1062,77 @@ try {
 
              load_corpus(filePath);
          }},
+        {"/history",
+         [&gen_history](const std::string& args) {
+             std::stringstream ss(args);
+             std::string argument;
+
+             if (!(ss >> argument)) {
+                 std::cout << RED;
+                 typewrite(
+                     "Usage: /history <argument>\nRun /history help for a list of subcommands\n",
+                     10);
+                 return;
+             }
+
+             if (argument == "help") {
+                 std::cout << BODY_TEXT;
+                 typewrite("View or clear history.\n\t/history <integer>: View last X "
+                           "responses\n\t/history clear: Clears history\n",
+                           10);
+                 return;
+             }
+
+             if (size_t value{};
+                 std::from_chars(argument.data(), argument.data() + argument.size(), value).ec ==
+                 std::errc{}) {
+                 if (gen_history.empty()) {
+                     std::cout << RED;
+                     typewrite("History is empty.\n");
+                     return;
+                 }
+
+                 if (value > gen_history.size()) {
+                     std::cout << RED;
+                     typewrite("[ERROR] History size requested is " + std::to_string(value) +
+                                   ", which is greater than the history vector, which has " +
+                                   std::to_string(gen_history.size()) + " elements\n",
+                               10);
+                     return;
+                 }
+
+                 std::ostringstream oss;
+
+                 for (size_t i = 0; i < value; ++i) {
+                     oss << "----- " << std::to_string(i + 1) << " -----\n";
+                     oss << gen_history.at(gen_history.size() - value) << "\n\n";
+                 }
+
+                 int speed;
+
+                 if (typewriter_delay_ms < 2)
+                     speed = 0;
+                 else
+                     speed = typewriter_delay_ms / 5;
+
+                 std::cout << BODY_TEXT;
+                 typewrite(oss.str(), speed);
+                 return;
+             }
+
+             if (argument == "clear") {
+                 size_t gen_history_size = gen_history.size();
+                 gen_history.clear();
+
+                 std::cout << AMBER;
+                 typewrite("Successfully cleared generation history, which contained " +
+                               std::to_string(gen_history_size) + " elements.\n",
+                           10);
+             } else {
+                 std::cout << RED;
+                 typewrite("[ERROR] Argument '" + argument + "' is invalid.\n", 10);
+             }
+         }},
         {"/clear", [](const std::string&) { initApplication(); }},
         {"/exit", [](const std::string&) { handle_user_exit(); }}};
 
@@ -1123,6 +1196,8 @@ try {
 
         std::cout << AMBER << BOLD << "Corpustein: " << RESET << BODY_TEXT;
         typewrite(ngram + " ", typewriter_delay_ms);
+
+        std::string current_output = ngram + " ";
 
         std::deque<std::string> token_history;
 
@@ -1188,6 +1263,8 @@ try {
 
             ngram = get_ngram_string(ngram_window.begin(), ngram_window.end());
 
+            current_output += ngram_window.back() + " ";
+
             std::cout << BODY_TEXT;
 
             typewrite(ngram_window.back() + " ", typewriter_delay_ms);
@@ -1199,6 +1276,7 @@ try {
             if (output_sentence_count >= max_sentence_count ||
                 output_token_count >= max_token_count) {
                 std::cout << "\n";
+                gen_history.push_back(current_output);
                 break;
             }
         }
