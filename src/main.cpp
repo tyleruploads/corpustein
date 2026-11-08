@@ -598,7 +598,7 @@ try {
         {"/help",
          [](const std::string&) {
              std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, "
-                          "/clear, /exit";
+                          "/load <type> <file>, /clear, /exit";
          }},
         {"/version",
          [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
