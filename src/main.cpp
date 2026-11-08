@@ -884,6 +884,11 @@ try {
                                    "\n",
                                10);
                  }
+             } else {
+                 std::cout << RED;
+                 typewrite("Invalid subcommand: '" + subcommand +
+                               "'. Run /set help for usage information.\n",
+                           10);
              }
          }},
         {"/load",
@@ -1006,6 +1011,11 @@ try {
                  }
 
                  load_corpus(path);
+             } else {
+                 std::cout << RED;
+                 typewrite("Invalid corpus type: '" + type +
+                               "'. Please run /load help for usage information.\n",
+                           10);
              }
          }},
         {"/clear", [](const std::string&) { initApplication(); }},
