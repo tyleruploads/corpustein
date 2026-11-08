@@ -736,7 +736,7 @@ try {
                  try {
                      int new_typewriter_delay_ms = std::stoi(subcommand_flag);
 
-                     if (new_typewriter_delay_ms <= 0) {
+                     if (new_typewriter_delay_ms < 0) {
                          std::cout << RED;
                          typewrite("[ERROR] Typewriter delay must be greater than 0.\n", 10);
                          return;
