@@ -597,8 +597,30 @@ try {
     std::unordered_map<std::string, FunctionAction> function_runner = {
         {"/help",
          [](const std::string&) {
-             std::cout << "Available Commands: /help, /version, /stats, /set <parameter> <value>, "
+             std::cout << "Available Commands: /help, /about, /version, /stats, /set <parameter> "
+                          "<value>, "
                           "/load <type> <file>, /clear, /exit";
+         }},
+        {"/about",
+         [](const std::string&) {
+             std::ostringstream oss;
+
+             oss << "Corpustein is a blazingly fast N-gram Markov Chain model with a configurable "
+                    "order and a rolling window system.\n";
+             oss << "It is coded only in the C++20 Standard Library, which makes it small and "
+                    "fast.\n";
+             oss << "It even uses an alternate terminal buffer to make it look sleek and "
+                    "beautiful.\n";
+             oss << "Usage: Type your prompt after the > symbol, and press Enter.\n";
+             oss << "Run /help to view list of slash commands.\n\n";
+             oss << "----------\n";
+             oss << "Developed by Tyler N. <tyleruploads on GitHub>.\n";
+             oss << "GitHub Repository: https://github.com/tyleruploads/corpustein\n";
+
+             std::cout << AMBER;
+             typewrite("----- Corpustein v" APP_VERSION " -----\n", 10);
+             std::cout << BODY_TEXT;
+             typewrite(oss.str(), 5);
          }},
         {"/version",
          [](const std::string&) { std::cout << "Corpustein Version: v" << APP_VERSION << "\n"; }},
