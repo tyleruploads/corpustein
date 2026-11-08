@@ -5,7 +5,7 @@ Corpustein is a **blazingly fast N-gram Markov Chain model with a configurable o
 <img src="media/hero.png" alt="Corpustein C++20 terminal interface" width="700" />
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/tyleruploads/corpustein/blob/main/LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/tyleruploads/corpustein)](https://github.com/tyleruploads/corpustein/issues)
+[![GitHub Issues](https://img.shields.io/github/issues-raw/tyleruploads/corpustein)](https://github.com/tyleruploads/corpustein/issues)
 [![C++](https://img.shields.io/badge/C%2B%2B-20-%2300599C?logo=cplusplus)](https://isocpp.org/)
 
 ## Features
