@@ -99,6 +99,32 @@ struct BodyText
 #define BODY_TEXT                                                                                  \
     BodyText {}
 
+class Timer
+{
+  private:
+    std::chrono::steady_clock::time_point start;
+
+  public:
+    Timer() { reset(); }
+
+    void reset() { start = std::chrono::steady_clock::now(); }
+
+    template <typename T>
+        requires std::same_as<T, double> || std::same_as<T, std::string>
+    [[nodiscard]] T ms() const
+    {
+        double duration =
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start)
+                .count();
+
+        if constexpr (std::is_same_v<T, double>) {
+            return duration;
+        } else if constexpr (std::is_same_v<T, std::string>) {
+            return std::to_string(duration);
+        }
+    }
+};
+
 void initApplication()
 {
     std::cout << FULL_RESET;
@@ -246,7 +272,7 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
 }
 
 std::string get_seed(const std::string& prompt, const std::vector<std::string>& tokens,
-                     std::unordered_set<std::string> allowed_repeats)
+                     const std::unordered_set<std::string>& allowed_repeats)
 {
     std::stringstream ss(prompt);
     std::vector<std::string> prompt_tokens;
@@ -331,21 +357,28 @@ std::string get_ngram_string(const Iterator& begin, const Iterator& end)
 }
 
 std::unordered_map<std::string, std::vector<std::string>>
-get_ngram_contexts(std::vector<std::string> tokens)
+get_ngram_contexts(const std::vector<std::string>& tokens)
 {
+    Timer timer;
+
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
+    ngram_contexts.max_load_factor(0.8f);
+    ngram_contexts.reserve(tokens.size());
 
     for (size_t i = 0; i + ngram_size < tokens.size(); ++i) {
         std::string key =
             get_ngram_string(tokens.begin() + static_cast<std::ptrdiff_t>(i),
                              tokens.begin() + static_cast<std::ptrdiff_t>(i + ngram_size));
-        std::string& next_word = tokens[i + ngram_size];
+        const std::string& next_word = tokens[i + ngram_size];
 
         auto& vec = ngram_contexts[key];
         if (std::ranges::find(vec, next_word) == vec.end()) {
             vec.push_back(next_word);
         }
     }
+
+    std::cout << BODY_TEXT;
+    typewrite("\t" + timer.ms<std::string>() + "ms to build ngram contexts map.\n", 10);
 
     return ngram_contexts;
 }
@@ -548,8 +581,10 @@ try {
 
         std::string line;
         std::string text;
-        while (getline(file, line))
+        while (getline(file, line)) {
             text += line;
+            text.push_back('\n');
+        }
 
         std::regex square_brackets(R"(\s*\[\d+\])");
         text = std::regex_replace(text, square_brackets, "");
