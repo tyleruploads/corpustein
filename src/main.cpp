@@ -179,7 +179,6 @@ void typewrite(const std::string& text, int delay_ms = 10)
     return;
 }
 
-// NOLINT(modernize-avoid-c-arrays)
 std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
 {
     std::map<int, std::string> corpora_map;
@@ -191,10 +190,6 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
     auto dir_it = std::filesystem::directory_iterator(corpora_path, ec);
 
     if (ec) {
-        std::cout << RED;
-        typewrite("[ERROR] An unexpected error occurred while loading default corpora from '" +
-                  corpora_path.string() + "'. \nError:\n\tCode: " + std::to_string(ec.value()) +
-                  "\tCategory: " + ec.category().name() + "\n\t" + ec.message() + "\n");
         return std::nullopt;
     }
 
@@ -587,8 +582,35 @@ try {
         return;
     };
 
-    std::filesystem::path filePath =
+    std::filesystem::path defaultFilePath =
         std::filesystem::absolute(argv[0]).parent_path() / "corpora" / "corpus_0.txt";
+
+    std::filesystem::path filePath;
+
+    if (std::filesystem::exists(defaultFilePath)) {
+        filePath = defaultFilePath;
+    } else {
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+        std::filesystem::path linuxFilePath = std::filesystem::path("/") / "usr" / "local" /
+                                              "share" / "corpustein" / "corpora" / "corpus_0.txt";
+
+        if (!std::filesystem::exists(linuxFilePath)) {
+            std::cout << RED;
+            typewrite("[ERROR] Both " + defaultFilePath.string() + " and " +
+                          linuxFilePath.string() +
+                          " do not exist on filesystem. No corpus found.\n",
+                      10);
+            return 1;
+        }
+
+        filePath = linuxFilePath;
+#else
+        std::cout << RED;
+        typewrite("[ERROR] Default corpus not found at " + defaultFilePath.string() + "\n", 10);
+        return 1;
+#endif
+    }
+
     load_corpus(filePath);
 
     std::cout << BODY_TEXT << BOLD;
@@ -952,15 +974,44 @@ try {
                      return;
                  }
 
-                 std::optional<std::map<int, std::string>> corpora_map =
-                     loadCorpora(argv); // NOLINT(modernize-avoid-c-arrays)
+                 std::optional<std::map<int, std::string>> corpora_map = loadCorpora(argv);
 
                  if (corpora_map == std::nullopt) {
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+                     std::filesystem::path linuxFilePath = std::filesystem::path("/") / "usr" /
+                                                           "local" / "share" / "corpustein" /
+                                                           "corpora";
+
+                     if (!std::filesystem::exists(linuxFilePath)) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Both " + defaultFilePath.string() + " and " +
+                                       linuxFilePath.string() +
+                                       " do not exist on filesystem. No corpus found.\n",
+                                   10);
+                         return;
+                     }
+
+                     std::string pathStr = linuxFilePath.string();
+                     char* pathArr[] = {const_cast<char*>(pathStr.c_str()), nullptr};
+                     corpora_map = loadCorpora(pathArr);
+
+                     if (corpora_map == std::nullopt) {
+                         std::cout << RED;
+                         typewrite("[ERROR] Both " + std::string(argv[0]) + " and " +
+                                       linuxFilePath.string() +
+                                       " do not exist on filesystem, or another unexpected error "
+                                       "occurred.\n",
+                                   10);
+                         return;
+                     }
+#else
                      std::cout << RED;
-                     typewrite(
-                         "[ERROR] An unexpected error occurred while loading preloaded corpora.\n",
-                         10);
+                     typewrite("[ERROR] " + std::string(argv[0]) +
+                                   " does not exist on filesystem, or another unexpected error "
+                                   "occurred.\n",
+                               10);
                      return;
+#endif
                  }
 
                  if (filename.empty()) {
@@ -1001,6 +1052,15 @@ try {
                  if (corpora_map->contains(file_value)) {
                      filePath = std::filesystem::absolute(argv[0]).parent_path() / "corpora" /
                                 ("corpus_" + std::to_string(file_value) + ".txt");
+
+#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
+                     if (!std::filesystem::exists(filePath)) {
+                         filePath = std::filesystem::path("/") / "usr" / "local" / "share" /
+                                    "corpustein" / "corpora" /
+                                    ("corpus_" + std::to_string(file_value) + ".txt");
+                     }
+#endif
+
                      load_corpus(filePath);
                  } else {
                      std::cout << RED;
