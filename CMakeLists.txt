@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(corpustein VERSION 0.4.0 LANGUAGES CXX)
+project(corpustein VERSION 0.5.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
