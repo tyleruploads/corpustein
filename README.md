@@ -173,6 +173,11 @@ The `/load` command allows users to load either default or custom corpora. It ta
 
 The `/reload` command reloads the current corpus, which is important for when users are making custom corpora and would like to make a hot-swap. It takes no arguments.
 
+
+### /history
+
+The `/history` command allows users to either view or clear response history. It takes an argument, which is either an integer or `clear`. If an integer is passed, it will use the integer to show the user the previous `X` responses from the model. If `clear` is passed, it will clear the response history.
+
 ### /clear & /exit
 
 The `/clear` command clears the current terminal buffer, applies ANSI codes initially run during initialization, and remakes the header at the top of the terminal. The `/exit` command reverts ANSI codes and exits the application. No arguments are processed by either command.
