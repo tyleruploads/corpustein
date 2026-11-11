@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(corpustein VERSION 0.4.0 LANGUAGES CXX)
 
+include(GNUInstallDirs)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -66,3 +68,14 @@ target_compile_definitions(corpustein PRIVATE
     APP_VERSION="${PROJECT_VERSION}"
     PROJECT_ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )
+
+install(TARGETS corpustein RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/corpora/"
+        DESTINATION /usr/local/share/corpustein/corpora
+    )
+else()
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/corpora"
+        DESTINATION "${CMAKE_INSTALL_BINDIR}")
+endif()
