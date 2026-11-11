@@ -272,6 +272,7 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
 }
 
 std::string get_seed(const std::string& prompt, const std::vector<std::string>& tokens,
+                     const std::unordered_set<std::string>& cleaned_tokens,
                      const std::unordered_set<std::string>& allowed_repeats)
 {
     std::stringstream ss(prompt);
@@ -280,22 +281,6 @@ std::string get_seed(const std::string& prompt, const std::vector<std::string>& 
     std::string word;
     while (ss >> word)
         prompt_tokens.push_back(word);
-
-    std::unordered_set<std::string> cleaned_tokens;
-    for (const std::string& token : tokens) {
-        std::string cleaned_token = token;
-
-        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-
-        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(),
-                                           [](unsigned char c) { return std::ispunct(c); }),
-                            cleaned_token.end());
-
-        std::erase(cleaned_token, '\'');
-
-        cleaned_tokens.insert(cleaned_token);
-    }
 
     auto it = std::ranges::find_if(prompt_tokens, [&](const auto& token) {
         std::string cleaned_token = token;
@@ -383,6 +368,27 @@ get_ngram_contexts(const std::vector<std::string>& tokens)
     return ngram_contexts;
 }
 
+std::unordered_set<std::string> get_cleaned_tokens(const std::vector<std::string>& tokens)
+{
+    std::unordered_set<std::string> cleaned_tokens;
+    for (const std::string& token : tokens) {
+        std::string cleaned_token = token;
+
+        std::transform(cleaned_token.begin(), cleaned_token.end(), cleaned_token.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+
+        cleaned_token.erase(std::remove_if(cleaned_token.begin(), cleaned_token.end(),
+                                           [](unsigned char c) { return std::ispunct(c); }),
+                            cleaned_token.end());
+
+        std::erase(cleaned_token, '\'');
+
+        cleaned_tokens.insert(cleaned_token);
+    }
+
+    return cleaned_tokens;
+}
+
 std::string next_token(std::mt19937& gen, const std::vector<std::string>& ngram_context)
 {
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
@@ -445,6 +451,7 @@ try {
     std::mt19937 gen(rd());
 
     std::vector<std::string> tokens;
+    std::unordered_set<std::string> cleaned_tokens;
     size_t corpus_token_count = 0;
 
     std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
@@ -607,6 +614,8 @@ try {
                       << RESET;
             return;
         }
+
+        cleaned_tokens = get_cleaned_tokens(tokens);
 
         ngram_contexts = get_ngram_contexts(tokens);
         ngram_dis.param(
@@ -1265,7 +1274,7 @@ try {
             }
         }
 
-        std::string seed = get_seed(prompt, tokens, allowed_repeats);
+        std::string seed = get_seed(prompt, tokens, allowed_repeats, cleaned_tokens);
 
         std::string starting_ngram;
         auto it = std::ranges::find_if(ngram_contexts, [&](const auto& pair) {
