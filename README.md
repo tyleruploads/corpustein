@@ -26,9 +26,30 @@ Type your prompt after the `>` symbol, and press Enter. Corpustein will instantl
 
 Corpustein also supports many slash commands. See the [Commands](#commands) section to view available slash commands.
 
-## Download
+## Downloads & Installation
 
-To run Corpustein, simply download the appropriate binary for your Operating System from the table below.
+To run Corpustein, simply download the appropriate binary for your Operating System from the table below. Linux users can run the **Linux Setup Script** to install Corpustein and allow it to be ran anywhere with the `corpustein` command in their terminal.
+
+### Linux Setup Script
+
+To run the Linux Setup Script, run the following command in your terminal:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/tyleruploads/corpustein/refs/heads/main/setup.sh)
+```
+
+You can also download the file at [https://raw.githubusercontent.com/tyleruploads/corpustein/refs/heads/main/setup.sh](https://raw.githubusercontent.com/tyleruploads/corpustein/refs/heads/main/setup.sh), mark it as executable, then run it.
+
+In the script, you have 4 options:
+
+1) **Install Remote Binary:** Installs the binary and defualt corpus files in the tar.gz attached to the latest GitHub Release
+2) **Compile Locally and Install:** Locally compiles and installs the latest state of the live repository
+3) **Uninstall Corpustein:** Uninstalls Corpustein
+4) **Exit:** Exits the script
+
+---
+
+### Downloads Table
 
 | Linux | Windows | macOS |
 | :---: | :---: | :---: |
