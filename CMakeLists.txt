@@ -24,6 +24,7 @@ target_compile_options(corpustein PRIVATE
     -Wall
     -Wextra
     -Wpedantic
+    -Wshadow
     -Werror
 )
 
