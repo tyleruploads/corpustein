@@ -341,12 +341,12 @@ std::string get_ngram_string(const Iterator& begin, const Iterator& end)
     return ngram;
 }
 
-std::unordered_map<std::string, std::vector<std::string>>
+std::unordered_map<std::string, std::unordered_set<std::string>>
 get_ngram_contexts(const std::vector<std::string>& tokens)
 {
     Timer timer;
 
-    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
+    std::unordered_map<std::string, std::unordered_set<std::string>> ngram_contexts;
     ngram_contexts.max_load_factor(0.8f);
     ngram_contexts.reserve(tokens.size());
 
@@ -356,10 +356,7 @@ get_ngram_contexts(const std::vector<std::string>& tokens)
                              tokens.begin() + static_cast<std::ptrdiff_t>(i + ngram_size));
         const std::string& next_word = tokens[i + ngram_size];
 
-        auto& vec = ngram_contexts[key];
-        if (std::ranges::find(vec, next_word) == vec.end()) {
-            vec.push_back(next_word);
-        }
+        ngram_contexts[key].insert(next_word);
     }
 
     std::cout << BODY_TEXT;
@@ -389,14 +386,18 @@ std::unordered_set<std::string> get_cleaned_tokens(const std::vector<std::string
     return cleaned_tokens;
 }
 
-std::string next_token(std::mt19937& gen, const std::vector<std::string>& ngram_context)
+std::string next_token(std::mt19937& gen, const std::unordered_set<std::string>& ngram_context)
 {
     std::uniform_int_distribution<size_t> dis(0, ngram_context.size() - 1);
-    return ngram_context[dis(gen)];
+
+    auto it = ngram_context.begin();
+    std::advance(it, dis(gen));
+    return *it;
 }
 
-std::string random_ngram(std::mt19937& gen, std::uniform_int_distribution<size_t> ngram_dis,
-                         std::unordered_map<std::string, std::vector<std::string>>& ngram_contexts)
+std::string
+random_ngram(std::mt19937& gen, std::uniform_int_distribution<size_t> ngram_dis,
+             std::unordered_map<std::string, std::unordered_set<std::string>>& ngram_contexts)
 {
     auto it = ngram_contexts.begin();
     std::advance(it, ngram_dis(gen));
@@ -454,7 +455,7 @@ try {
     std::unordered_set<std::string> cleaned_tokens;
     size_t corpus_token_count = 0;
 
-    std::unordered_map<std::string, std::vector<std::string>> ngram_contexts;
+    std::unordered_map<std::string, std::unordered_set<std::string>> ngram_contexts;
     std::uniform_int_distribution<size_t> ngram_dis;
 
     std::string current_corpus_name;
