@@ -10,7 +10,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(corpustein
     src/main.cpp
-    src/function_runner.inc
 )
 
 add_custom_command(
