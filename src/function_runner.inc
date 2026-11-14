@@ -574,5 +574,5 @@ std::unordered_map<std::string, FunctionAction> function_runner = {
          }
      }},
     {"/clear", [](const std::string&) { initApplication(); }},
-    {"/exit", [](const std::string&) { handle_user_exit(); }}
+    {"/exit", [](const std::string&) { perform_user_exit(); }}
 };

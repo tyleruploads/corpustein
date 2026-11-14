@@ -63,6 +63,8 @@ std::atomic<bool> is_typewriting(false);
 std::atomic<bool> skip_typewriting_delay_requested(false);
 bool use_alt_buffer = true;
 
+volatile std::sig_atomic_t sigint_received = 0;
+
 struct Reset
 {
     friend std::ostream& operator<<(std::ostream& os, const Reset&)
@@ -150,15 +152,14 @@ void initApplication()
               << RESET;
 }
 
-void handle_user_exit(int signal = 0)
+void handle_sigint(int signal = 0)
 {
     (void)signal;
+    sigint_received = 1;
+}
 
-    if (is_typewriting) {
-        skip_typewriting_delay_requested = true;
-        return;
-    }
-
+void perform_user_exit()
+{
     std::string final_reset_sequence = "\033[?25h\033[?7h\033[0m";
 
     if (use_alt_buffer) {
@@ -189,7 +190,7 @@ void typewrite(const std::string& text, int delay_ms = 10)
     is_typewriting = true;
 
     for (size_t i = 0; i < text.size(); ++i) {
-        if (skip_typewriting_delay_requested) {
+        if (skip_typewriting_delay_requested || sigint_received) {
             std::cout << text.substr(i);
             break;
         }
@@ -445,7 +446,16 @@ try {
         "had",    "having",   "do",     "does",  "did",    "im",       "youre",   "can",   "could",
         "may",    "might",    "must",   "shall", "should", "shouldnt", "will",    "would"};
 
-    static_cast<void>(std::signal(SIGINT, handle_user_exit));
+#ifdef _WIN32
+    static_cast<void>(std::signal(SIGINT, handle_sigint));
+#else
+    struct sigaction sa{};
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    sigaction(SIGINT, &sa, nullptr);
+#endif
     initApplication();
 
     std::random_device rd;
@@ -511,7 +521,32 @@ try {
             std::cout << BG_COLOR;
         std::cout << AMBER << BOLD << BLINK << "\n> " << "\033[25m";
         std::string prompt;
-        std::getline(std::cin, prompt);
+        sigint_received = 0;
+
+        if (!std::getline(std::cin, prompt)) {
+            if (sigint_received) {
+                if (is_typewriting) {
+                    skip_typewriting_delay_requested = true;
+                }
+
+                std::cin.clear();
+
+                std::string exit_str;
+                std::cout << "\nWould you like to exit Corpustein? (yes or no): ";
+                std::cin >> exit_str;
+
+                constexpr std::array false_strings{
+                    "false",    "0",       "no",         "n",          "off",   "low", "unset",
+                    "disabled", "disable", "inactivate", "deactivate", "wrong", "fail"};
+
+                if (std::ranges::any_of(false_strings, [&](auto s) { return exit_str == s; })) {
+                    std::cout << "SIGINT ignored because of user directive.\n";
+                } else {
+                    perform_user_exit();
+                    return 0;
+                }
+            }
+        }
 
         if (prompt.empty())
             continue;
