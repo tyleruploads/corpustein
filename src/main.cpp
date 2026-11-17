@@ -579,7 +579,7 @@ try {
             }
         }
 
-        std::string seed = get_seed(prompt, tokens, allowed_repeats, cleaned_tokens);
+        std::string seed = get_seed(prompt, tokens, cleaned_tokens, allowed_repeats);
 
         std::string starting_ngram;
         auto it = std::ranges::find_if(ngram_contexts, [&](const auto& pair) {
