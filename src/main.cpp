@@ -272,6 +272,12 @@ std::optional<std::map<int, std::string>> loadCorpora(char* argv[])
     return corpora_map;
 }
 
+std::string cleanInput(const std::string& input)
+{
+    std::regex ansiRegex("\x1B(\\[[0-9;]*[a-zA-Z~]|O[A-Za-z])");
+    return std::regex_replace(input, ansiRegex, "");
+}
+
 std::string get_seed(const std::string& prompt, const std::vector<std::string>& tokens,
                      const std::unordered_set<std::string>& cleaned_tokens,
                      const std::unordered_set<std::string>& allowed_repeats)
@@ -547,6 +553,8 @@ try {
                 }
             }
         }
+
+        prompt = cleanInput(prompt);
 
         if (prompt.empty())
             continue;
